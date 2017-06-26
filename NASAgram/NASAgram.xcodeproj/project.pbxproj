@@ -1,0 +1,769 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1812ED3D614F3F103C6F5C38 /* Pods_NASAgramUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 544C1C32652D480D73C40647 /* Pods_NASAgramUITests.framework */; };
+		A8D1C7F4D50F10D317305DEC /* Pods_NASAgramTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5687EAE1666678C578181A11 /* Pods_NASAgramTests.framework */; };
+		DEAD51AC1F018C6F002486B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51AB1F018C6F002486B1 /* AppDelegate.swift */; };
+		DEAD51B41F018C6F002486B1 /* NASAgram.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51B21F018C6F002486B1 /* NASAgram.xcdatamodeld */; };
+		DEAD51B61F018C6F002486B1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DEAD51B51F018C6F002486B1 /* Assets.xcassets */; };
+		DEAD51B91F018C6F002486B1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DEAD51B71F018C6F002486B1 /* LaunchScreen.storyboard */; };
+		DEAD51C41F018C70002486B1 /* NASAgramTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51C31F018C70002486B1 /* NASAgramTests.swift */; };
+		DEAD51CF1F018C70002486B1 /* NASAgramUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51CE1F018C70002486B1 /* NASAgramUITests.swift */; };
+		DEAD51DD1F018ED9002486B1 /* DailyPicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51DC1F018ED9002486B1 /* DailyPicViewController.swift */; };
+		DEAD51E01F018F16002486B1 /* APOD.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51DF1F018F16002486B1 /* APOD.swift */; };
+		DEAD51E31F018F76002486B1 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51E21F018F76002486B1 /* DataManager.swift */; };
+		E330D1489BEF5DBBBA1F9A6F /* Pods_NASAgram.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6D49F0779A522C5970463E9 /* Pods_NASAgram.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DEAD51C01F018C70002486B1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DEAD51A01F018C6F002486B1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DEAD51A71F018C6F002486B1;
+			remoteInfo = NASAgram;
+		};
+		DEAD51CB1F018C70002486B1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DEAD51A01F018C6F002486B1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DEAD51A71F018C6F002486B1;
+			remoteInfo = NASAgram;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		42F2EFE0DAF6E59B8EBDAFFD /* Pods-NASAgramUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NASAgramUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NASAgramUITests/Pods-NASAgramUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		544C1C32652D480D73C40647 /* Pods_NASAgramUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NASAgramUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5687EAE1666678C578181A11 /* Pods_NASAgramTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NASAgramTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		60B9DA745FF025C4888943B2 /* Pods-NASAgram.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NASAgram.release.xcconfig"; path = "Pods/Target Support Files/Pods-NASAgram/Pods-NASAgram.release.xcconfig"; sourceTree = "<group>"; };
+		B54CF62ACB5E5AB365800D66 /* Pods-NASAgramTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NASAgramTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NASAgramTests/Pods-NASAgramTests.release.xcconfig"; sourceTree = "<group>"; };
+		C97C0F81A47C9FC3164FA679 /* Pods-NASAgram.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NASAgram.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NASAgram/Pods-NASAgram.debug.xcconfig"; sourceTree = "<group>"; };
+		D66B842FB0B556870985D402 /* Pods-NASAgramUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NASAgramUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NASAgramUITests/Pods-NASAgramUITests.release.xcconfig"; sourceTree = "<group>"; };
+		D98DBAA20347FDEE5A9CE598 /* Pods-NASAgramTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NASAgramTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NASAgramTests/Pods-NASAgramTests.debug.xcconfig"; sourceTree = "<group>"; };
+		DEAD51A81F018C6F002486B1 /* NASAgram.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NASAgram.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DEAD51AB1F018C6F002486B1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		DEAD51B31F018C6F002486B1 /* NASAgram.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NASAgram.xcdatamodel; sourceTree = "<group>"; };
+		DEAD51B51F018C6F002486B1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DEAD51B81F018C6F002486B1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		DEAD51BA1F018C6F002486B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DEAD51BF1F018C70002486B1 /* NASAgramTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NASAgramTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DEAD51C31F018C70002486B1 /* NASAgramTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NASAgramTests.swift; sourceTree = "<group>"; };
+		DEAD51C51F018C70002486B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DEAD51CA1F018C70002486B1 /* NASAgramUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NASAgramUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DEAD51CE1F018C70002486B1 /* NASAgramUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NASAgramUITests.swift; sourceTree = "<group>"; };
+		DEAD51D01F018C70002486B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DEAD51DC1F018ED9002486B1 /* DailyPicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DailyPicViewController.swift; sourceTree = "<group>"; };
+		DEAD51DF1F018F16002486B1 /* APOD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APOD.swift; sourceTree = "<group>"; };
+		DEAD51E21F018F76002486B1 /* DataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		F6D49F0779A522C5970463E9 /* Pods_NASAgram.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NASAgram.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DEAD51A51F018C6F002486B1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E330D1489BEF5DBBBA1F9A6F /* Pods_NASAgram.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DEAD51BC1F018C70002486B1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A8D1C7F4D50F10D317305DEC /* Pods_NASAgramTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DEAD51C71F018C70002486B1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1812ED3D614F3F103C6F5C38 /* Pods_NASAgramUITests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		86128F83209616D278DE1E50 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F6D49F0779A522C5970463E9 /* Pods_NASAgram.framework */,
+				5687EAE1666678C578181A11 /* Pods_NASAgramTests.framework */,
+				544C1C32652D480D73C40647 /* Pods_NASAgramUITests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DEAD519F1F018C6F002486B1 = {
+			isa = PBXGroup;
+			children = (
+				DEAD51AA1F018C6F002486B1 /* NASAgram */,
+				DEAD51C21F018C70002486B1 /* NASAgramTests */,
+				DEAD51CD1F018C70002486B1 /* NASAgramUITests */,
+				DEAD51A91F018C6F002486B1 /* Products */,
+				EAB67290B2484EA85FC49147 /* Pods */,
+				86128F83209616D278DE1E50 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		DEAD51A91F018C6F002486B1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DEAD51A81F018C6F002486B1 /* NASAgram.app */,
+				DEAD51BF1F018C70002486B1 /* NASAgramTests.xctest */,
+				DEAD51CA1F018C70002486B1 /* NASAgramUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DEAD51AA1F018C6F002486B1 /* NASAgram */ = {
+			isa = PBXGroup;
+			children = (
+				DEAD51E11F018F2E002486B1 /* Model */,
+				DEAD51E41F018F7F002486B1 /* Managers */,
+				DEAD51DE1F018EDE002486B1 /* View Controllers */,
+				DEAD51AB1F018C6F002486B1 /* AppDelegate.swift */,
+				DEAD51B51F018C6F002486B1 /* Assets.xcassets */,
+				DEAD51B71F018C6F002486B1 /* LaunchScreen.storyboard */,
+				DEAD51BA1F018C6F002486B1 /* Info.plist */,
+				DEAD51B21F018C6F002486B1 /* NASAgram.xcdatamodeld */,
+			);
+			path = NASAgram;
+			sourceTree = "<group>";
+		};
+		DEAD51C21F018C70002486B1 /* NASAgramTests */ = {
+			isa = PBXGroup;
+			children = (
+				DEAD51C31F018C70002486B1 /* NASAgramTests.swift */,
+				DEAD51C51F018C70002486B1 /* Info.plist */,
+			);
+			path = NASAgramTests;
+			sourceTree = "<group>";
+		};
+		DEAD51CD1F018C70002486B1 /* NASAgramUITests */ = {
+			isa = PBXGroup;
+			children = (
+				DEAD51CE1F018C70002486B1 /* NASAgramUITests.swift */,
+				DEAD51D01F018C70002486B1 /* Info.plist */,
+			);
+			path = NASAgramUITests;
+			sourceTree = "<group>";
+		};
+		DEAD51DE1F018EDE002486B1 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				DEAD51DC1F018ED9002486B1 /* DailyPicViewController.swift */,
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		DEAD51E11F018F2E002486B1 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				DEAD51DF1F018F16002486B1 /* APOD.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		DEAD51E41F018F7F002486B1 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				DEAD51E21F018F76002486B1 /* DataManager.swift */,
+			);
+			name = Managers;
+			sourceTree = "<group>";
+		};
+		EAB67290B2484EA85FC49147 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C97C0F81A47C9FC3164FA679 /* Pods-NASAgram.debug.xcconfig */,
+				60B9DA745FF025C4888943B2 /* Pods-NASAgram.release.xcconfig */,
+				D98DBAA20347FDEE5A9CE598 /* Pods-NASAgramTests.debug.xcconfig */,
+				B54CF62ACB5E5AB365800D66 /* Pods-NASAgramTests.release.xcconfig */,
+				42F2EFE0DAF6E59B8EBDAFFD /* Pods-NASAgramUITests.debug.xcconfig */,
+				D66B842FB0B556870985D402 /* Pods-NASAgramUITests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DEAD51A71F018C6F002486B1 /* NASAgram */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DEAD51D31F018C70002486B1 /* Build configuration list for PBXNativeTarget "NASAgram" */;
+			buildPhases = (
+				22AA3588E7B0F7DF7F37BE57 /* [CP] Check Pods Manifest.lock */,
+				DEAD51A41F018C6F002486B1 /* Sources */,
+				DEAD51A51F018C6F002486B1 /* Frameworks */,
+				DEAD51A61F018C6F002486B1 /* Resources */,
+				CB7FAFE8ED786488C1BDBF9A /* [CP] Embed Pods Frameworks */,
+				C48145A7691D16BD5FB2FDCC /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NASAgram;
+			productName = NASAgram;
+			productReference = DEAD51A81F018C6F002486B1 /* NASAgram.app */;
+			productType = "com.apple.product-type.application";
+		};
+		DEAD51BE1F018C70002486B1 /* NASAgramTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DEAD51D61F018C70002486B1 /* Build configuration list for PBXNativeTarget "NASAgramTests" */;
+			buildPhases = (
+				F954003D9D5797900B03FDD5 /* [CP] Check Pods Manifest.lock */,
+				DEAD51BB1F018C70002486B1 /* Sources */,
+				DEAD51BC1F018C70002486B1 /* Frameworks */,
+				DEAD51BD1F018C70002486B1 /* Resources */,
+				DA47ED21D2C43117EE48C0EB /* [CP] Embed Pods Frameworks */,
+				59F345573589BE7EB25DBDD0 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DEAD51C11F018C70002486B1 /* PBXTargetDependency */,
+			);
+			name = NASAgramTests;
+			productName = NASAgramTests;
+			productReference = DEAD51BF1F018C70002486B1 /* NASAgramTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		DEAD51C91F018C70002486B1 /* NASAgramUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DEAD51D91F018C70002486B1 /* Build configuration list for PBXNativeTarget "NASAgramUITests" */;
+			buildPhases = (
+				FD5503AAFAAF60874B25FD06 /* [CP] Check Pods Manifest.lock */,
+				DEAD51C61F018C70002486B1 /* Sources */,
+				DEAD51C71F018C70002486B1 /* Frameworks */,
+				DEAD51C81F018C70002486B1 /* Resources */,
+				5C4E26C891FF3D95CD885CFA /* [CP] Embed Pods Frameworks */,
+				45EDA8FE3F49D2878995AE19 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DEAD51CC1F018C70002486B1 /* PBXTargetDependency */,
+			);
+			name = NASAgramUITests;
+			productName = NASAgramUITests;
+			productReference = DEAD51CA1F018C70002486B1 /* NASAgramUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DEAD51A01F018C6F002486B1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0830;
+				LastUpgradeCheck = 0830;
+				ORGANIZATIONNAME = seymotom;
+				TargetAttributes = {
+					DEAD51A71F018C6F002486B1 = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = P7Y3CKA76T;
+						ProvisioningStyle = Automatic;
+					};
+					DEAD51BE1F018C70002486B1 = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = P7Y3CKA76T;
+						ProvisioningStyle = Automatic;
+						TestTargetID = DEAD51A71F018C6F002486B1;
+					};
+					DEAD51C91F018C70002486B1 = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = P7Y3CKA76T;
+						ProvisioningStyle = Automatic;
+						TestTargetID = DEAD51A71F018C6F002486B1;
+					};
+				};
+			};
+			buildConfigurationList = DEAD51A31F018C6F002486B1 /* Build configuration list for PBXProject "NASAgram" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = DEAD519F1F018C6F002486B1;
+			productRefGroup = DEAD51A91F018C6F002486B1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DEAD51A71F018C6F002486B1 /* NASAgram */,
+				DEAD51BE1F018C70002486B1 /* NASAgramTests */,
+				DEAD51C91F018C70002486B1 /* NASAgramUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DEAD51A61F018C6F002486B1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DEAD51B91F018C6F002486B1 /* LaunchScreen.storyboard in Resources */,
+				DEAD51B61F018C6F002486B1 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DEAD51BD1F018C70002486B1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DEAD51C81F018C70002486B1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		22AA3588E7B0F7DF7F37BE57 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		45EDA8FE3F49D2878995AE19 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NASAgramUITests/Pods-NASAgramUITests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		59F345573589BE7EB25DBDD0 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NASAgramTests/Pods-NASAgramTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5C4E26C891FF3D95CD885CFA /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NASAgramUITests/Pods-NASAgramUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C48145A7691D16BD5FB2FDCC /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NASAgram/Pods-NASAgram-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CB7FAFE8ED786488C1BDBF9A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NASAgram/Pods-NASAgram-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DA47ED21D2C43117EE48C0EB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NASAgramTests/Pods-NASAgramTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F954003D9D5797900B03FDD5 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		FD5503AAFAAF60874B25FD06 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DEAD51A41F018C6F002486B1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DEAD51B41F018C6F002486B1 /* NASAgram.xcdatamodeld in Sources */,
+				DEAD51E31F018F76002486B1 /* DataManager.swift in Sources */,
+				DEAD51E01F018F16002486B1 /* APOD.swift in Sources */,
+				DEAD51DD1F018ED9002486B1 /* DailyPicViewController.swift in Sources */,
+				DEAD51AC1F018C6F002486B1 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DEAD51BB1F018C70002486B1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DEAD51C41F018C70002486B1 /* NASAgramTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DEAD51C61F018C70002486B1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DEAD51CF1F018C70002486B1 /* NASAgramUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DEAD51C11F018C70002486B1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DEAD51A71F018C6F002486B1 /* NASAgram */;
+			targetProxy = DEAD51C01F018C70002486B1 /* PBXContainerItemProxy */;
+		};
+		DEAD51CC1F018C70002486B1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DEAD51A71F018C6F002486B1 /* NASAgram */;
+			targetProxy = DEAD51CB1F018C70002486B1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		DEAD51B71F018C6F002486B1 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DEAD51B81F018C6F002486B1 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		DEAD51D11F018C70002486B1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DEAD51D21F018C70002486B1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		DEAD51D41F018C70002486B1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C97C0F81A47C9FC3164FA679 /* Pods-NASAgram.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = P7Y3CKA76T;
+				INFOPLIST_FILE = NASAgram/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = seymotom.NASAgram;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		DEAD51D51F018C70002486B1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 60B9DA745FF025C4888943B2 /* Pods-NASAgram.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = P7Y3CKA76T;
+				INFOPLIST_FILE = NASAgram/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = seymotom.NASAgram;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		DEAD51D71F018C70002486B1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D98DBAA20347FDEE5A9CE598 /* Pods-NASAgramTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = P7Y3CKA76T;
+				INFOPLIST_FILE = NASAgramTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = seymotom.NASAgramTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NASAgram.app/NASAgram";
+			};
+			name = Debug;
+		};
+		DEAD51D81F018C70002486B1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B54CF62ACB5E5AB365800D66 /* Pods-NASAgramTests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = P7Y3CKA76T;
+				INFOPLIST_FILE = NASAgramTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = seymotom.NASAgramTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NASAgram.app/NASAgram";
+			};
+			name = Release;
+		};
+		DEAD51DA1F018C70002486B1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 42F2EFE0DAF6E59B8EBDAFFD /* Pods-NASAgramUITests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				DEVELOPMENT_TEAM = P7Y3CKA76T;
+				INFOPLIST_FILE = NASAgramUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = seymotom.NASAgramUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = NASAgram;
+			};
+			name = Debug;
+		};
+		DEAD51DB1F018C70002486B1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D66B842FB0B556870985D402 /* Pods-NASAgramUITests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				DEVELOPMENT_TEAM = P7Y3CKA76T;
+				INFOPLIST_FILE = NASAgramUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = seymotom.NASAgramUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = NASAgram;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DEAD51A31F018C6F002486B1 /* Build configuration list for PBXProject "NASAgram" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DEAD51D11F018C70002486B1 /* Debug */,
+				DEAD51D21F018C70002486B1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DEAD51D31F018C70002486B1 /* Build configuration list for PBXNativeTarget "NASAgram" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DEAD51D41F018C70002486B1 /* Debug */,
+				DEAD51D51F018C70002486B1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		DEAD51D61F018C70002486B1 /* Build configuration list for PBXNativeTarget "NASAgramTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DEAD51D71F018C70002486B1 /* Debug */,
+				DEAD51D81F018C70002486B1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		DEAD51D91F018C70002486B1 /* Build configuration list for PBXNativeTarget "NASAgramUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DEAD51DA1F018C70002486B1 /* Debug */,
+				DEAD51DB1F018C70002486B1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		DEAD51B21F018C6F002486B1 /* NASAgram.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				DEAD51B31F018C6F002486B1 /* NASAgram.xcdatamodel */,
+			);
+			currentVersion = DEAD51B31F018C6F002486B1 /* NASAgram.xcdatamodel */;
+			path = NASAgram.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = DEAD51A01F018C6F002486B1 /* Project object */;
+}
