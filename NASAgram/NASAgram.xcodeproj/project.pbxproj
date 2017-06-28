@@ -9,15 +9,18 @@
 /* Begin PBXBuildFile section */
 		1812ED3D614F3F103C6F5C38 /* Pods_NASAgramUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 544C1C32652D480D73C40647 /* Pods_NASAgramUITests.framework */; };
 		A8D1C7F4D50F10D317305DEC /* Pods_NASAgramTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5687EAE1666678C578181A11 /* Pods_NASAgramTests.framework */; };
+		DE39A7311F02F123004212DD /* DailyPicPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE39A7301F02F123004212DD /* DailyPicPageViewController.swift */; };
+		DE39A7331F02F15F004212DD /* APODViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE39A7321F02F15E004212DD /* APODViewController.swift */; };
+		DE39A7351F030A86004212DD /* Extension+Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE39A7341F030A86004212DD /* Extension+Date.swift */; };
 		DEAD51AC1F018C6F002486B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51AB1F018C6F002486B1 /* AppDelegate.swift */; };
 		DEAD51B41F018C6F002486B1 /* NASAgram.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51B21F018C6F002486B1 /* NASAgram.xcdatamodeld */; };
 		DEAD51B61F018C6F002486B1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DEAD51B51F018C6F002486B1 /* Assets.xcassets */; };
 		DEAD51B91F018C6F002486B1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DEAD51B71F018C6F002486B1 /* LaunchScreen.storyboard */; };
 		DEAD51C41F018C70002486B1 /* NASAgramTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51C31F018C70002486B1 /* NASAgramTests.swift */; };
 		DEAD51CF1F018C70002486B1 /* NASAgramUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51CE1F018C70002486B1 /* NASAgramUITests.swift */; };
-		DEAD51DD1F018ED9002486B1 /* DailyPicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51DC1F018ED9002486B1 /* DailyPicViewController.swift */; };
 		DEAD51E01F018F16002486B1 /* APOD.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51DF1F018F16002486B1 /* APOD.swift */; };
 		DEAD51E31F018F76002486B1 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51E21F018F76002486B1 /* DataManager.swift */; };
+		DEAD51E61F01B391002486B1 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51E51F01B391002486B1 /* APIManager.swift */; };
 		E330D1489BEF5DBBBA1F9A6F /* Pods_NASAgram.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6D49F0779A522C5970463E9 /* Pods_NASAgram.framework */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +50,9 @@
 		C97C0F81A47C9FC3164FA679 /* Pods-NASAgram.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NASAgram.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NASAgram/Pods-NASAgram.debug.xcconfig"; sourceTree = "<group>"; };
 		D66B842FB0B556870985D402 /* Pods-NASAgramUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NASAgramUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NASAgramUITests/Pods-NASAgramUITests.release.xcconfig"; sourceTree = "<group>"; };
 		D98DBAA20347FDEE5A9CE598 /* Pods-NASAgramTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NASAgramTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NASAgramTests/Pods-NASAgramTests.debug.xcconfig"; sourceTree = "<group>"; };
+		DE39A7301F02F123004212DD /* DailyPicPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DailyPicPageViewController.swift; sourceTree = "<group>"; };
+		DE39A7321F02F15E004212DD /* APODViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APODViewController.swift; sourceTree = "<group>"; };
+		DE39A7341F030A86004212DD /* Extension+Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extension+Date.swift"; sourceTree = "<group>"; };
 		DEAD51A81F018C6F002486B1 /* NASAgram.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NASAgram.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEAD51AB1F018C6F002486B1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DEAD51B31F018C6F002486B1 /* NASAgram.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NASAgram.xcdatamodel; sourceTree = "<group>"; };
@@ -59,9 +65,9 @@
 		DEAD51CA1F018C70002486B1 /* NASAgramUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NASAgramUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEAD51CE1F018C70002486B1 /* NASAgramUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NASAgramUITests.swift; sourceTree = "<group>"; };
 		DEAD51D01F018C70002486B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DEAD51DC1F018ED9002486B1 /* DailyPicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DailyPicViewController.swift; sourceTree = "<group>"; };
 		DEAD51DF1F018F16002486B1 /* APOD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APOD.swift; sourceTree = "<group>"; };
 		DEAD51E21F018F76002486B1 /* DataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		DEAD51E51F01B391002486B1 /* APIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		F6D49F0779A522C5970463E9 /* Pods_NASAgram.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NASAgram.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -103,6 +109,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		DE39A7361F030A8D004212DD /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				DE39A7341F030A86004212DD /* Extension+Date.swift */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
 		DEAD519F1F018C6F002486B1 = {
 			isa = PBXGroup;
 			children = (
@@ -131,6 +145,7 @@
 				DEAD51E11F018F2E002486B1 /* Model */,
 				DEAD51E41F018F7F002486B1 /* Managers */,
 				DEAD51DE1F018EDE002486B1 /* View Controllers */,
+				DE39A7361F030A8D004212DD /* Extensions */,
 				DEAD51AB1F018C6F002486B1 /* AppDelegate.swift */,
 				DEAD51B51F018C6F002486B1 /* Assets.xcassets */,
 				DEAD51B71F018C6F002486B1 /* LaunchScreen.storyboard */,
@@ -161,7 +176,8 @@
 		DEAD51DE1F018EDE002486B1 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				DEAD51DC1F018ED9002486B1 /* DailyPicViewController.swift */,
+				DE39A7301F02F123004212DD /* DailyPicPageViewController.swift */,
+				DE39A7321F02F15E004212DD /* APODViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -178,6 +194,7 @@
 			isa = PBXGroup;
 			children = (
 				DEAD51E21F018F76002486B1 /* DataManager.swift */,
+				DEAD51E51F01B391002486B1 /* APIManager.swift */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -478,10 +495,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DE39A7311F02F123004212DD /* DailyPicPageViewController.swift in Sources */,
+				DEAD51E61F01B391002486B1 /* APIManager.swift in Sources */,
 				DEAD51B41F018C6F002486B1 /* NASAgram.xcdatamodeld in Sources */,
+				DE39A7331F02F15F004212DD /* APODViewController.swift in Sources */,
 				DEAD51E31F018F76002486B1 /* DataManager.swift in Sources */,
+				DE39A7351F030A86004212DD /* Extension+Date.swift in Sources */,
 				DEAD51E01F018F16002486B1 /* APOD.swift in Sources */,
-				DEAD51DD1F018ED9002486B1 /* DailyPicViewController.swift in Sources */,
 				DEAD51AC1F018C6F002486B1 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -733,6 +753,7 @@
 				DEAD51D51F018C70002486B1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DEAD51D61F018C70002486B1 /* Build configuration list for PBXNativeTarget "NASAgramTests" */ = {
 			isa = XCConfigurationList;
@@ -741,6 +762,7 @@
 				DEAD51D81F018C70002486B1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DEAD51D91F018C70002486B1 /* Build configuration list for PBXNativeTarget "NASAgramUITests" */ = {
 			isa = XCConfigurationList;
@@ -749,6 +771,7 @@
 				DEAD51DB1F018C70002486B1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
