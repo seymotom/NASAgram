@@ -12,6 +12,10 @@ enum ParseError: Error {
     case makeAPODError
 }
 
+enum MediaType: String {
+    case image, video
+}
+
 enum APODField: String {
     case date, explanation, hdurl, title, url, copyright
     case mediaType = "media_type"
@@ -21,15 +25,15 @@ enum APODField: String {
 class APOD {
     let date: Date
     let explanation: String
-    let hdurl: String
+    let hdurl: String?
     let url: String
-    let mediaType: String
+    let mediaType: MediaType
     let serviceVersion: String
     let title: String
     let copyright: String?
     
-    init(date: Date, explanation: String, hdurl: String, url: String,
-         mediaType: String, serviceVersion: String, title: String, copyright: String?) {
+    init(date: Date, explanation: String, hdurl: String?, url: String,
+         mediaType: MediaType, serviceVersion: String, title: String, copyright: String?) {
         self.date = date
         self.explanation = explanation
         self.hdurl = hdurl
@@ -44,14 +48,15 @@ class APOD {
         guard
             let dateString = json[APODField.date.rawValue] as? String,
             let explanation = json[APODField.explanation.rawValue] as? String,
-            let hdurl = json[APODField.hdurl.rawValue] as? String,
             let url = json[APODField.url.rawValue] as? String,
-            let mediaType = json[APODField.mediaType.rawValue] as? String,
+            let mediaTypeString = json[APODField.mediaType.rawValue] as? String,
+            let mediaType = MediaType(rawValue: mediaTypeString),
             let serviceVersion = json[APODField.serviceVersion.rawValue] as? String,
             let title = json[APODField.title.rawValue] as? String
             else {
                 return nil
         }
+        let hdurl = json[APODField.hdurl.rawValue] as? String
         let copyright = json[APODField.copyright.rawValue] as? String
         
         let dateFormatter = DateFormatter()

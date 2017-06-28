@@ -73,11 +73,18 @@ class APODViewController: UIViewController {
     
     func loadAPOD() {
         DataManager.shared.getAPOD(from: date) { (apod) in
-            APIManager.shared.getData(endpoint: apod.hdurl, completion: { (data) in
-                DispatchQueue.main.async {
-                    self.apodImageView.image = UIImage(data: data)
+            switch apod.mediaType {
+            case .image:
+                if let hdurl = apod.hdurl {
+                    APIManager.shared.getData(endpoint: hdurl, completion: { (data) in
+                        DispatchQueue.main.async {
+                            self.apodImageView.image = UIImage(data: data)
+                        }
+                    })
                 }
-            })
+            case .video:
+                print("Video")
+            }
         }
     }
     
