@@ -9,15 +9,23 @@
 import UIKit
 import SnapKit
 
+protocol APODViewDelegate {
+    func dateSelected(date: Date)
+}
+
 class APODViewController: UIViewController {
     
     let date: Date!
     
+    let delegate: APODViewDelegate!
+    
     let apodImageView = UIImageView()
     let dateLabel = UILabel()
+    let datePicker = UIDatePicker()
     
-    init(date: Date) {
+    init(date: Date, delegate: APODViewDelegate) {
         self.date = date
+        self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -35,11 +43,19 @@ class APODViewController: UIViewController {
     }
     
     func setupView() {
+        
         apodImageView.contentMode = .scaleAspectFit
+        apodImageView.clipsToBounds = true
         view.addSubview(apodImageView)
         
         dateLabel.text = date.apodURI()
         view.addSubview(dateLabel)
+        
+        datePicker.date = date
+        datePicker.maximumDate = Date()
+        datePicker.datePickerMode = .date
+        datePicker.addTarget(self, action: #selector (datePickerDidChange(sender:)), for: .valueChanged)
+        view.addSubview(datePicker)
     }
     
     func setupConstraints() {
@@ -49,6 +65,9 @@ class APODViewController: UIViewController {
         dateLabel.snp.makeConstraints { (view) in
             view.leading.trailing.top.equalToSuperview()
             view.height.equalTo(60)
+        }
+        datePicker.snp.makeConstraints { (view) in
+            view.bottom.leading.trailing.equalToSuperview()
         }
     }
     
@@ -60,6 +79,10 @@ class APODViewController: UIViewController {
                 }
             })
         }
+    }
+    
+    func datePickerDidChange(sender: UIDatePicker) {
+        delegate.dateSelected(date: sender.date)
     }
 
     

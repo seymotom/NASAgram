@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DailyPicPageViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
+class DailyPicPageViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, APODViewDelegate {
     
     var thisDate: Date = Date()
     
@@ -32,12 +32,9 @@ class DailyPicPageViewController: UIPageViewController, UIPageViewControllerData
         dataSource = self
         delegate = self
         
-        let todayVC = APODViewController(date: thisDate)
-        let yesterdayVC = APODViewController(date: thisDate.advanceDay(by: -1))
+        let todayVC = APODViewController(date: thisDate, delegate: self)
         setViewControllers([todayVC], direction: .reverse, animated: true, completion: nil)
-        
         seenVCs[thisDate.apodURI()] = todayVC
-        seenVCs[thisDate.advanceDay(by: -1).apodURI()] = yesterdayVC
     }
     
     
@@ -63,7 +60,7 @@ class DailyPicPageViewController: UIPageViewController, UIPageViewControllerData
         if let nextVC = seenVCs[date.apodURI()] {
             return nextVC
         } else {
-            let nextVC = APODViewController(date: date)
+            let nextVC = APODViewController(date: date, delegate: self)
             seenVCs[date.apodURI()] = nextVC
             return nextVC
         }
@@ -85,7 +82,14 @@ class DailyPicPageViewController: UIPageViewController, UIPageViewControllerData
     }
     
     
+    // apod View delegate
     
+    func dateSelected(date: Date) {
+        guard date != thisDate else { return }
+        let direction: UIPageViewControllerNavigationDirection = date < thisDate ? .reverse : .forward
+        setViewControllers([getAPODVC(for: date)], direction: direction, animated: true, completion: nil)
+        thisDate = date
+    }
     
 
     
