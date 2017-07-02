@@ -19,7 +19,7 @@ class APODViewController: UIViewController {
     
     let delegate: APODViewDelegate!
     
-    let apodImageView = UIImageView()
+    let apodImageView = APODImageView()
     let dateLabel = UILabel()
     let datePicker = UIDatePicker()
     
@@ -44,8 +44,6 @@ class APODViewController: UIViewController {
     
     func setupView() {
         
-        apodImageView.contentMode = .scaleAspectFit
-        apodImageView.clipsToBounds = true
         view.addSubview(apodImageView)
         
         dateLabel.text = date.apodURI()
@@ -76,7 +74,7 @@ class APODViewController: UIViewController {
             switch apod.mediaType {
             case .image:
                 if let hdurl = apod.hdurl {
-                    APIManager.shared.getData(endpoint: hdurl, completion: { (data) in
+                    DataManager.shared.getImage(url: hdurl, completion: { (data) in
                         DispatchQueue.main.async {
                             self.apodImageView.image = UIImage(data: data)
                         }

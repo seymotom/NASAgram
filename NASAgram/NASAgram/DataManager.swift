@@ -27,4 +27,10 @@ class DataManager {
         }
     }
     
+    func getImage(url: String, completion: @ escaping (Data) -> ()) {
+        APIManager.shared.getData(endpoint: url) { (data) in
+            completion(data)
+        }
+    }
+    
 }
