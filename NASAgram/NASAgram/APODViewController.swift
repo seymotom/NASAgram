@@ -13,19 +13,16 @@ protocol APODViewDelegate {
     func dateSelected(date: Date)
 }
 
-class APODViewController: UIViewController {
+class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     let date: Date!
     
-    let delegate: APODViewDelegate!
-    
     let apodImageView = APODImageView()
-    let dateLabel = UILabel()
-    let datePicker = UIDatePicker()
+    let apodInfoView = APODInfoView()
     
     init(date: Date, delegate: APODViewDelegate) {
         self.date = date
-        self.delegate = delegate
+        self.apodInfoView.delegate = delegate
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -35,42 +32,43 @@ class APODViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .white
-        
         setupView()
         setupConstraints()
+        setupGestures()
         loadAPOD()
     }
     
     func setupView() {
-        
+        view.backgroundColor = .black
         view.addSubview(apodImageView)
-        
-        dateLabel.text = date.apodURI()
-        view.addSubview(dateLabel)
-        
-        datePicker.date = date
-        datePicker.maximumDate = Date()
-        datePicker.datePickerMode = .date
-        datePicker.addTarget(self, action: #selector (datePickerDidChange(sender:)), for: .valueChanged)
-        view.addSubview(datePicker)
+        view.addSubview(apodInfoView)
+        apodInfoView.isHidden = true
     }
     
     func setupConstraints() {
         apodImageView.snp.makeConstraints { (view) in
             view.leading.trailing.top.bottom.equalToSuperview()
         }
-        dateLabel.snp.makeConstraints { (view) in
-            view.leading.trailing.top.equalToSuperview()
-            view.height.equalTo(60)
+        
+        apodInfoView.snp.makeConstraints { (view) in
+            view.leading.trailing.top.bottom.equalToSuperview()
         }
-        datePicker.snp.makeConstraints { (view) in
-            view.bottom.leading.trailing.equalToSuperview()
-        }
+    }
+    
+    func setupGestures() {
+        let singleTap = UITapGestureRecognizer()
+        singleTap.numberOfTapsRequired = 1
+        singleTap.delegate = self
+        singleTap.cancelsTouchesInView = false
+        singleTap.addTarget(self, action: #selector(handleGesture(sender:)))
+        view.addGestureRecognizer(singleTap)
     }
     
     func loadAPOD() {
         DataManager.shared.getAPOD(from: date) { (apod) in
+            DispatchQueue.main.async {
+                self.apodInfoView.apod = apod
+            }
             switch apod.mediaType {
             case .image:
                 if let hdurl = apod.hdurl {
@@ -82,13 +80,15 @@ class APODViewController: UIViewController {
                 }
             case .video:
                 print("Video")
+                self.apodImageView.image = nil
             }
         }
     }
     
-    func datePickerDidChange(sender: UIDatePicker) {
-        delegate.dateSelected(date: sender.date)
+    
+    func handleGesture(sender: UITapGestureRecognizer) {
+        apodInfoView.isHidden = apodInfoView.isHidden ? false : true
     }
-
+    
     
 }

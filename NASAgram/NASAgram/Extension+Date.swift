@@ -15,6 +15,12 @@ extension Date {
         return dateFormatter.string(from: self)
     }
     
+    func displayString() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        return dateFormatter.string(from: self)
+    }
+    
     func advanceDay(by days: Int) -> Date {
         var dateComponent = DateComponents()
         dateComponent.day = days

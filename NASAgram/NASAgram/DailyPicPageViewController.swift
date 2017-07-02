@@ -16,13 +16,11 @@ class DailyPicPageViewController: UIPageViewController, UIPageViewControllerData
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupPageVC()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        
         print("/n/n/n>>>>>>>>>>> !!! MEMORY WARNING !!! <<<<<<<<<<<<<\n\n\n")
         // empty the dictionary if using too much memory
         seenVCs = [:]
