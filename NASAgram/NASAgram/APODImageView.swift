@@ -92,8 +92,27 @@ class APODImageView: UIScrollView, UIScrollViewDelegate {
             view.top.equalToSuperview().offset(yOffset)
             view.bottom.equalToSuperview().offset(-yOffset)
         }
-        
         layoutIfNeeded()
+    }
+    
+    func doubleTapZoom(for doubleTap: UITapGestureRecognizer) {
+        if zoomScale == minimumZoomScale {
+            // zoom in
+            let point = doubleTap.location(in: imageView)
+            //subtract half the size of the scrollView to center the offset
+            let x = point.x - (bounds.size.width/2.0)
+            let y = point.y - (bounds.size.height/2.0)
+            
+            // width and height of the zoomed frame
+            let width = imageView.frame.width
+            let height = imageView.frame.height
+            
+            let rect = CGRect(x: x, y: y, width: width, height: height)
+            zoom(to: rect, animated: true)
+        } else {
+            // zoom out
+            setZoomScale(minimumZoomScale, animated: true)
+        }
     }
 
 

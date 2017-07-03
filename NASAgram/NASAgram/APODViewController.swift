@@ -56,12 +56,24 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func setupGestures() {
-        let singleTap = UITapGestureRecognizer()
-        singleTap.numberOfTapsRequired = 1
-        singleTap.delegate = self
-        singleTap.cancelsTouchesInView = false
-        singleTap.addTarget(self, action: #selector(handleGesture(sender:)))
-        view.addGestureRecognizer(singleTap)
+        var recognizers = [UIGestureRecognizer]()
+        
+        let tapRecognizer = UITapGestureRecognizer()
+        tapRecognizer.numberOfTapsRequired = 1
+        recognizers.append(tapRecognizer)
+        
+        let doubleTapRecognizer = UITapGestureRecognizer()
+        doubleTapRecognizer.numberOfTapsRequired = 2
+        tapRecognizer.require(toFail: doubleTapRecognizer)
+        recognizers.append(doubleTapRecognizer)
+        
+        recognizers.forEach { (recognizer) in
+            recognizer.delegate = self
+            recognizer.addTarget(self, action: #selector(handleGesture(sender:)))
+            recognizer.cancelsTouchesInView = false
+            view.addGestureRecognizer(recognizer)
+        }
+
     }
     
     func loadAPOD() {
@@ -87,7 +99,14 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func handleGesture(sender: UITapGestureRecognizer) {
-        apodInfoView.isHidden = apodInfoView.isHidden ? false : true
+        switch sender.numberOfTapsRequired {
+        case 1:
+            apodInfoView.isHidden = apodInfoView.isHidden ? false : true
+        case 2:
+            apodImageView.doubleTapZoom(for: sender)
+        default:
+            break
+        }
     }
     
     
