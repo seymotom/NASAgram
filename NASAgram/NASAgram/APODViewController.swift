@@ -109,5 +109,9 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        apodImageView.updateImageConstraints()
+    }
+    
     
 }

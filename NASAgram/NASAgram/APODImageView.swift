@@ -79,12 +79,13 @@ class APODImageView: UIScrollView, UIScrollViewDelegate {
     }
     
     func updateImageConstraints() {
-        let size = superview!.bounds.size
-        let imageViewHeight = image!.size.height * zoomScale
-        let imageViewWidth = image!.size.width * zoomScale
-        let yOffset = max(0, (size.height - imageViewHeight) / 2)
-        
-        let xOffset = max(0, (size.width - imageViewWidth) / 2)
+        guard let screenSize = superview?.bounds.size,
+            let imageSize = image?.size else { return }
+            
+        let imageViewHeight = imageSize.height * zoomScale
+        let imageViewWidth = imageSize.width * zoomScale
+        let yOffset = max(0, (screenSize.height - imageViewHeight) / 2)
+        let xOffset = max(0, (screenSize.width - imageViewWidth) / 2)
         
         imageView.snp.remakeConstraints { (view) in
             view.leading.equalToSuperview().offset(xOffset)
@@ -100,8 +101,8 @@ class APODImageView: UIScrollView, UIScrollViewDelegate {
             // zoom in
             let point = doubleTap.location(in: imageView)
             //subtract half the size of the scrollView to center the offset
-            let x = point.x - (bounds.size.width/2.0)
-            let y = point.y - (bounds.size.height/2.0)
+            let x = point.x - (bounds.size.width / 2)
+            let y = point.y - (bounds.size.height / 2)
             
             // width and height of the zoomed frame
             let width = imageView.frame.width
