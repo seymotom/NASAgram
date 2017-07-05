@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DailyPicPageViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, APODViewDelegate {
+class DailyPicPageViewController: UIPageViewController {
     
     var thisDate: Date = Date()
     
@@ -35,9 +35,19 @@ class DailyPicPageViewController: UIPageViewController, UIPageViewControllerData
         seenVCs[thisDate.apodURI()] = todayVC
     }
     
-    
-    // data source
-    
+    // put this in the dataManager
+    func getAPODVC(for date: Date) -> APODViewController {
+        if let nextVC = seenVCs[date.apodURI()] {
+            return nextVC
+        } else {
+            let nextVC = APODViewController(date: date, delegate: self)
+            seenVCs[date.apodURI()] = nextVC
+            return nextVC
+        }
+    }
+}
+
+extension DailyPicPageViewController: UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         if thisDate.apodURI() == Date().apodURI() {
             return nil
@@ -51,23 +61,11 @@ class DailyPicPageViewController: UIPageViewController, UIPageViewControllerData
         let yesterday = thisDate.advanceDay(by: -1)
         return getAPODVC(for: yesterday)
     }
-    
-    
-    // put this in the dataManager
-    func getAPODVC(for date: Date) -> APODViewController {
-        if let nextVC = seenVCs[date.apodURI()] {
-            return nextVC
-        } else {
-            let nextVC = APODViewController(date: date, delegate: self)
-            seenVCs[date.apodURI()] = nextVC
-            return nextVC
-        }
-    }
-    
-    // delegate
-    
+}
+
+extension DailyPicPageViewController: UIPageViewControllerDelegate {
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-                
+        
         guard let currentVC = self.viewControllers?.first as? APODViewController else {
             return
         }
@@ -78,17 +76,14 @@ class DailyPicPageViewController: UIPageViewController, UIPageViewControllerData
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
         
     }
-    
-    
-    // apod View delegate
-    
+}
+
+extension DailyPicPageViewController: APODViewDelegate {    
     func dateSelected(date: Date) {
         guard date != thisDate else { return }
         let direction: UIPageViewControllerNavigationDirection = date < thisDate ? .reverse : .forward
         setViewControllers([getAPODVC(for: date)], direction: direction, animated: true, completion: nil)
         thisDate = date
     }
-    
-
-    
 }
+

@@ -73,7 +73,6 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
             recognizer.cancelsTouchesInView = false
             view.addGestureRecognizer(recognizer)
         }
-
     }
     
     func loadAPOD() {
@@ -97,12 +96,11 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    
     func handleGesture(sender: UITapGestureRecognizer) {
         switch sender.numberOfTapsRequired {
         case 1:
             apodInfoView.isHidden = apodInfoView.isHidden ? false : true
-        case 2:
+        case 2 where apodInfoView.isHidden:
             apodImageView.doubleTapZoom(for: sender)
         default:
             break
@@ -110,7 +108,12 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        apodImageView.updateImageConstraints()
+        super.viewWillTransition(to: size, with: coordinator)
+        
+        coordinator.animate(alongsideTransition: { (context) in
+            self.apodImageView.rotate()
+        }) { (context) in
+        }
     }
     
     
