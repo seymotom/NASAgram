@@ -8,7 +8,7 @@
 
 import UIKit
 
-class APODInfoView: UIView {
+class APODInfoView: UIView, UIGestureRecognizerDelegate {
     
     var apod: APOD? {
         didSet {
@@ -21,6 +21,8 @@ class APODInfoView: UIView {
     var dateLabel = DetailLabel()
     var titleLabel = DetailLabel()
     var explanationLabel = DetailLabel()
+    var favoriteButton = UIButton()
+    
     var backgroundView: UIVisualEffectView!
     
     let datePicker = UIDatePicker()
@@ -55,7 +57,24 @@ class APODInfoView: UIView {
         datePicker.datePickerMode = .date
         datePicker.addTarget(self, action: #selector (datePickerDidChange(sender:)), for: .valueChanged)
         addSubview(datePicker)
+        
+        favoriteButton.setTitle("⭐️", for: .normal)
+        favoriteButton.addTarget(self, action: #selector (favoriteButtonTapped(sender:)), for: .touchUpInside)
+        addSubview(favoriteButton)
+        
+        
+        // have to put a tap gesture on this view to dismiss the info
+        let recognizer = UITapGestureRecognizer()
+        recognizer.numberOfTapsRequired = 1
+        recognizer.delegate = self
+        recognizer.addTarget(self, action: #selector(handleGesture(sender:)))
+        recognizer.cancelsTouchesInView = false
+        addGestureRecognizer(recognizer)
+        
     }
+    
+    
+
     
     private func setupConstraints() {
         backgroundView.snp.makeConstraints { (view) in
@@ -78,6 +97,9 @@ class APODInfoView: UIView {
             view.leading.trailing.equalToSuperview()
             view.top.equalTo(explanationLabel.snp.bottom).offset(20)
         }
+        favoriteButton.snp.makeConstraints { (view) in
+            view.leading.top.equalToSuperview().offset(10)
+        }
     }
     
     private func populateInfo() {
@@ -90,8 +112,26 @@ class APODInfoView: UIView {
         }
     }
     
+    func handleGesture(sender: UITapGestureRecognizer) {
+        self.isHidden = true
+    }
+    
     func datePickerDidChange(sender: UIDatePicker) {
         delegate.dateSelected(date: sender.date)
         self.isHidden = true
     }
+    
+    func favoriteButtonTapped(sender: UIButton) {
+        delegate.favoriteButtonTapped()
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        // cancel gesture if tap is in the button or datePicker
+        if touch.view == favoriteButton || touch.view == datePicker {
+            return false
+        }
+        return true
+    }
+    
+    
 }

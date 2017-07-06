@@ -85,5 +85,9 @@ extension DailyPicPageViewController: APODViewDelegate {
         setViewControllers([getAPODVC(for: date)], direction: direction, animated: true, completion: nil)
         thisDate = date
     }
+    
+    func favoriteButtonTapped() {
+        print("make the data manager save this shit")
+    }
 }
 

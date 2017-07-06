@@ -11,6 +11,7 @@ import SnapKit
 
 protocol APODViewDelegate {
     func dateSelected(date: Date)
+    func favoriteButtonTapped()
 }
 
 class APODViewController: UIViewController, UIGestureRecognizerDelegate {
@@ -97,15 +98,20 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func handleGesture(sender: UITapGestureRecognizer) {
-        switch sender.numberOfTapsRequired {
-        case 1:
-            apodInfoView.isHidden = apodInfoView.isHidden ? false : true
-        case 2 where apodInfoView.isHidden:
-            apodImageView.doubleTapZoom(for: sender)
-        default:
-            break
+        if apodInfoView.isHidden {
+            switch sender.numberOfTapsRequired {
+            case 1:
+                //            apodInfoView.isHidden = apodInfoView.isHidden ? false : true
+                apodInfoView.isHidden = false
+            case 2 where apodInfoView.isHidden:
+                apodImageView.doubleTapZoom(for: sender)
+            default:
+                break
+            }
         }
     }
+    
+    // MARK:- Rotation
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
