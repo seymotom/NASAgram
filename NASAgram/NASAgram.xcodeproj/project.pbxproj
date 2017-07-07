@@ -12,6 +12,9 @@
 		DE1AF1221F092FC2001474A0 /* APODImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1AF1211F092FC2001474A0 /* APODImageView.swift */; };
 		DE1AF1241F096BBF001474A0 /* APODInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1AF1231F096BBF001474A0 /* APODInfoView.swift */; };
 		DE1AF1261F09754C001474A0 /* DetailLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1AF1251F09754C001474A0 /* DetailLabel.swift */; };
+		DE1AF1281F0E8D7E001474A0 /* FavoritesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1AF1271F0E8D7E001474A0 /* FavoritesManager.swift */; };
+		DE1AF12B1F0FCA6C001474A0 /* Extension+FavAPOD.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1AF12A1F0FCA6C001474A0 /* Extension+FavAPOD.swift */; };
+		DE1AF12D1F0FCBF8001474A0 /* Extension+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1AF12C1F0FCBF8001474A0 /* Extension+String.swift */; };
 		DE39A7311F02F123004212DD /* DailyPicPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE39A7301F02F123004212DD /* DailyPicPageViewController.swift */; };
 		DE39A7331F02F15F004212DD /* APODViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE39A7321F02F15E004212DD /* APODViewController.swift */; };
 		DE39A7351F030A86004212DD /* Extension+Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE39A7341F030A86004212DD /* Extension+Date.swift */; };
@@ -56,6 +59,9 @@
 		DE1AF1211F092FC2001474A0 /* APODImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APODImageView.swift; sourceTree = "<group>"; };
 		DE1AF1231F096BBF001474A0 /* APODInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APODInfoView.swift; sourceTree = "<group>"; };
 		DE1AF1251F09754C001474A0 /* DetailLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailLabel.swift; sourceTree = "<group>"; };
+		DE1AF1271F0E8D7E001474A0 /* FavoritesManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesManager.swift; sourceTree = "<group>"; };
+		DE1AF12A1F0FCA6C001474A0 /* Extension+FavAPOD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extension+FavAPOD.swift"; sourceTree = "<group>"; };
+		DE1AF12C1F0FCBF8001474A0 /* Extension+String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extension+String.swift"; sourceTree = "<group>"; };
 		DE39A7301F02F123004212DD /* DailyPicPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DailyPicPageViewController.swift; sourceTree = "<group>"; };
 		DE39A7321F02F15E004212DD /* APODViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APODViewController.swift; sourceTree = "<group>"; };
 		DE39A7341F030A86004212DD /* Extension+Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extension+Date.swift"; sourceTree = "<group>"; };
@@ -125,10 +131,23 @@
 			name = Views;
 			sourceTree = "<group>";
 		};
+		DE1AF1291F0ED96B001474A0 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				DEAD51AB1F018C6F002486B1 /* AppDelegate.swift */,
+				DEAD51B51F018C6F002486B1 /* Assets.xcassets */,
+				DEAD51B71F018C6F002486B1 /* LaunchScreen.storyboard */,
+				DEAD51BA1F018C6F002486B1 /* Info.plist */,
+				DEAD51B21F018C6F002486B1 /* NASAgram.xcdatamodeld */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		DE39A7361F030A8D004212DD /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
 				DE39A7341F030A86004212DD /* Extension+Date.swift */,
+				DE1AF12C1F0FCBF8001474A0 /* Extension+String.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -163,11 +182,7 @@
 				DEAD51DE1F018EDE002486B1 /* View Controllers */,
 				DE1AF1201F092F84001474A0 /* Views */,
 				DE39A7361F030A8D004212DD /* Extensions */,
-				DEAD51AB1F018C6F002486B1 /* AppDelegate.swift */,
-				DEAD51B51F018C6F002486B1 /* Assets.xcassets */,
-				DEAD51B71F018C6F002486B1 /* LaunchScreen.storyboard */,
-				DEAD51BA1F018C6F002486B1 /* Info.plist */,
-				DEAD51B21F018C6F002486B1 /* NASAgram.xcdatamodeld */,
+				DE1AF1291F0ED96B001474A0 /* Supporting Files */,
 			);
 			path = NASAgram;
 			sourceTree = "<group>";
@@ -203,6 +218,7 @@
 			isa = PBXGroup;
 			children = (
 				DEAD51DF1F018F16002486B1 /* APOD.swift */,
+				DE1AF12A1F0FCA6C001474A0 /* Extension+FavAPOD.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -212,6 +228,7 @@
 			children = (
 				DEAD51E21F018F76002486B1 /* DataManager.swift */,
 				DEAD51E51F01B391002486B1 /* APIManager.swift */,
+				DE1AF1271F0E8D7E001474A0 /* FavoritesManager.swift */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -519,7 +536,10 @@
 				DE1AF1241F096BBF001474A0 /* APODInfoView.swift in Sources */,
 				DE39A7331F02F15F004212DD /* APODViewController.swift in Sources */,
 				DEAD51E31F018F76002486B1 /* DataManager.swift in Sources */,
+				DE1AF1281F0E8D7E001474A0 /* FavoritesManager.swift in Sources */,
+				DE1AF12D1F0FCBF8001474A0 /* Extension+String.swift in Sources */,
 				DE39A7351F030A86004212DD /* Extension+Date.swift in Sources */,
+				DE1AF12B1F0FCA6C001474A0 /* Extension+FavAPOD.swift in Sources */,
 				DEAD51E01F018F16002486B1 /* APOD.swift in Sources */,
 				DE1AF1261F09754C001474A0 /* DetailLabel.swift in Sources */,
 				DEAD51AC1F018C6F002486B1 /* AppDelegate.swift in Sources */,

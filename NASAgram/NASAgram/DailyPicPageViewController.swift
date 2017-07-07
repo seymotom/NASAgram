@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol APODDateDelegate {
+    func dateSelected(date: Date)
+}
+
 class DailyPicPageViewController: UIPageViewController {
     
     var thisDate: Date = Date()
@@ -30,18 +34,18 @@ class DailyPicPageViewController: UIPageViewController {
         dataSource = self
         delegate = self
         
-        let todayVC = APODViewController(date: thisDate, delegate: self)
+        let todayVC = APODViewController(date: thisDate, dateDelegate: self)
         setViewControllers([todayVC], direction: .reverse, animated: true, completion: nil)
-        seenVCs[thisDate.apodURI()] = todayVC
+        seenVCs[thisDate.yyyyMMdd()] = todayVC
     }
     
     // put this in the dataManager
     func getAPODVC(for date: Date) -> APODViewController {
-        if let nextVC = seenVCs[date.apodURI()] {
+        if let nextVC = seenVCs[date.yyyyMMdd()] {
             return nextVC
         } else {
-            let nextVC = APODViewController(date: date, delegate: self)
-            seenVCs[date.apodURI()] = nextVC
+            let nextVC = APODViewController(date: date, dateDelegate: self)
+            seenVCs[date.yyyyMMdd()] = nextVC
             return nextVC
         }
     }
@@ -49,7 +53,7 @@ class DailyPicPageViewController: UIPageViewController {
 
 extension DailyPicPageViewController: UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        if thisDate.apodURI() == Date().apodURI() {
+        if thisDate.yyyyMMdd() == Date().yyyyMMdd() {
             return nil
         }
         
@@ -78,16 +82,12 @@ extension DailyPicPageViewController: UIPageViewControllerDelegate {
     }
 }
 
-extension DailyPicPageViewController: APODViewDelegate {    
+extension DailyPicPageViewController: APODDateDelegate {
     func dateSelected(date: Date) {
         guard date != thisDate else { return }
         let direction: UIPageViewControllerNavigationDirection = date < thisDate ? .reverse : .forward
         setViewControllers([getAPODVC(for: date)], direction: direction, animated: true, completion: nil)
         thisDate = date
-    }
-    
-    func favoriteButtonTapped() {
-        print("make the data manager save this shit")
     }
 }
 

@@ -20,7 +20,7 @@ class DataManager {
     
     // probably wanna add an error to these completion handlers
     func getAPOD(from date: Date, completion: @escaping (APOD) -> ()) {
-        APIManager.shared.getData(endpoint: apodEndpoint + date.apodURI()) { (data) in
+        APIManager.shared.getData(endpoint: apodEndpoint + date.yyyyMMdd()) { (data) in
             if let apod = APOD.makeAPOD(from: data) {
                 completion(apod)
             }

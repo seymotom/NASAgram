@@ -10,20 +10,21 @@ import UIKit
 import SnapKit
 
 protocol APODViewDelegate {
-    func dateSelected(date: Date)
-    func favoriteButtonTapped()
+    func toggleFavorite()
 }
 
 class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     let date: Date!
     
+    var apod: APOD?
+    
     let apodImageView = APODImageView()
     let apodInfoView = APODInfoView()
     
-    init(date: Date, delegate: APODViewDelegate) {
+    init(date: Date, dateDelegate: APODDateDelegate) {
         self.date = date
-        self.apodInfoView.delegate = delegate
+        self.apodInfoView.dateDelegate = dateDelegate
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -42,8 +43,10 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     func setupView() {
         view.backgroundColor = .black
         view.addSubview(apodImageView)
+        
         view.addSubview(apodInfoView)
         apodInfoView.isHidden = true
+        apodInfoView.viewDelegate = self
     }
     
     func setupConstraints() {
@@ -76,23 +79,44 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    func getAPOD() {
+        
+        FavoritesManager.shared.findFavAPOD(date: date.yyyyMMdd()) { (favAPOD) in
+            if let apod = favAPOD?.apod() {
+                DispatchQueue.main.async {
+                    self.apod = apod
+                    self.apodInfoView.populateInfo(from: apod)
+                    self.apodImageView.image = UIImage(data: apod.hdImageData! as Data)
+                }
+            } else {
+                self.loadAPOD()
+            }
+        }
+        
+        
+    }
+    
     func loadAPOD() {
         DataManager.shared.getAPOD(from: date) { (apod) in
             DispatchQueue.main.async {
-                self.apodInfoView.apod = apod
+                self.apod = apod
+                self.apodInfoView.populateInfo(from: apod)
             }
             switch apod.mediaType {
             case .image:
                 if let hdurl = apod.hdurl {
                     DataManager.shared.getImage(url: hdurl, completion: { (data) in
                         DispatchQueue.main.async {
-                            self.apodImageView.image = UIImage(data: data)
+                            self.apod?.hdImageData = data as NSData
+                            let image = UIImage(data: data)
+                            self.apod?.ldImageData = UIImageJPEGRepresentation(image!, 0.25)! as NSData
+                            self.apodImageView.image = image
                         }
                     })
                 }
             case .video:
                 print("Video")
-                self.apodImageView.image = nil
+                self.apodImageView.image = #imageLiteral(resourceName: "Video-Icon")
             }
         }
     }
@@ -101,7 +125,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         if apodInfoView.isHidden {
             switch sender.numberOfTapsRequired {
             case 1:
-                //            apodInfoView.isHidden = apodInfoView.isHidden ? false : true
+                // apodInfoView.isHidden = apodInfoView.isHidden ? false : true
                 apodInfoView.isHidden = false
             case 2 where apodInfoView.isHidden:
                 apodImageView.doubleTapZoom(for: sender)
@@ -121,6 +145,39 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         }) { (context) in
         }
     }
-    
-    
 }
+
+extension APODViewController: APODViewDelegate {
+    func toggleFavorite() {
+        
+        guard let apod = apod else { return }
+        
+        // DRY
+        
+        if apod.isFavorite {
+            FavoritesManager.shared.delete(apod) { (success) in
+                print("delete was \(success)")
+                if success {
+                    apod.isFavorite = false
+                    DispatchQueue.main.async {
+                        self.apodInfoView.populateInfo(from: apod)
+                    }                    
+                }
+            }
+        } else {
+            FavoritesManager.shared.save(apod) { (success, error) in
+                print("save was \(success)")
+                if success {
+                    apod.isFavorite = true
+                    DispatchQueue.main.async {
+                        self.apodInfoView.populateInfo(from: apod)
+                    }
+                }
+            }
+        }
+        
+    }
+}
+
+
+
