@@ -66,11 +66,11 @@ class FavoritesManager: NSObject, NSFetchedResultsControllerDelegate {
     }
     
     func findFavAPOD(date: String, completion: @escaping (FavAPOD?) -> Void) {
-        let request: NSFetchRequest<NSFetchRequestResult> = FavAPOD.fetchRequest()
+        let request: NSFetchRequest<FavAPOD> = FavAPOD.fetchRequest()
         let predicate: NSPredicate = NSPredicate(format: "date = %@", date)
         request.predicate = predicate
         do {
-            let favApods = try mainContext.fetch(request) as! [FavAPOD]
+            let favApods = try mainContext.fetch(request) 
             if favApods.isEmpty {
                 completion(nil)
             } else {
@@ -82,9 +82,9 @@ class FavoritesManager: NSObject, NSFetchedResultsControllerDelegate {
     }
     
     func printAllSavedFavDates() {
-        let request: NSFetchRequest<NSFetchRequestResult> = FavAPOD.fetchRequest()
+        let request: NSFetchRequest<FavAPOD> = FavAPOD.fetchRequest()
         do {
-            let favApods = try mainContext.fetch(request) as! [FavAPOD]
+            let favApods = try mainContext.fetch(request) 
             print("\nHere are the \(favApods.count) favorites")
             for fav in favApods {
                 print(fav.date!)
