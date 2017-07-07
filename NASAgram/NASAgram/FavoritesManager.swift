@@ -20,23 +20,19 @@ class FavoritesManager: NSObject, NSFetchedResultsControllerDelegate {
         return appDelegate.persistentContainer.viewContext
     }
     
+       
     var fetchedResultsController: NSFetchedResultsController<FavAPOD>!
     
+    func fetchAPOD(date: String, completion: @escaping (APOD?) -> Void) {
+        fetchFavAPOD(date: date) { (favApod) in
+            completion(favApod?.apod())
+        }
+    }
     
     func save(_ apod: APOD, completion: @escaping (Bool, Error?) -> Void) {
         
-        // maybe factor this out to a method of the favApod model
-        let favAPOD = FavAPOD(context: mainContext)
-        favAPOD.date = apod.date.yyyyMMdd()
-        favAPOD.title = apod.title
-        favAPOD.explanation = apod.explanation
-        favAPOD.serviceVersion = apod.serviceVersion
-        favAPOD.mediaType = apod.mediaType.rawValue
-        favAPOD.copyright = apod.copyright
-        favAPOD.url = apod.url
-        favAPOD.hdurl = apod.hdurl!
-        favAPOD.hdImageData = apod.hdImageData!
-        favAPOD.ldImageData = apod.ldImageData!
+        let favApod = FavAPOD(context: mainContext)
+        favApod.populate(from: apod)
         
         do {
             try mainContext.save()
@@ -49,8 +45,7 @@ class FavoritesManager: NSObject, NSFetchedResultsControllerDelegate {
     }
     
     func delete(_ apod: APOD, completion: @escaping (Bool) -> Void) {
-        
-        findFavAPOD(date: apod.date.yyyyMMdd()) { (favApod) in
+        fetchFavAPOD(date: apod.date.yyyyMMdd()) { (favApod) in
             if let validFavApod = favApod {
                 self.mainContext.delete(validFavApod)
                 do {
@@ -65,7 +60,8 @@ class FavoritesManager: NSObject, NSFetchedResultsControllerDelegate {
         }
     }
     
-    func findFavAPOD(date: String, completion: @escaping (FavAPOD?) -> Void) {
+    
+    private func fetchFavAPOD(date: String, completion: @escaping (FavAPOD?) -> Void) {
         let request: NSFetchRequest<FavAPOD> = FavAPOD.fetchRequest()
         let predicate: NSPredicate = NSPredicate(format: "date = %@", date)
         request.predicate = predicate
@@ -81,6 +77,8 @@ class FavoritesManager: NSObject, NSFetchedResultsControllerDelegate {
         }
     }
     
+    
+    // debug function
     func printAllSavedFavDates() {
         let request: NSFetchRequest<FavAPOD> = FavAPOD.fetchRequest()
         do {

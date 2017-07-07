@@ -80,9 +80,9 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func getAPOD() {
-        
-        FavoritesManager.shared.findFavAPOD(date: date.yyyyMMdd()) { (favAPOD) in
-            if let apod = favAPOD?.apod() {
+        // checks favorites before hitting api
+        FavoritesManager.shared.fetchAPOD(date: date.yyyyMMdd()) { (apod) in
+            if let apod = apod {
                 DispatchQueue.main.async {
                     self.apod = apod
                     self.apodInfoView.populateInfo(from: apod)
@@ -92,8 +92,6 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
                 self.loadAPOD()
             }
         }
-        
-        
     }
     
     func loadAPOD() {
@@ -150,9 +148,6 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
 extension APODViewController: APODViewDelegate {
     func toggleFavorite() {
         
-//        FavoritesManager.shared.printAllSavedFavDates()
-
-        
         guard let apod = apod else { return }
         
         // DRY
@@ -178,10 +173,6 @@ extension APODViewController: APODViewDelegate {
                 }
             }
         }
-        
-        FavoritesManager.shared.printAllSavedFavDates()
-
-        
     }
 }
 
