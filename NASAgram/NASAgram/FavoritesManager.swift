@@ -41,6 +41,7 @@ class FavoritesManager: NSObject, NSFetchedResultsControllerDelegate {
         do {
             try mainContext.save()
         } catch let error {
+            print("\n\n\n\(error)\n\n\n\n")
             completion(false, error)
             return
         }
@@ -66,7 +67,7 @@ class FavoritesManager: NSObject, NSFetchedResultsControllerDelegate {
     
     func findFavAPOD(date: String, completion: @escaping (FavAPOD?) -> Void) {
         let request: NSFetchRequest<NSFetchRequestResult> = FavAPOD.fetchRequest()
-        let predicate: NSPredicate = NSPredicate(format: "date = %d", date)
+        let predicate: NSPredicate = NSPredicate(format: "date = %@", date)
         request.predicate = predicate
         do {
             let favApods = try mainContext.fetch(request) as! [FavAPOD]
@@ -77,6 +78,20 @@ class FavoritesManager: NSObject, NSFetchedResultsControllerDelegate {
             }
         } catch {
             fatalError("Failed to search for apod in core data: \(error)")
+        }
+    }
+    
+    func printAllSavedFavDates() {
+        let request: NSFetchRequest<NSFetchRequestResult> = FavAPOD.fetchRequest()
+        do {
+            let favApods = try mainContext.fetch(request) as! [FavAPOD]
+            print("\nHere are the \(favApods.count) favorites")
+            for fav in favApods {
+                print(fav.date!)
+            }
+            print("\n")
+        } catch {
+            fatalError("Failed to search for all apods in core data:\n\n \(error)")
         }
     }
     

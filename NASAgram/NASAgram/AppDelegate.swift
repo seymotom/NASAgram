@@ -17,6 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
+//        FavoritesManager.shared.printAllSavedFavDates()
+        
         self.window = UIWindow(frame: UIScreen.main.bounds)
         let rootVC = DailyPicPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
         self.window?.rootViewController = rootVC

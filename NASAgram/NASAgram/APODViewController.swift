@@ -37,7 +37,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         setupView()
         setupConstraints()
         setupGestures()
-        loadAPOD()
+        getAPOD()
     }
     
     func setupView() {
@@ -81,18 +81,18 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func getAPOD() {
         
-        FavoritesManager.shared.findFavAPOD(date: date.yyyyMMdd()) { (favAPOD) in
-            if let apod = favAPOD?.apod() {
-                DispatchQueue.main.async {
-                    self.apod = apod
-                    self.apodInfoView.populateInfo(from: apod)
-                    self.apodImageView.image = UIImage(data: apod.hdImageData! as Data)
-                }
-            } else {
-                self.loadAPOD()
-            }
-        }
+//        FavoritesManager.shared.findFavAPOD(date: date.yyyyMMdd()) { (favAPOD) in
+//            if let apod = favAPOD?.apod() {
+//                DispatchQueue.main.async {
+//                    self.apod = apod
+//                    self.apodInfoView.populateInfo(from: apod)
+//                    self.apodImageView.image = UIImage(data: apod.hdImageData! as Data)
+//                }
+//            } else {
+//            }
+//        }
         
+        self.loadAPOD()
         
     }
     
@@ -150,6 +150,9 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
 extension APODViewController: APODViewDelegate {
     func toggleFavorite() {
         
+//        FavoritesManager.shared.printAllSavedFavDates()
+
+        
         guard let apod = apod else { return }
         
         // DRY
@@ -175,6 +178,9 @@ extension APODViewController: APODViewDelegate {
                 }
             }
         }
+        
+        FavoritesManager.shared.printAllSavedFavDates()
+
         
     }
 }
