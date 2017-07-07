@@ -81,18 +81,18 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func getAPOD() {
         
-//        FavoritesManager.shared.findFavAPOD(date: date.yyyyMMdd()) { (favAPOD) in
-//            if let apod = favAPOD?.apod() {
-//                DispatchQueue.main.async {
-//                    self.apod = apod
-//                    self.apodInfoView.populateInfo(from: apod)
-//                    self.apodImageView.image = UIImage(data: apod.hdImageData! as Data)
-//                }
-//            } else {
-//            }
-//        }
+        FavoritesManager.shared.findFavAPOD(date: date.yyyyMMdd()) { (favAPOD) in
+            if let apod = favAPOD?.apod() {
+                DispatchQueue.main.async {
+                    self.apod = apod
+                    self.apodInfoView.populateInfo(from: apod)
+                    self.apodImageView.image = UIImage(data: apod.hdImageData! as Data)
+                }
+            } else {
+                self.loadAPOD()
+            }
+        }
         
-        self.loadAPOD()
         
     }
     

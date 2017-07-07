@@ -11,7 +11,7 @@ import Foundation
 extension FavAPOD {
     
     func apod() -> APOD {
-        return APOD(date: self.date!.date()!,
+        let apod = APOD(date: self.date!.date()!,
                         explanation: self.explanation!,
                         hdurl: self.hdurl,
                         url: self.url!,
@@ -21,5 +21,7 @@ extension FavAPOD {
                         copyright: self.copyright,
                         hdImageData: self.hdImageData,
                         ldImageData: self.ldImageData!)
+        apod.isFavorite = true
+        return apod
     }
 }

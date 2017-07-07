@@ -48,6 +48,8 @@ class APOD {
         self.serviceVersion = serviceVersion
         self.title = title
         self.copyright = copyright
+        self.hdImageData = hdImageData
+        self.ldImageData = ldImageData
     }
     
     convenience init?(json: [String: AnyObject]) {
