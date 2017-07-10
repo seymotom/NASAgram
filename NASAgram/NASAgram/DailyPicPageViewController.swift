@@ -16,7 +16,11 @@ class DailyPicPageViewController: UIPageViewController {
     
     var thisDate: Date = Date()
     
-    var seenVCs: [String: APODViewController] = [:]
+    var seenVCs: [String: UIViewController] = [:] {
+        didSet{
+            print(seenVCs)
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,12 +39,14 @@ class DailyPicPageViewController: UIPageViewController {
         delegate = self
         
         let todayVC = APODViewController(date: thisDate, dateDelegate: self)
-        setViewControllers([todayVC], direction: .reverse, animated: true, completion: nil)
+        setViewControllers([todayVC], direction: .reverse, animated: true) { (_) in
+            self.setSurroundingVCs(for: self.thisDate, viewController: todayVC)
+        }
         seenVCs[thisDate.yyyyMMdd()] = todayVC
     }
     
     // put this in the dataManager
-    func getAPODVC(for date: Date) -> APODViewController {
+    func getAPODVC(for date: Date) -> UIViewController {
         if let nextVC = seenVCs[date.yyyyMMdd()] {
             return nextVC
         } else {
@@ -48,6 +54,11 @@ class DailyPicPageViewController: UIPageViewController {
             seenVCs[date.yyyyMMdd()] = nextVC
             return nextVC
         }
+    }
+    
+    func setSurroundingVCs(for date: Date, viewController: UIViewController) {
+        seenVCs[date.advanceDay(by: -1).yyyyMMdd()] = self.pageViewController(self, viewControllerBefore: viewController)
+        seenVCs[date.advanceDay(by: 1).yyyyMMdd()] = self.pageViewController(self, viewControllerAfter: viewController)
     }
 }
 
@@ -86,7 +97,10 @@ extension DailyPicPageViewController: APODDateDelegate {
     func dateSelected(date: Date) {
         guard date != thisDate else { return }
         let direction: UIPageViewControllerNavigationDirection = date < thisDate ? .reverse : .forward
-        setViewControllers([getAPODVC(for: date)], direction: direction, animated: true, completion: nil)
+        let thisVC = getAPODVC(for: date)
+        setViewControllers([thisVC], direction: direction, animated: true) { (_) in
+            self.setSurroundingVCs(for: date, viewController: thisVC)
+        }
         thisDate = date
     }
 }
