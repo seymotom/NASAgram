@@ -9,27 +9,34 @@
 import UIKit
 
 class FavoritesViewController: UIViewController {
+    
+    var tableView = UITableView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .yellow
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        setupTableView()
+        setupConstraints()
+        FavoritesManager.shared.initializeFetchedResultsController()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    override func viewWillAppear(_ animated: Bool) {
+        FavoritesManager.shared.initializeFetchedResultsController()
+        tableView.reloadData()
     }
-    */
 
+    func setupTableView() {
+        view.addSubview(tableView)
+        tableView.register(FavoritesTableViewCell.self, forCellReuseIdentifier: FavoritesTableViewCell.identifier)
+        tableView.delegate = FavoritesManager.shared
+        tableView.dataSource = FavoritesManager.shared
+    }
+    
+    func setupConstraints() {
+        edgesForExtendedLayout = []
+        tableView.snp.makeConstraints { (view) in
+            view.leading.trailing.equalToSuperview()
+            view.top.equalTo(topLayoutGuide.snp.bottom)
+            view.bottom.equalTo(bottomLayoutGuide.snp.top)
+        }
+    }
 }

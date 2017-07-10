@@ -19,6 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         FavoritesManager.shared.printAllSavedFavDates()
         
+        UIApplication.shared.statusBarStyle = .lightContent
+        
         self.window = UIWindow(frame: UIScreen.main.bounds)
         self.window?.rootViewController = setupTabBar()
         self.window?.makeKeyAndVisible()

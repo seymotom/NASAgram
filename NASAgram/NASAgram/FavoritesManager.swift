@@ -60,6 +60,20 @@ class FavoritesManager: NSObject, NSFetchedResultsControllerDelegate {
         }
     }
     
+    func initializeFetchedResultsController() {
+        let request: NSFetchRequest<FavAPOD> = FavAPOD.fetchRequest()
+        let dateSort = NSSortDescriptor(key: #keyPath(FavAPOD.date), ascending: false)
+        request.sortDescriptors = [dateSort]
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: mainContext, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController.delegate = self
+        
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            fatalError("failed to initialize fetchedResults controller")
+        }
+    }
+    
     
     private func fetchFavAPOD(date: String, completion: @escaping (FavAPOD?) -> Void) {
         let request: NSFetchRequest<FavAPOD> = FavAPOD.fetchRequest()
@@ -92,9 +106,31 @@ class FavoritesManager: NSObject, NSFetchedResultsControllerDelegate {
             fatalError("Failed to search for all apods in core data:\n\n \(error)")
         }
     }
+}
+
+extension FavoritesManager: UITableViewDelegate, UITableViewDataSource {
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        guard let sections = fetchedResultsController.sections else { fatalError("No sections in fetched results controller")}
+        return sections.count
+    }
     
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard let sections = fetchedResultsController.sections else {
+            fatalError("No sections in fetchedResultsController")
+        }
+        let sectionInfo = sections[section]
+        return sectionInfo.numberOfObjects
+    }
     
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: FavoritesTableViewCell.identifier, for: indexPath) as! FavoritesTableViewCell
+        let favAPOD = fetchedResultsController.object(at: indexPath)
+        
+        
+        cell.textLabel?.text = favAPOD.apod().date.displayString()
+        return cell
+    }
     
 }
 

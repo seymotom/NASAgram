@@ -43,8 +43,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        tabBarController?.tabBar.isHidden = true
+        toggleTabBar()
     }
     
     
@@ -59,11 +58,14 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func setupConstraints() {
         apodImageView.snp.makeConstraints { (view) in
-            view.leading.trailing.top.bottom.equalToSuperview()
+            view.leading.trailing.bottom.equalToSuperview()
+            view.top.equalTo(topLayoutGuide.snp.bottom)
         }
         
         apodInfoView.snp.makeConstraints { (view) in
-            view.leading.trailing.top.bottom.equalToSuperview()
+            view.leading.trailing.equalToSuperview()
+            view.top.equalTo(topLayoutGuide.snp.bottom)
+            view.bottom.equalTo(bottomLayoutGuide.snp.top)
         }
     }
     
