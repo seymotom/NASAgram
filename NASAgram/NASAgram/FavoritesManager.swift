@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import CoreData
 
-class FavoritesManager: NSObject, NSFetchedResultsControllerDelegate {
+class FavoritesManager: NSObject {
     
     static let shared = FavoritesManager()
     private override init() {}
@@ -20,6 +20,7 @@ class FavoritesManager: NSObject, NSFetchedResultsControllerDelegate {
         return appDelegate.persistentContainer.viewContext
     }
     
+    var tableView: UITableView!
        
     var fetchedResultsController: NSFetchedResultsController<FavAPOD>!
     
@@ -72,6 +73,7 @@ class FavoritesManager: NSObject, NSFetchedResultsControllerDelegate {
         } catch {
             fatalError("failed to initialize fetchedResults controller")
         }
+        tableView.reloadData()
     }
     
     
@@ -108,6 +110,43 @@ class FavoritesManager: NSObject, NSFetchedResultsControllerDelegate {
     }
 }
 
+extension FavoritesManager: NSFetchedResultsControllerDelegate {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.endUpdates()
+    }
+    
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.beginUpdates()
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+        switch type {
+        case .insert:
+            tableView.insertSections(IndexSet(integer: sectionIndex), with: .automatic)
+        case .delete:
+            tableView.deleteSections(IndexSet(integer: sectionIndex), with: .automatic)
+        case .move:
+            break
+        case .update:
+            break
+        }
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        switch type {
+        case .insert:
+            tableView.insertRows(at: [newIndexPath!], with: .automatic)
+        case .delete:
+            tableView.deleteRows(at: [indexPath!], with: .automatic)
+        case .update:
+            tableView.reloadRows(at: [indexPath!], with: .automatic)
+        case .move:
+            tableView.moveRow(at: indexPath!, to: newIndexPath!)
+        }
+    }
+
+}
+
 extension FavoritesManager: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -130,6 +169,27 @@ extension FavoritesManager: UITableViewDelegate, UITableViewDataSource {
         
         cell.textLabel?.text = favAPOD.apod().date.displayString()
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return .delete
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let favApod = fetchedResultsController.object(at: indexPath)
+            mainContext.delete(favApod)
+            do {
+                try mainContext.save()
+            } catch let error {
+                fatalError("Failed to save context: \(error)")
+            }
+        }
+        initializeFetchedResultsController()
     }
     
 }

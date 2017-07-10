@@ -16,12 +16,12 @@ class FavoritesViewController: UIViewController {
         super.viewDidLoad()
         setupTableView()
         setupConstraints()
+        FavoritesManager.shared.tableView = tableView
         FavoritesManager.shared.initializeFetchedResultsController()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         FavoritesManager.shared.initializeFetchedResultsController()
-        tableView.reloadData()
     }
 
     func setupTableView() {

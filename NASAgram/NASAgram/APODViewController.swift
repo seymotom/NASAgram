@@ -44,6 +44,9 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         toggleTabBar()
+        
+        // reset the favorites star if deleted from favorites
+        
     }
     
     
