@@ -20,11 +20,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FavoritesManager.shared.printAllSavedFavDates()
         
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        let rootVC = DailyPicPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
-        self.window?.rootViewController = rootVC
+        self.window?.rootViewController = setupTabBar()
         self.window?.makeKeyAndVisible()
 
         return true
+    }
+    
+    func setupTabBar() -> UIViewController {
+        let pageVC = DailyPicPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+        let favVc = FavoritesViewController()
+        
+        pageVC.tabBarItem = UITabBarItem(title: "Daily", image: nil, selectedImage: nil)
+        favVc.tabBarItem = UITabBarItem(title: "Favorites", image: nil, selectedImage: nil)
+        
+        let tabController = UITabBarController()
+        tabController.viewControllers = [pageVC, favVc]
+        return tabController
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

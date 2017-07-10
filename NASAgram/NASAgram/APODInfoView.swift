@@ -10,14 +10,6 @@ import UIKit
 
 class APODInfoView: UIView, UIGestureRecognizerDelegate {
     
-    
-//    // there shouldn't be a model object here
-//    var apod: APOD? {
-//        didSet {
-//            populateInfo()
-//        }
-//    }
-    
     var viewDelegate: APODViewDelegate!
     var dateDelegate: APODDateDelegate!
     
@@ -116,6 +108,7 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
     
     func handleGesture(sender: UITapGestureRecognizer) {
         self.isHidden = true
+        viewDelegate.toggleTabBar()
     }
     
     func datePickerDidChange(sender: UIDatePicker) {

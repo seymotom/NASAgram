@@ -27,6 +27,7 @@
 		DEAD51E01F018F16002486B1 /* APOD.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51DF1F018F16002486B1 /* APOD.swift */; };
 		DEAD51E31F018F76002486B1 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51E21F018F76002486B1 /* DataManager.swift */; };
 		DEAD51E61F01B391002486B1 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51E51F01B391002486B1 /* APIManager.swift */; };
+		DEDA0E661F13C7DB004BCB0F /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDA0E651F13C7DB004BCB0F /* FavoritesViewController.swift */; };
 		E330D1489BEF5DBBBA1F9A6F /* Pods_NASAgram.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6D49F0779A522C5970463E9 /* Pods_NASAgram.framework */; };
 /* End PBXBuildFile section */
 
@@ -80,6 +81,7 @@
 		DEAD51DF1F018F16002486B1 /* APOD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APOD.swift; sourceTree = "<group>"; };
 		DEAD51E21F018F76002486B1 /* DataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		DEAD51E51F01B391002486B1 /* APIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
+		DEDA0E651F13C7DB004BCB0F /* FavoritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
 		F6D49F0779A522C5970463E9 /* Pods_NASAgram.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NASAgram.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -210,6 +212,7 @@
 			children = (
 				DE39A7301F02F123004212DD /* DailyPicPageViewController.swift */,
 				DE39A7321F02F15E004212DD /* APODViewController.swift */,
+				DEDA0E651F13C7DB004BCB0F /* FavoritesViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -542,6 +545,7 @@
 				DE1AF12B1F0FCA6C001474A0 /* Extension+FavAPOD.swift in Sources */,
 				DEAD51E01F018F16002486B1 /* APOD.swift in Sources */,
 				DE1AF1261F09754C001474A0 /* DetailLabel.swift in Sources */,
+				DEDA0E661F13C7DB004BCB0F /* FavoritesViewController.swift in Sources */,
 				DEAD51AC1F018C6F002486B1 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -11,6 +11,7 @@ import SnapKit
 
 protocol APODViewDelegate {
     func toggleFavorite()
+    func toggleTabBar()
 }
 
 class APODViewController: UIViewController, UIGestureRecognizerDelegate {
@@ -39,6 +40,13 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         setupGestures()
         getAPOD()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        tabBarController?.tabBar.isHidden = true
+    }
+    
     
     func setupView() {
         view.backgroundColor = .black
@@ -125,12 +133,14 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
             case 1:
                 // apodInfoView.isHidden = apodInfoView.isHidden ? false : true
                 apodInfoView.isHidden = false
+                toggleTabBar()
             case 2 where apodInfoView.isHidden:
                 apodImageView.doubleTapZoom(for: sender)
             default:
                 break
             }
         }
+        
     }
     
     // MARK:- Rotation
@@ -146,6 +156,11 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
 }
 
 extension APODViewController: APODViewDelegate {
+    
+    func toggleTabBar() {
+        tabBarController?.tabBar.isHidden = apodInfoView.isHidden ? true : false
+    }
+    
     func toggleFavorite() {
         
         guard let apod = apod else { return }
