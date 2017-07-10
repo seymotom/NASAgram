@@ -38,6 +38,7 @@ class FavoritesManager: NSObject {
         
         do {
             try mainContext.save()
+            DataManager.shared.updateFavorite(for: favApod.date!, isFavorite: true)
         } catch let error {
             print("\n\n\n\(error)\n\n\n\n")
             completion(false, error)
@@ -49,15 +50,8 @@ class FavoritesManager: NSObject {
     func delete(_ apod: APOD, completion: @escaping (Bool) -> Void) {
         fetchFavAPOD(date: apod.date.yyyyMMdd()) { (favApod) in
             if let validFavApod = favApod {
-                self.mainContext.delete(validFavApod)
-                do {
-                    try self.mainContext.save()
-                } catch {
-                    fatalError("Failed to delete apod: \(error)")
-                }
-                completion(true)
-            } else {
-                completion(false)
+                self.deleteFromCoreData(favApod: validFavApod)
+                print("delete was \(true)")
             }
         }
     }
@@ -75,6 +69,17 @@ class FavoritesManager: NSObject {
             }
         } catch {
             fatalError("Failed to search for apod in core data: \(error)")
+        }
+    }
+    
+    fileprivate func deleteFromCoreData(favApod: FavAPOD) {
+        let date = favApod.date!
+        self.mainContext.delete(favApod)
+        do {
+            try self.mainContext.save()
+            DataManager.shared.updateFavorite(for: date, isFavorite: false)
+        } catch {
+            fatalError("Failed to delete apod: \(error)")
         }
     }
     
@@ -183,14 +188,7 @@ extension FavoritesManager: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let favApod = fetchedResultsController.object(at: indexPath)
-            let date = favApod.date!
-            mainContext.delete(favApod)
-            do {
-                try mainContext.save()
-                DataManager.shared.removeFavorite(for: date)
-            } catch let error {
-                fatalError("Failed to save context: \(error)")
-            }
+            deleteFromCoreData(favApod: favApod)
         }
         initializeFetchedResultsController()
     }

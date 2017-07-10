@@ -172,28 +172,13 @@ extension APODViewController: APODViewDelegate {
         
         guard let apod = apod else { return }
         
-        // DRY
-        
         if apod.isFavorite {
-            FavoritesManager.shared.delete(apod) { (success) in
-                print("delete was \(success)")
-                if success {
-                    apod.isFavorite = false
-                    DispatchQueue.main.async {
-                        self.apodInfoView.populateInfo(from: apod)
-                    }                    
-                }
-            }
+            FavoritesManager.shared.delete(apod) { (success) in }
         } else {
-            FavoritesManager.shared.save(apod) { (success, error) in
-                print("save was \(success)")
-                if success {
-                    apod.isFavorite = true
-                    DispatchQueue.main.async {
-                        self.apodInfoView.populateInfo(from: apod)
-                    }
-                }
-            }
+            FavoritesManager.shared.save(apod) { (success, error) in }
+        }
+        DispatchQueue.main.async {
+            self.apodInfoView.populateInfo(from: apod)
         }
     }
 }

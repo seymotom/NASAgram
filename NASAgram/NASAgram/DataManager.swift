@@ -30,13 +30,12 @@ class DataManager {
     }
 
     
-    func removeFavorite(for date: String) {
+    func updateFavorite(for date: String, isFavorite: Bool) {
         let optionalAPOD = apods.filter{ $0.date.yyyyMMdd() == date }.first
         if let apod = optionalAPOD {
-            apod.isFavorite = false
+            apod.isFavorite = isFavorite
         }
     }
-    
     
     // probably wanna add an error to these completion handlers
     func getAPOD(from date: Date, completion: @escaping (APOD) -> ()) {
