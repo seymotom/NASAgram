@@ -26,6 +26,7 @@ class FavoritesManager: NSObject {
     
     func fetchAPOD(date: String, completion: @escaping (APOD?) -> Void) {
         fetchFavAPOD(date: date) { (favApod) in
+            DataManager.shared.appendAPOD(favApod?.apod())
             completion(favApod?.apod())
         }
     }
@@ -61,22 +62,6 @@ class FavoritesManager: NSObject {
         }
     }
     
-    func initializeFetchedResultsController() {
-        let request: NSFetchRequest<FavAPOD> = FavAPOD.fetchRequest()
-        let dateSort = NSSortDescriptor(key: #keyPath(FavAPOD.date), ascending: false)
-        request.sortDescriptors = [dateSort]
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: mainContext, sectionNameKeyPath: nil, cacheName: nil)
-        fetchedResultsController.delegate = self
-        
-        do {
-            try fetchedResultsController.performFetch()
-        } catch {
-            fatalError("failed to initialize fetchedResults controller")
-        }
-        tableView.reloadData()
-    }
-    
-    
     private func fetchFavAPOD(date: String, completion: @escaping (FavAPOD?) -> Void) {
         let request: NSFetchRequest<FavAPOD> = FavAPOD.fetchRequest()
         let predicate: NSPredicate = NSPredicate(format: "date = %@", date)
@@ -111,6 +96,22 @@ class FavoritesManager: NSObject {
 }
 
 extension FavoritesManager: NSFetchedResultsControllerDelegate {
+    
+    func initializeFetchedResultsController() {
+        let request: NSFetchRequest<FavAPOD> = FavAPOD.fetchRequest()
+        let dateSort = NSSortDescriptor(key: #keyPath(FavAPOD.date), ascending: false)
+        request.sortDescriptors = [dateSort]
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: mainContext, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController.delegate = self
+        
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            fatalError("failed to initialize fetchedResults controller")
+        }
+        tableView.reloadData()
+    }
+    
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.endUpdates()
     }
@@ -182,9 +183,11 @@ extension FavoritesManager: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let favApod = fetchedResultsController.object(at: indexPath)
+            let date = favApod.date!
             mainContext.delete(favApod)
             do {
                 try mainContext.save()
+                DataManager.shared.removeFavorite(for: date)
             } catch let error {
                 fatalError("Failed to save context: \(error)")
             }

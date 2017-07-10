@@ -18,7 +18,9 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     let date: Date!
     
-    var apod: APOD?
+    var apod: APOD? {
+        return DataManager.shared.apod(for: date.yyyyMMdd())
+    }
     
     let apodImageView = APODImageView()
     let apodInfoView = APODInfoView()
@@ -46,7 +48,9 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         toggleTabBar()
         
         // reset the favorites star if deleted from favorites
-        
+        if let apod = apod {
+            apodInfoView.populateInfo(from: apod)
+        }
     }
     
     
@@ -97,7 +101,6 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         FavoritesManager.shared.fetchAPOD(date: date.yyyyMMdd()) { (apod) in
             if let apod = apod {
                 DispatchQueue.main.async {
-                    self.apod = apod
                     self.apodInfoView.populateInfo(from: apod)
                     self.apodImageView.image = UIImage(data: apod.hdImageData! as Data)
                 }
@@ -110,7 +113,6 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     func loadAPOD() {
         DataManager.shared.getAPOD(from: date) { (apod) in
             DispatchQueue.main.async {
-                self.apod = apod
                 self.apodInfoView.populateInfo(from: apod)
             }
             switch apod.mediaType {

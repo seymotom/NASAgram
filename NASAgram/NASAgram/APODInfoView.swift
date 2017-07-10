@@ -51,9 +51,9 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         datePicker.maximumDate = Date()
         datePicker.datePickerMode = .date
         datePicker.addTarget(self, action: #selector (datePickerDidChange(sender:)), for: .valueChanged)
+        datePicker.backgroundColor = .white
         addSubview(datePicker)
         
-//        favoriteButton.setTitle("⭐️", for: .normal)
         favoriteButton.addTarget(self, action: #selector (favoriteButtonTapped(sender:)), for: .touchUpInside)
         addSubview(favoriteButton)
         
