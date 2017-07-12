@@ -26,49 +26,36 @@ class FavoritesManager: NSObject {
         self.dataManager = dataManager
     }
     
-    func fetchAPOD(date: String, completion: @escaping (APOD?) -> Void) {
-        fetchFavAPOD(date: date) { (favApod) in
-            self.dataManager.appendAPOD(favApod?.apod())
-            completion(favApod?.apod())
-        }
+    func fetchAPOD(date: String) -> APOD? {
+        let apod = fetchFavAPOD(date: date)?.apod()
+        dataManager.appendAPOD(apod)
+        return apod        
     }
 
-    func save(_ apod: APOD, completion: @escaping (Bool, Error?) -> Void) {
-        
+    func save(_ apod: APOD) {
         let favApod = FavAPOD(context: mainContext)
         favApod.populate(from: apod)
-        
         do {
             try mainContext.save()
-            dataManager.updateFavorite(for: favApod.date!, isFavorite: true)
         } catch let error {
-            print("\n\n\n\(error)\n\n\n\n")
-            completion(false, error)
-            return
+            fatalError("Failed to save apod in core data: \(error)")
         }
-        completion(true, nil)
+        dataManager.updateFavorite(for: favApod.date!, isFavorite: true)
     }
     
-    func delete(_ apod: APOD, completion: @escaping (Bool) -> Void) {
-        fetchFavAPOD(date: apod.date.yyyyMMdd()) { (favApod) in
-            if let validFavApod = favApod {
-                self.deleteFromCoreData(favApod: validFavApod)
-                print("delete was \(true)")
-            }
+    func delete(_ apod: APOD) {
+        if let favApod = fetchFavAPOD(date: apod.date.yyyyMMdd()) {
+            deleteFromCoreData(favApod: favApod)
         }
     }
     
-    private func fetchFavAPOD(date: String, completion: @escaping (FavAPOD?) -> Void) {
+    private func fetchFavAPOD(date: String) -> FavAPOD? {
         let request: NSFetchRequest<FavAPOD> = FavAPOD.fetchRequest()
         let predicate: NSPredicate = NSPredicate(format: "date = %@", date)
         request.predicate = predicate
         do {
             let favApods = try mainContext.fetch(request) 
-            if favApods.isEmpty {
-                completion(nil)
-            } else {
-                completion(favApods.last!)
-            }
+            return favApods.last
         } catch {
             fatalError("Failed to search for apod in core data: \(error)")
         }

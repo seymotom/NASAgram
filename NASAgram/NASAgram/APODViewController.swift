@@ -101,15 +101,13 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func getAPOD() {
         // checks favorites before hitting api
-        manager.favorites.fetchAPOD(date: date.yyyyMMdd()) { (apod) in
-            if let apod = apod {
-                DispatchQueue.main.async {
-                    self.apodInfoView.populateInfo(from: apod)
-                    self.apodImageView.image = UIImage(data: apod.hdImageData! as Data)
-                }
-            } else {
-                self.loadAPOD()
+        if let apod = manager.favorites.fetchAPOD(date: date.yyyyMMdd()) {
+            DispatchQueue.main.async {
+                self.apodInfoView.populateInfo(from: apod)
+                self.apodImageView.image = UIImage(data: apod.hdImageData! as Data)
             }
+        } else {
+            self.loadAPOD()
         }
     }
     
@@ -131,6 +129,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
                     })
                 }
             case .video:
+                // handle this better
                 print("Video")
                 self.apodImageView.image = #imageLiteral(resourceName: "Video-Icon")
             }
@@ -176,9 +175,9 @@ extension APODViewController: APODViewDelegate {
         guard let apod = apod else { return }
         
         if apod.isFavorite {
-            manager.favorites.delete(apod) { (success) in }
+            manager.favorites.delete(apod)
         } else {
-            manager.favorites.save(apod) { (success, error) in }
+            manager.favorites.save(apod)
         }
         DispatchQueue.main.async {
             self.apodInfoView.populateInfo(from: apod)
