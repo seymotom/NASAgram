@@ -8,12 +8,27 @@
 
 import UIKit
 
+protocol APODDateDelegate {
+    func dateSelected(date: Date)
+}
+
 class DailyPicPageViewController: UIPageViewController {
     
     var thisDate: Date = Date()
     
-    var seenVCs: [String: APODViewController] = [:]
-
+    var seenVCs: [String: UIViewController] = [:]
+    
+    let manager: APODManager!
+    
+    init(manager: APODManager) {
+        self.manager = manager
+        super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupPageVC()
@@ -30,29 +45,41 @@ class DailyPicPageViewController: UIPageViewController {
         dataSource = self
         delegate = self
         
-        let todayVC = APODViewController(date: thisDate, delegate: self)
-        setViewControllers([todayVC], direction: .reverse, animated: true, completion: nil)
-        seenVCs[thisDate.apodURI()] = todayVC
+        let todayVC = APODViewController(date: thisDate, dateDelegate: self, manager: manager)
+        setViewControllers([todayVC], direction: .reverse, animated: true) { (_) in
+            self.loadSurroundingVCs(for: self.thisDate, viewController: todayVC)
+        }
+        seenVCs[thisDate.yyyyMMdd()] = todayVC
     }
     
     // put this in the dataManager
-    func getAPODVC(for date: Date) -> APODViewController {
-        if let nextVC = seenVCs[date.apodURI()] {
+    func getAPODVC(for date: Date) -> UIViewController {
+        if let nextVC = seenVCs[date.yyyyMMdd()] {
             return nextVC
         } else {
-            let nextVC = APODViewController(date: date, delegate: self)
-            seenVCs[date.apodURI()] = nextVC
+            let nextVC = APODViewController(date: date, dateDelegate: self, manager: manager)
+            seenVCs[date.yyyyMMdd()] = nextVC
             return nextVC
         }
+    }
+    
+    func loadSurroundingVCs(for date: Date, viewController: UIViewController) {
+        let before = pageViewController(self, viewControllerBefore: viewController)
+        let after = pageViewController(self, viewControllerAfter: viewController)
+        // accessing the viewController's view loads it so it can prepopulate
+        let _ = before?.view
+        let _ = after?.view
+        
+        seenVCs[date.advanceDay(by: -1).yyyyMMdd()] = before
+        seenVCs[date.advanceDay(by: 1).yyyyMMdd()] = after
     }
 }
 
 extension DailyPicPageViewController: UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        if thisDate.apodURI() == Date().apodURI() {
+        if thisDate.yyyyMMdd() == Date().yyyyMMdd() {
             return nil
         }
-        
         let tomorrow = thisDate.advanceDay(by: 1)
         return getAPODVC(for: tomorrow)
     }
@@ -72,22 +99,17 @@ extension DailyPicPageViewController: UIPageViewControllerDelegate {
         // this increments or decrements the currentDate
         thisDate = currentVC.date
     }
-    
-    func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
-        
-    }
 }
 
-extension DailyPicPageViewController: APODViewDelegate {    
+extension DailyPicPageViewController: APODDateDelegate {
     func dateSelected(date: Date) {
         guard date != thisDate else { return }
         let direction: UIPageViewControllerNavigationDirection = date < thisDate ? .reverse : .forward
-        setViewControllers([getAPODVC(for: date)], direction: direction, animated: true, completion: nil)
+        let thisVC = getAPODVC(for: date)
+        setViewControllers([thisVC], direction: direction, animated: true) { (_) in
+            self.loadSurroundingVCs(for: date, viewController: thisVC)
+        }
         thisDate = date
-    }
-    
-    func favoriteButtonTapped() {
-        print("make the data manager save this shit")
     }
 }
 

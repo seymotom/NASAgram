@@ -10,27 +10,46 @@ import Foundation
 
 class DataManager {
     
-    static let shared = DataManager()
-    private init() {}
+    private let apiManager: APIManager!
     
-    private static let validEndpoint = "https://api.nasa.gov/planetary/apod?api_key=AOy2RZcIA1OYQZF6Bbjjz5ntTJPSPwYogYtN0IGP&hd=True&date=2016-11-07"
+    private(set) var apods: [APOD] = []
     
-    let apodEndpoint = "https://api.nasa.gov/planetary/apod?api_key=AOy2RZcIA1OYQZF6Bbjjz5ntTJPSPwYogYtN0IGP&hd=True&date="
+    private let apodEndpoint = "https://api.nasa.gov/planetary/apod?api_key=AOy2RZcIA1OYQZF6Bbjjz5ntTJPSPwYogYtN0IGP&hd=True&date="
     
+    init(apiManager: APIManager) {
+        self.apiManager = apiManager
+    }
+    
+    func apod(for date: String) -> APOD? {
+        return apods.filter{ $0.date.yyyyMMdd() == date }.first
+    }
+    
+    func appendAPOD(_ apod: APOD?) {
+        if let apod = apod {
+            apods.append(apod)
+        }
+    }
+
+    func updateFavorite(for date: String, isFavorite: Bool) {
+        let optionalAPOD = apods.filter{ $0.date.yyyyMMdd() == date }.first
+        if let apod = optionalAPOD {
+            apod.isFavorite = isFavorite
+        }
+    }
     
     // probably wanna add an error to these completion handlers
     func getAPOD(from date: Date, completion: @escaping (APOD) -> ()) {
-        APIManager.shared.getData(endpoint: apodEndpoint + date.apodURI()) { (data) in
+        apiManager.getData(endpoint: apodEndpoint + date.yyyyMMdd()) { (data) in
             if let apod = APOD.makeAPOD(from: data) {
+                self.apods.append(apod)
                 completion(apod)
             }
         }
     }
     
     func getImage(url: String, completion: @ escaping (Data) -> ()) {
-        APIManager.shared.getData(endpoint: url) { (data) in
+        apiManager.getData(endpoint: url) { (data) in
             completion(data)
         }
     }
-    
 }

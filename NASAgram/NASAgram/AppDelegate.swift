@@ -17,12 +17,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
+        UIApplication.shared.statusBarStyle = .lightContent
+        
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        let rootVC = DailyPicPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
-        self.window?.rootViewController = rootVC
+        self.window?.rootViewController = setupTabBar()
         self.window?.makeKeyAndVisible()
 
         return true
+    }
+    
+    func setupTabBar() -> UIViewController {
+        
+        let apiManager = APIManager()
+        let dataManager = DataManager(apiManager: apiManager)
+        let favoitesManager = FavoritesManager(dataManager: dataManager)
+        let apodManager = APODManager(dataManager: dataManager, favoritesManager: favoitesManager)
+        
+        let pageVC = DailyPicPageViewController(manager: apodManager)
+        let favVc = FavoritesViewController(manager: apodManager)
+        
+        pageVC.tabBarItem = UITabBarItem(title: "Daily", image: nil, selectedImage: nil)
+        favVc.tabBarItem = UITabBarItem(title: "Favorites", image: nil, selectedImage: nil)
+        
+        let tabController = UITabBarController()
+        tabController.viewControllers = [pageVC, favVc]
+        return tabController
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -93,6 +112,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
-
+    
 }
 

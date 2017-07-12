@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <elements/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16F73" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="FavAPOD" representedClassName="FavAPOD" syncable="YES" codeGenerationType="class">
+        <attribute name="copyright" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="date" attributeType="String" syncable="YES"/>
+        <attribute name="explanation" attributeType="String" syncable="YES"/>
+        <attribute name="hdImageData" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="hdurl" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ldImageData" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="mediaType" attributeType="String" syncable="YES"/>
+        <attribute name="serviceVersion" attributeType="String" syncable="YES"/>
+        <attribute name="title" attributeType="String" syncable="YES"/>
+        <attribute name="url" attributeType="String" syncable="YES"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="date"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <elements>
+        <element name="FavAPOD" positionX="-63" positionY="-18" width="128" height="195"/>
+    </elements>
 </model>

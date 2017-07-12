@@ -10,20 +10,27 @@ import UIKit
 import SnapKit
 
 protocol APODViewDelegate {
-    func dateSelected(date: Date)
-    func favoriteButtonTapped()
+    func toggleFavorite()
+    func toggleTabBar()
 }
 
 class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     let date: Date!
     
+    let manager: APODManager!
+    
+    var apod: APOD? {
+        return manager.data.apod(for: date.yyyyMMdd())
+    }
+    
     let apodImageView = APODImageView()
     let apodInfoView = APODInfoView()
     
-    init(date: Date, delegate: APODViewDelegate) {
+    init(date: Date, dateDelegate: APODDateDelegate, manager: APODManager) {
         self.date = date
-        self.apodInfoView.delegate = delegate
+        self.apodInfoView.dateDelegate = dateDelegate
+        self.manager = manager
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -36,23 +43,39 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         setupView()
         setupConstraints()
         setupGestures()
-        loadAPOD()
+        getAPOD()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        toggleTabBar()
+        
+        // reset the favorites star if deleted from favorites
+        if let apod = apod {
+            apodInfoView.populateInfo(from: apod)
+        }
+    }
+    
     
     func setupView() {
         view.backgroundColor = .black
         view.addSubview(apodImageView)
+        
         view.addSubview(apodInfoView)
         apodInfoView.isHidden = true
+        apodInfoView.viewDelegate = self
     }
     
     func setupConstraints() {
         apodImageView.snp.makeConstraints { (view) in
-            view.leading.trailing.top.bottom.equalToSuperview()
+            view.leading.trailing.bottom.equalToSuperview()
+            view.top.equalTo(topLayoutGuide.snp.bottom)
         }
         
         apodInfoView.snp.makeConstraints { (view) in
-            view.leading.trailing.top.bottom.equalToSuperview()
+            view.leading.trailing.equalToSuperview()
+            view.top.equalTo(topLayoutGuide.snp.bottom)
+            view.bottom.equalTo(bottomLayoutGuide.snp.top)
         }
     }
     
@@ -76,23 +99,40 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    func getAPOD() {
+        // checks favorites before hitting api
+        manager.favorites.fetchAPOD(date: date.yyyyMMdd()) { (apod) in
+            if let apod = apod {
+                DispatchQueue.main.async {
+                    self.apodInfoView.populateInfo(from: apod)
+                    self.apodImageView.image = UIImage(data: apod.hdImageData! as Data)
+                }
+            } else {
+                self.loadAPOD()
+            }
+        }
+    }
+    
     func loadAPOD() {
-        DataManager.shared.getAPOD(from: date) { (apod) in
+        manager.data.getAPOD(from: date) { (apod) in
             DispatchQueue.main.async {
-                self.apodInfoView.apod = apod
+                self.apodInfoView.populateInfo(from: apod)
             }
             switch apod.mediaType {
             case .image:
                 if let hdurl = apod.hdurl {
-                    DataManager.shared.getImage(url: hdurl, completion: { (data) in
+                    self.manager.data.getImage(url: hdurl, completion: { (data) in
                         DispatchQueue.main.async {
-                            self.apodImageView.image = UIImage(data: data)
+                            self.apod?.hdImageData = data as NSData
+                            let image = UIImage(data: data)
+                            self.apod?.ldImageData = UIImageJPEGRepresentation(image!, 0.25)! as NSData
+                            self.apodImageView.image = image
                         }
                     })
                 }
             case .video:
                 print("Video")
-                self.apodImageView.image = nil
+                self.apodImageView.image = #imageLiteral(resourceName: "Video-Icon")
             }
         }
     }
@@ -101,14 +141,16 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         if apodInfoView.isHidden {
             switch sender.numberOfTapsRequired {
             case 1:
-                //            apodInfoView.isHidden = apodInfoView.isHidden ? false : true
+                // apodInfoView.isHidden = apodInfoView.isHidden ? false : true
                 apodInfoView.isHidden = false
+                toggleTabBar()
             case 2 where apodInfoView.isHidden:
                 apodImageView.doubleTapZoom(for: sender)
             default:
                 break
             }
         }
+        
     }
     
     // MARK:- Rotation
@@ -121,6 +163,28 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         }) { (context) in
         }
     }
-    
-    
 }
+
+extension APODViewController: APODViewDelegate {
+    
+    func toggleTabBar() {
+        tabBarController?.tabBar.isHidden = apodInfoView.isHidden ? true : false
+    }
+    
+    func toggleFavorite() {
+        
+        guard let apod = apod else { return }
+        
+        if apod.isFavorite {
+            manager.favorites.delete(apod) { (success) in }
+        } else {
+            manager.favorites.save(apod) { (success, error) in }
+        }
+        DispatchQueue.main.async {
+            self.apodInfoView.populateInfo(from: apod)
+        }
+    }
+}
+
+
+

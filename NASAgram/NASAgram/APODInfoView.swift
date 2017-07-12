@@ -10,13 +10,8 @@ import UIKit
 
 class APODInfoView: UIView, UIGestureRecognizerDelegate {
     
-    var apod: APOD? {
-        didSet {
-            populateInfo()
-        }
-    }
-    
-    var delegate: APODViewDelegate!
+    var viewDelegate: APODViewDelegate!
+    var dateDelegate: APODDateDelegate!
     
     var dateLabel = DetailLabel()
     var titleLabel = DetailLabel()
@@ -56,9 +51,9 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         datePicker.maximumDate = Date()
         datePicker.datePickerMode = .date
         datePicker.addTarget(self, action: #selector (datePickerDidChange(sender:)), for: .valueChanged)
+        datePicker.backgroundColor = .white
         addSubview(datePicker)
         
-        favoriteButton.setTitle("⭐️", for: .normal)
         favoriteButton.addTarget(self, action: #selector (favoriteButtonTapped(sender:)), for: .touchUpInside)
         addSubview(favoriteButton)
         
@@ -80,7 +75,6 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         backgroundView.snp.makeConstraints { (view) in
             view.leading.trailing.top.bottom.equalToSuperview()
         }
-        
         dateLabel.snp.makeConstraints { (view) in
             view.top.equalToSuperview().offset(50)
             view.leading.trailing.equalToSuperview()
@@ -102,27 +96,28 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         }
     }
     
-    private func populateInfo() {
-        if let apod = apod {
-            dateLabel.text = apod.date.displayString()
-            datePicker.date = apod.date
-            titleLabel.text = apod.title
-            explanationLabel.text = apod.explanation
-            layoutIfNeeded()
-        }
+    func populateInfo(from apod: APOD) {
+        dateLabel.text = apod.date.displayString()
+        datePicker.date = apod.date
+        titleLabel.text = apod.title
+        explanationLabel.text = apod.explanation
+        let fav = apod.isFavorite ? "⭐️" : "☆"
+        favoriteButton.setTitle(fav, for: .normal)
+        layoutIfNeeded()
     }
     
     func handleGesture(sender: UITapGestureRecognizer) {
         self.isHidden = true
+        viewDelegate.toggleTabBar()
     }
     
     func datePickerDidChange(sender: UIDatePicker) {
-        delegate.dateSelected(date: sender.date)
+        dateDelegate.dateSelected(date: sender.date)
         self.isHidden = true
     }
     
     func favoriteButtonTapped(sender: UIButton) {
-        delegate.favoriteButtonTapped()
+        viewDelegate.toggleFavorite()
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {

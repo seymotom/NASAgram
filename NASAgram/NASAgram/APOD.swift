@@ -32,8 +32,14 @@ class APOD {
     let title: String
     let copyright: String?
     
+    var hdImageData: NSData?
+    var ldImageData: NSData?
+    
+    var isFavorite: Bool = false
+    
     init(date: Date, explanation: String, hdurl: String?, url: String,
-         mediaType: MediaType, serviceVersion: String, title: String, copyright: String?) {
+         mediaType: MediaType, serviceVersion: String, title: String, copyright: String?,
+         hdImageData: NSData? = nil, ldImageData: NSData? = nil) {
         self.date = date
         self.explanation = explanation
         self.hdurl = hdurl
@@ -42,11 +48,14 @@ class APOD {
         self.serviceVersion = serviceVersion
         self.title = title
         self.copyright = copyright
+        self.hdImageData = hdImageData
+        self.ldImageData = ldImageData
     }
     
     convenience init?(json: [String: AnyObject]) {
         guard
             let dateString = json[APODField.date.rawValue] as? String,
+            let date = dateString.date(),
             let explanation = json[APODField.explanation.rawValue] as? String,
             let url = json[APODField.url.rawValue] as? String,
             let mediaTypeString = json[APODField.mediaType.rawValue] as? String,
@@ -58,10 +67,6 @@ class APOD {
         }
         let hdurl = json[APODField.hdurl.rawValue] as? String
         let copyright = json[APODField.copyright.rawValue] as? String
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        let date: Date = dateFormatter.date(from: dateString)!
         
         self.init(date: date, explanation: explanation, hdurl: hdurl, url: url, mediaType: mediaType, serviceVersion: serviceVersion, title: title, copyright: copyright)
     }

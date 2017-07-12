@@ -10,8 +10,8 @@ import Foundation
 
 class APIManager {
     
-    static let shared = APIManager()
-    private init() {}
+//    static let shared = APIManager()
+//    private init() {}
     
     func getData(endpoint: String, completion: @escaping (Data) -> Void) {
         guard let myURL = URL(string: endpoint) else { return }
