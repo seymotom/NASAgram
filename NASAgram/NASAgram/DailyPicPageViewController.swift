@@ -16,12 +16,19 @@ class DailyPicPageViewController: UIPageViewController {
     
     var thisDate: Date = Date()
     
-    var seenVCs: [String: UIViewController] = [:] {
-        didSet{
-            print(seenVCs)
-        }
+    var seenVCs: [String: UIViewController] = [:]
+    
+    let manager: APODManager!
+    
+    init(manager: APODManager) {
+        self.manager = manager
+        super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     }
-
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupPageVC()
@@ -38,9 +45,9 @@ class DailyPicPageViewController: UIPageViewController {
         dataSource = self
         delegate = self
         
-        let todayVC = APODViewController(date: thisDate, dateDelegate: self)
+        let todayVC = APODViewController(date: thisDate, dateDelegate: self, manager: manager)
         setViewControllers([todayVC], direction: .reverse, animated: true) { (_) in
-            self.setSurroundingVCs(for: self.thisDate, viewController: todayVC)
+            self.loadSurroundingVCs(for: self.thisDate, viewController: todayVC)
         }
         seenVCs[thisDate.yyyyMMdd()] = todayVC
     }
@@ -50,15 +57,21 @@ class DailyPicPageViewController: UIPageViewController {
         if let nextVC = seenVCs[date.yyyyMMdd()] {
             return nextVC
         } else {
-            let nextVC = APODViewController(date: date, dateDelegate: self)
+            let nextVC = APODViewController(date: date, dateDelegate: self, manager: manager)
             seenVCs[date.yyyyMMdd()] = nextVC
             return nextVC
         }
     }
     
-    func setSurroundingVCs(for date: Date, viewController: UIViewController) {
-        seenVCs[date.advanceDay(by: -1).yyyyMMdd()] = self.pageViewController(self, viewControllerBefore: viewController)
-        seenVCs[date.advanceDay(by: 1).yyyyMMdd()] = self.pageViewController(self, viewControllerAfter: viewController)
+    func loadSurroundingVCs(for date: Date, viewController: UIViewController) {
+        let before = pageViewController(self, viewControllerBefore: viewController)
+        let after = pageViewController(self, viewControllerAfter: viewController)
+        // accessing the viewController's view loads it so it can prepopulate
+        let _ = before?.view
+        let _ = after?.view
+        
+        seenVCs[date.advanceDay(by: -1).yyyyMMdd()] = before
+        seenVCs[date.advanceDay(by: 1).yyyyMMdd()] = after
     }
 }
 
@@ -67,7 +80,6 @@ extension DailyPicPageViewController: UIPageViewControllerDataSource {
         if thisDate.yyyyMMdd() == Date().yyyyMMdd() {
             return nil
         }
-        
         let tomorrow = thisDate.advanceDay(by: 1)
         return getAPODVC(for: tomorrow)
     }
@@ -87,10 +99,6 @@ extension DailyPicPageViewController: UIPageViewControllerDelegate {
         // this increments or decrements the currentDate
         thisDate = currentVC.date
     }
-    
-    func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
-        
-    }
 }
 
 extension DailyPicPageViewController: APODDateDelegate {
@@ -99,7 +107,7 @@ extension DailyPicPageViewController: APODDateDelegate {
         let direction: UIPageViewControllerNavigationDirection = date < thisDate ? .reverse : .forward
         let thisVC = getAPODVC(for: date)
         setViewControllers([thisVC], direction: direction, animated: true) { (_) in
-            self.setSurroundingVCs(for: date, viewController: thisVC)
+            self.loadSurroundingVCs(for: date, viewController: thisVC)
         }
         thisDate = date
     }

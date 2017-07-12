@@ -18,16 +18,19 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     let date: Date!
     
+    let manager: APODManager!
+    
     var apod: APOD? {
-        return DataManager.shared.apod(for: date.yyyyMMdd())
+        return manager.data.apod(for: date.yyyyMMdd())
     }
     
     let apodImageView = APODImageView()
     let apodInfoView = APODInfoView()
     
-    init(date: Date, dateDelegate: APODDateDelegate) {
+    init(date: Date, dateDelegate: APODDateDelegate, manager: APODManager) {
         self.date = date
         self.apodInfoView.dateDelegate = dateDelegate
+        self.manager = manager
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -98,7 +101,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func getAPOD() {
         // checks favorites before hitting api
-        FavoritesManager.shared.fetchAPOD(date: date.yyyyMMdd()) { (apod) in
+        manager.favorites.fetchAPOD(date: date.yyyyMMdd()) { (apod) in
             if let apod = apod {
                 DispatchQueue.main.async {
                     self.apodInfoView.populateInfo(from: apod)
@@ -111,14 +114,14 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func loadAPOD() {
-        DataManager.shared.getAPOD(from: date) { (apod) in
+        manager.data.getAPOD(from: date) { (apod) in
             DispatchQueue.main.async {
                 self.apodInfoView.populateInfo(from: apod)
             }
             switch apod.mediaType {
             case .image:
                 if let hdurl = apod.hdurl {
-                    DataManager.shared.getImage(url: hdurl, completion: { (data) in
+                    self.manager.data.getImage(url: hdurl, completion: { (data) in
                         DispatchQueue.main.async {
                             self.apod?.hdImageData = data as NSData
                             let image = UIImage(data: data)
@@ -173,9 +176,9 @@ extension APODViewController: APODViewDelegate {
         guard let apod = apod else { return }
         
         if apod.isFavorite {
-            FavoritesManager.shared.delete(apod) { (success) in }
+            manager.favorites.delete(apod) { (success) in }
         } else {
-            FavoritesManager.shared.save(apod) { (success, error) in }
+            manager.favorites.save(apod) { (success, error) in }
         }
         DispatchQueue.main.async {
             self.apodInfoView.populateInfo(from: apod)

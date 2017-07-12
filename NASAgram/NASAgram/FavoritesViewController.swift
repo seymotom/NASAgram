@@ -11,24 +11,35 @@ import UIKit
 class FavoritesViewController: UIViewController {
     
     var tableView = UITableView()
+    
+    let manager: APODManager!
+    
+    init(manager: APODManager) {
+        self.manager = manager
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
         setupConstraints()
-        FavoritesManager.shared.tableView = tableView
-        FavoritesManager.shared.initializeFetchedResultsController()
+        manager.favorites.tableView = tableView
+        manager.favorites.initializeFetchedResultsController()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        FavoritesManager.shared.initializeFetchedResultsController()
+        manager.favorites.initializeFetchedResultsController()
     }
 
     func setupTableView() {
         view.addSubview(tableView)
         tableView.register(FavoritesTableViewCell.self, forCellReuseIdentifier: FavoritesTableViewCell.identifier)
-        tableView.delegate = FavoritesManager.shared
-        tableView.dataSource = FavoritesManager.shared
+        tableView.delegate = manager.favorites
+        tableView.dataSource = manager.favorites
     }
     
     func setupConstraints() {

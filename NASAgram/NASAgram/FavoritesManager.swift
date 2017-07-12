@@ -12,8 +12,7 @@ import CoreData
 
 class FavoritesManager: NSObject {
     
-    static let shared = FavoritesManager()
-    private override init() {}
+    let dataManager: DataManager!
     
     var mainContext: NSManagedObjectContext {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -21,16 +20,19 @@ class FavoritesManager: NSObject {
     }
     
     var tableView: UITableView!
-       
     var fetchedResultsController: NSFetchedResultsController<FavAPOD>!
+    
+    init(dataManager: DataManager) {
+        self.dataManager = dataManager
+    }
     
     func fetchAPOD(date: String, completion: @escaping (APOD?) -> Void) {
         fetchFavAPOD(date: date) { (favApod) in
-            DataManager.shared.appendAPOD(favApod?.apod())
+            self.dataManager.appendAPOD(favApod?.apod())
             completion(favApod?.apod())
         }
     }
-    
+
     func save(_ apod: APOD, completion: @escaping (Bool, Error?) -> Void) {
         
         let favApod = FavAPOD(context: mainContext)
@@ -38,7 +40,7 @@ class FavoritesManager: NSObject {
         
         do {
             try mainContext.save()
-            DataManager.shared.updateFavorite(for: favApod.date!, isFavorite: true)
+            dataManager.updateFavorite(for: favApod.date!, isFavorite: true)
         } catch let error {
             print("\n\n\n\(error)\n\n\n\n")
             completion(false, error)
@@ -77,7 +79,7 @@ class FavoritesManager: NSObject {
         self.mainContext.delete(favApod)
         do {
             try self.mainContext.save()
-            DataManager.shared.updateFavorite(for: date, isFavorite: false)
+            dataManager.updateFavorite(for: date, isFavorite: false)
         } catch {
             fatalError("Failed to delete apod: \(error)")
         }
@@ -150,7 +152,6 @@ extension FavoritesManager: NSFetchedResultsControllerDelegate {
             tableView.moveRow(at: indexPath!, to: newIndexPath!)
         }
     }
-
 }
 
 extension FavoritesManager: UITableViewDelegate, UITableViewDataSource {

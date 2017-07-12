@@ -17,8 +17,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-        FavoritesManager.shared.printAllSavedFavDates()
-        
         UIApplication.shared.statusBarStyle = .lightContent
         
         self.window = UIWindow(frame: UIScreen.main.bounds)
@@ -29,8 +27,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func setupTabBar() -> UIViewController {
-        let pageVC = DailyPicPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
-        let favVc = FavoritesViewController()
+        
+        let apiManager = APIManager()
+        let dataManager = DataManager(apiManager: apiManager)
+        let favoitesManager = FavoritesManager(dataManager: dataManager)
+        let apodManager = APODManager(dataManager: dataManager, favoritesManager: favoitesManager)
+        
+        let pageVC = DailyPicPageViewController(manager: apodManager)
+        let favVc = FavoritesViewController(manager: apodManager)
         
         pageVC.tabBarItem = UITabBarItem(title: "Daily", image: nil, selectedImage: nil)
         favVc.tabBarItem = UITabBarItem(title: "Favorites", image: nil, selectedImage: nil)
