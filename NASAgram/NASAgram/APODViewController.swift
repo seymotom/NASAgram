@@ -27,6 +27,8 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     let apodImageView = APODImageView()
     let apodInfoView = APODInfoView()
     
+    var alertFactory: AlertFactory!
+    
     init(date: Date, dateDelegate: APODDateDelegate, manager: APODManager) {
         self.date = date
         self.apodInfoView.dateDelegate = dateDelegate
@@ -40,6 +42,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        alertFactory = AlertFactory(for: self)
         setupView()
         setupConstraints()
         setupGestures()
@@ -68,8 +71,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func setupConstraints() {
         apodImageView.snp.makeConstraints { (view) in
-            view.leading.trailing.bottom.equalToSuperview()
-            view.top.equalTo(topLayoutGuide.snp.bottom)
+            view.leading.trailing.bottom.top.equalToSuperview()
         }
         
         apodInfoView.snp.makeConstraints { (view) in
@@ -112,21 +114,29 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func loadAPOD() {
-        manager.data.getAPOD(from: date) { (apod) in
+        manager.data.getAPOD(from: date) { (apod, errorMessage) in
+            guard let apod = apod else {
+                self.alertFactory.showErrorAlert(message: errorMessage!)
+                return
+            }
             DispatchQueue.main.async {
                 self.apodInfoView.populateInfo(from: apod)
             }
             switch apod.mediaType {
             case .image:
                 if let hdurl = apod.hdurl {
-                    self.manager.data.getImage(url: hdurl, completion: { (data) in
+                    self.manager.data.getImage(url: hdurl) { (data, errorMessage) in
+                        guard let data = data else {
+                            self.alertFactory.showErrorAlert(message: errorMessage!)
+                            return
+                        }
                         DispatchQueue.main.async {
                             self.apod?.hdImageData = data as NSData
                             let image = UIImage(data: data)
                             self.apod?.ldImageData = UIImageJPEGRepresentation(image!, 0.25)! as NSData
                             self.apodImageView.image = image
                         }
-                    })
+                    }
                 }
             case .video:
                 // handle this better

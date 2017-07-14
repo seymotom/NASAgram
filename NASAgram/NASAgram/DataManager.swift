@@ -38,18 +38,26 @@ class DataManager {
     }
     
     // probably wanna add an error to these completion handlers
-    func getAPOD(from date: Date, completion: @escaping (APOD) -> ()) {
-        apiManager.getData(endpoint: apodEndpoint + date.yyyyMMdd()) { (data) in
-            if let apod = APOD.makeAPOD(from: data) {
+    func getAPOD(from date: Date, completion: @escaping (APOD?, String?) -> ()) {
+        apiManager.getData(endpoint: apodEndpoint + date.yyyyMMdd()) { (data, errorMessage) in
+            if let error = errorMessage {
+                completion(nil, error)
+            }
+            else if let data = data, let apod = APOD.makeAPOD(from: data) {
                 self.apods.append(apod)
-                completion(apod)
+                completion(apod, nil)
             }
         }
     }
     
-    func getImage(url: String, completion: @ escaping (Data) -> ()) {
-        apiManager.getData(endpoint: url) { (data) in
-            completion(data)
+    func getImage(url: String, completion: @ escaping (Data?, String?) -> ()) {
+        apiManager.getData(endpoint: url) { (data, errorMessage) in
+            if let error = errorMessage {
+                completion(nil, error)
+            }
+            else {
+                completion(data, nil)
+            }
         }
     }
 }

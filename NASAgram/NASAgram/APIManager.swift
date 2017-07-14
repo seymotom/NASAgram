@@ -10,18 +10,22 @@ import Foundation
 
 class APIManager {
     
-//    static let shared = APIManager()
-//    private init() {}
-    
-    func getData(endpoint: String, completion: @escaping (Data) -> Void) {
-        guard let myURL = URL(string: endpoint) else { return }
+    func getData(endpoint: String, completion: @escaping (Data?, String?) -> Void) {
+        guard let url = URL(string: endpoint) else { return }
         let session = URLSession(configuration: URLSessionConfiguration.default)
-        session.dataTask(with: myURL) { (data: Data?, response: URLResponse?, error: Error?) in
-            if error != nil {
+        session.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) in
+            if let error = error {
                 print("Error durring session: \(String(describing: error))")
+                completion(nil, error.localizedDescription)
             }
-            if let validData = data {
-                completion(validData)
+            else if let response = response as? HTTPURLResponse {
+                let success = response.statusCode / 100 == 2
+                if success {
+                    completion(data, nil)
+                }
+                else {
+                    completion(nil, response.description)
+                }
             }
             }.resume()
     }

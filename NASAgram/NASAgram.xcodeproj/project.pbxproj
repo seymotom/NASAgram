@@ -19,6 +19,7 @@
 		DE39A7331F02F15F004212DD /* APODViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE39A7321F02F15E004212DD /* APODViewController.swift */; };
 		DE39A7351F030A86004212DD /* Extension+Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE39A7341F030A86004212DD /* Extension+Date.swift */; };
 		DE5DACB21F165DC0000B8607 /* APODManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5DACB11F165DC0000B8607 /* APODManager.swift */; };
+		DE5DACB41F167383000B8607 /* AlertFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5DACB31F167383000B8607 /* AlertFactory.swift */; };
 		DEAD51AC1F018C6F002486B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51AB1F018C6F002486B1 /* AppDelegate.swift */; };
 		DEAD51B41F018C6F002486B1 /* NASAgram.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51B21F018C6F002486B1 /* NASAgram.xcdatamodeld */; };
 		DEAD51B61F018C6F002486B1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DEAD51B51F018C6F002486B1 /* Assets.xcassets */; };
@@ -69,6 +70,7 @@
 		DE39A7321F02F15E004212DD /* APODViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APODViewController.swift; sourceTree = "<group>"; };
 		DE39A7341F030A86004212DD /* Extension+Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extension+Date.swift"; sourceTree = "<group>"; };
 		DE5DACB11F165DC0000B8607 /* APODManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APODManager.swift; sourceTree = "<group>"; };
+		DE5DACB31F167383000B8607 /* AlertFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertFactory.swift; sourceTree = "<group>"; };
 		DEAD51A81F018C6F002486B1 /* NASAgram.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NASAgram.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEAD51AB1F018C6F002486B1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DEAD51B31F018C6F002486B1 /* NASAgram.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NASAgram.xcdatamodel; sourceTree = "<group>"; };
@@ -238,6 +240,7 @@
 				DEAD51E21F018F76002486B1 /* DataManager.swift */,
 				DE1AF1271F0E8D7E001474A0 /* FavoritesManager.swift */,
 				DEAD51E51F01B391002486B1 /* APIManager.swift */,
+				DE5DACB31F167383000B8607 /* AlertFactory.swift */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -555,6 +558,7 @@
 				DEDA0E681F13D28D004BCB0F /* FavoritesTableViewCell.swift in Sources */,
 				DEDA0E661F13C7DB004BCB0F /* FavoritesViewController.swift in Sources */,
 				DEAD51AC1F018C6F002486B1 /* AppDelegate.swift in Sources */,
+				DE5DACB41F167383000B8607 /* AlertFactory.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
