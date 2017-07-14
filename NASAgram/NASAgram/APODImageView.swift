@@ -75,24 +75,24 @@ class APODImageView: UIScrollView {
         zoomScale = scale
         // check for a zoomPoint in case zoomed in when rotating
         if let zoomPoint = zoomPointBeforeRotation {
-            let zoomRect = getRect(for: zoomPoint, thisZoomScale: zoomScaleBeforeRotation)
+            let zoomRect = getRect(centerPoint: zoomPoint, zoomScale: zoomScaleBeforeRotation)
             zoom(to: zoomRect, animated: false)
         }
         layoutIfNeeded()
     }
     
     // returns the rect to zoom to
-//    private func getRect(centerPoint: CGPoint, zoomScale: CGFloat = 1) -> CGRect {
-//        //subtract half the size of the scrollView to center the offset and then divide by zoomScale
-//        let x = (centerPoint.x - (bounds.size.width / 2)) / zoomScale
-//        let y = (centerPoint.y - (bounds.size.height / 2)) / zoomScale
-//        
-//        // width and height of the zoomed frame
-//        let width = imageView.frame.width / zoomScale
-//        let height = imageView.frame.height / zoomScale
-//        
-//        return CGRect(x: x, y: y, width: width, height: height)
-//    }
+    private func getRect(centerPoint: CGPoint, zoomScale: CGFloat = 1) -> CGRect {
+        //subtract half the size of the scrollView to center the offset and then divide by zoomScale
+        let x = (centerPoint.x - (bounds.size.width / 2)) / zoomScale
+        let y = (centerPoint.y - (bounds.size.height / 2)) / zoomScale
+        
+        // width and height of the zoomed frame
+        let width = imageView.frame.width / zoomScale
+        let height = imageView.frame.height / zoomScale
+        
+        return CGRect(x: x, y: y, width: width, height: height)
+    }
     
     // adds offset to the imageView to center image
     fileprivate func updateImageConstraints() {
@@ -132,7 +132,7 @@ class APODImageView: UIScrollView {
             // zoom in
             // Save the point to zoom in on in case of rotation
             currentZoomPoint = doubleTap.location(in: imageView)
-            let zoomRect = getRect(for: currentZoomPoint!)
+            let zoomRect = getRect(centerPoint: currentZoomPoint!)
             zoom(to: zoomRect, animated: true)
         } else {
             // zoom out
@@ -141,36 +141,36 @@ class APODImageView: UIScrollView {
         }
     }
     
-    private func getRect(for point: CGPoint, thisZoomScale: CGFloat = 1) -> CGRect {
-        //subtract half the size of the scrollView to center the offset
-        print("image size: \(image!.size)")
-        print("imageView bounds: \(imageView.bounds)")
-
-        print("self.zoomScale: \(zoomScale)")
-
-        print("point: \(point)")
-        print("this zoom scale: \(thisZoomScale)")
-
-
-        let x = (point.x - (bounds.size.width / 2) ) / thisZoomScale
-        let y = (point.y - (bounds.size.height / 2) ) / thisZoomScale
-        print("x: \(x), y: \(y)")
-        print("bounds: \(bounds.size)")
-
-        
-        // width and height of the zoomed frame
-        let width = imageView.frame.width / thisZoomScale
-        let height = imageView.frame.height / thisZoomScale
-
-        print("imageView.frame: \(imageView.frame)")
-        print("scrollView.frame: \(frame)")
-
-        let rect = CGRect(x: x, y: y, width: width, height: height)
-
-        print("rect to zoom to: \(rect)")
-        print("___________________________")
-        return rect
-    }
+//    private func getRect(for point: CGPoint, thisZoomScale: CGFloat = 1) -> CGRect {
+//        //subtract half the size of the scrollView to center the offset
+//        print("image size: \(image!.size)")
+//        print("imageView bounds: \(imageView.bounds)")
+//
+//        print("self.zoomScale: \(zoomScale)")
+//
+//        print("point: \(point)")
+//        print("this zoom scale: \(thisZoomScale)")
+//
+//
+//        let x = (point.x - (bounds.size.width / 2) ) / thisZoomScale
+//        let y = (point.y - (bounds.size.height / 2) ) / thisZoomScale
+//        print("x: \(x), y: \(y)")
+//        print("bounds: \(bounds.size)")
+//
+//        
+//        // width and height of the zoomed frame
+//        let width = imageView.frame.width / thisZoomScale
+//        let height = imageView.frame.height / thisZoomScale
+//
+//        print("imageView.frame: \(imageView.frame)")
+//        print("scrollView.frame: \(frame)")
+//
+//        let rect = CGRect(x: x, y: y, width: width, height: height)
+//
+//        print("rect to zoom to: \(rect)")
+//        print("___________________________")
+//        return rect
+//    }
     
 }
 

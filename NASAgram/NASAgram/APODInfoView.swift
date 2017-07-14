@@ -13,9 +13,13 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
     var viewDelegate: APODViewDelegate!
     var dateDelegate: APODDateDelegate!
     
+    var mediaType: MediaType!
+    
     var dateLabel = DetailLabel()
     var titleLabel = DetailLabel()
     var explanationLabel = DetailLabel()
+    var videoLabel = DetailLabel()
+    
     var favoriteButton = UIButton()
     
     var backgroundView: UIVisualEffectView!
@@ -44,6 +48,16 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         addSubview(backgroundView)
         addSubview(dateLabel)
         addSubview(titleLabel)
+        
+        let videoTap = UITapGestureRecognizer()
+        videoTap.delegate = self
+        videoTap.numberOfTapsRequired = 1
+        videoTap.addTarget(self, action: #selector (videoLabelTapped))
+        videoLabel.addGestureRecognizer(videoTap)
+        videoLabel.text = "This is a video, open in browser?"
+        videoLabel.isUserInteractionEnabled = true
+        addSubview(videoLabel)
+        
         explanationLabel.numberOfLines = 0
         explanationLabel.font = UIFont.systemFont(ofSize: 10)
         addSubview(explanationLabel)
@@ -68,9 +82,6 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         
     }
     
-    
-
-    
     private func setupConstraints() {
         backgroundView.snp.makeConstraints { (view) in
             view.leading.trailing.top.bottom.equalToSuperview()
@@ -94,9 +105,19 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         favoriteButton.snp.makeConstraints { (view) in
             view.leading.top.equalToSuperview().offset(10)
         }
+        videoLabel.snp.makeConstraints { (view) in
+            view.leading.trailing.equalToSuperview()
+            view.top.equalTo(datePicker.snp.bottom)
+        }
     }
     
     func populateInfo(from apod: APOD) {
+        mediaType = apod.mediaType
+        if mediaType == .video  {
+            isHidden = false
+        }
+        videoLabel.isHidden = mediaType == .image ? true : false
+        
         dateLabel.text = apod.date.displayString()
         datePicker.date = apod.date
         titleLabel.text = apod.title
@@ -107,17 +128,21 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
     }
     
     func handleGesture(sender: UITapGestureRecognizer) {
-        self.isHidden = true
+        isHidden = mediaType == .image ? true : false
         viewDelegate.toggleTabBar()
     }
     
     func datePickerDidChange(sender: UIDatePicker) {
         dateDelegate.dateSelected(date: sender.date)
-        self.isHidden = true
+        isHidden = mediaType == .image ? true : false
     }
     
     func favoriteButtonTapped(sender: UIButton) {
         viewDelegate.toggleFavorite()
+    }
+    
+    func videoLabelTapped() {
+        viewDelegate.openVideoURL()
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {

@@ -12,6 +12,8 @@ import SnapKit
 protocol APODViewDelegate {
     func toggleFavorite()
     func toggleTabBar()
+    func openVideoURL()
+//    func handleGesture(sender: UITapGestureRecognizer)
 }
 
 class APODViewController: UIViewController, UIGestureRecognizerDelegate {
@@ -106,7 +108,9 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         if let apod = manager.favorites.fetchAPOD(date: date.yyyyMMdd()) {
             DispatchQueue.main.async {
                 self.apodInfoView.populateInfo(from: apod)
-                self.apodImageView.image = UIImage(data: apod.hdImageData! as Data)
+                if apod.mediaType == .image {
+                    self.apodImageView.image = UIImage(data: apod.hdImageData! as Data)
+                }
             }
         } else {
             self.loadAPOD()
@@ -122,26 +126,22 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
             DispatchQueue.main.async {
                 self.apodInfoView.populateInfo(from: apod)
             }
-            switch apod.mediaType {
-            case .image:
+            
+            if apod.mediaType == .image {
                 if let hdurl = apod.hdurl {
                     self.manager.data.getImage(url: hdurl) { (data, errorMessage) in
                         guard let data = data else {
                             self.alertFactory.showErrorAlert(message: errorMessage!)
                             return
                         }
+                        self.apod?.hdImageData = data as NSData
+                        let image = UIImage(data: data)
+                        self.apod?.ldImageData = UIImageJPEGRepresentation(image!, 0.25)! as NSData
                         DispatchQueue.main.async {
-                            self.apod?.hdImageData = data as NSData
-                            let image = UIImage(data: data)
-                            self.apod?.ldImageData = UIImageJPEGRepresentation(image!, 0.25)! as NSData
                             self.apodImageView.image = image
                         }
                     }
                 }
-            case .video:
-                // handle this better
-                print("Video")
-                self.apodImageView.image = #imageLiteral(resourceName: "Video-Icon")
             }
         }
     }
@@ -150,10 +150,10 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         if apodInfoView.isHidden {
             switch sender.numberOfTapsRequired {
             case 1:
-                // apodInfoView.isHidden = apodInfoView.isHidden ? false : true
+//                apodInfoView.isHidden = apodInfoView.isHidden ? false : true
                 apodInfoView.isHidden = false
                 toggleTabBar()
-            case 2 where apodInfoView.isHidden:
+            case 2 where apodInfoView.isHidden && apod?.mediaType == .image:
                 apodImageView.doubleTapZoom(for: sender)
             default:
                 break
@@ -192,6 +192,11 @@ extension APODViewController: APODViewDelegate {
         DispatchQueue.main.async {
             self.apodInfoView.populateInfo(from: apod)
         }
+    }
+    
+    func openVideoURL() {
+        guard let apod = apod, let url = URL(string: apod.url) else { return }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 }
 
