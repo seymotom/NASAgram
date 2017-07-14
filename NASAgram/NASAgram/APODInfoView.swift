@@ -47,6 +47,9 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         backgroundView = UIVisualEffectView(effect: effect)
         addSubview(backgroundView)
         addSubview(dateLabel)
+        dateLabel.textAlignment = .center
+        titleLabel.textAlignment = .center
+
         addSubview(titleLabel)
         
         let videoTap = UITapGestureRecognizer()

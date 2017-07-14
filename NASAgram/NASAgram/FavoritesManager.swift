@@ -158,10 +158,8 @@ extension FavoritesManager: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: FavoritesTableViewCell.identifier, for: indexPath) as! FavoritesTableViewCell
-        let favAPOD = fetchedResultsController.object(at: indexPath)
-        
-        
-        cell.textLabel?.text = favAPOD.apod().date.displayString()
+        let apod = fetchedResultsController.object(at: indexPath).apod()
+        cell.configure(with: apod)
         return cell
     }
     

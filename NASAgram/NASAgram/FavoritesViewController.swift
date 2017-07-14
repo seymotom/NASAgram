@@ -40,6 +40,11 @@ class FavoritesViewController: UIViewController {
         tableView.register(FavoritesTableViewCell.self, forCellReuseIdentifier: FavoritesTableViewCell.identifier)
         tableView.delegate = manager.favorites
         tableView.dataSource = manager.favorites
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 150
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = .black
+
     }
     
     func setupConstraints() {
