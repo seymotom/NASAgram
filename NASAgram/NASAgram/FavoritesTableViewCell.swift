@@ -13,6 +13,9 @@ class FavoritesTableViewCell: UITableViewCell {
     static let identifier = "favoritesTableViewCell"
     
     let margin = 8.0
+    var imageHeight: CGFloat {
+        return CGFloat(Int(bounds.width / 3))
+    }
     
     var apodImageView = UIImageView()
     var dateLabel = DetailLabel()
@@ -56,7 +59,8 @@ class FavoritesTableViewCell: UITableViewCell {
         apodImageView.snp.makeConstraints { (view) in
             view.leading.top.equalToSuperview().offset(margin)
             view.bottom.equalToSuperview().offset(-margin)
-            view.width.height.equalTo(self.bounds.width / 3)
+            view.height.equalTo(imageHeight)
+            view.width.equalTo(imageHeight * 1.5)
         }
         dateLabel.snp.makeConstraints { (view) in
             view.leading.equalTo(apodImageView.snp.trailing).offset(margin)

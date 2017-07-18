@@ -335,7 +335,7 @@
 				TargetAttributes = {
 					DEAD51A71F018C6F002486B1 = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = P7Y3CKA76T;
+						DevelopmentTeam = 7Z242QD3TB;
 						ProvisioningStyle = Automatic;
 					};
 					DEAD51BE1F018C70002486B1 = {
@@ -705,7 +705,7 @@
 			baseConfigurationReference = C97C0F81A47C9FC3164FA679 /* Pods-NASAgram.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = P7Y3CKA76T;
+				DEVELOPMENT_TEAM = 7Z242QD3TB;
 				INFOPLIST_FILE = NASAgram/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = seymotom.NASAgram;
@@ -719,7 +719,7 @@
 			baseConfigurationReference = 60B9DA745FF025C4888943B2 /* Pods-NASAgram.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = P7Y3CKA76T;
+				DEVELOPMENT_TEAM = 7Z242QD3TB;
 				INFOPLIST_FILE = NASAgram/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = seymotom.NASAgram;

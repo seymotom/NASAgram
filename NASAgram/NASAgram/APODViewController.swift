@@ -9,6 +9,10 @@
 import UIKit
 import SnapKit
 
+enum APODVCType {
+    case daily, favorite
+}
+
 protocol APODViewDelegate {
     func toggleFavorite()
     func toggleTabBar()
@@ -23,18 +27,21 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     let manager: APODManager!
     
     var apod: APOD? {
-        return manager.data.apod(for: date.yyyyMMdd())
+        return manager?.data.apod(for: date.yyyyMMdd())
     }
     
     let apodImageView = APODImageView()
     let apodInfoView = APODInfoView()
     
+    let vcType: APODVCType!
+    
     var alertFactory: AlertFactory!
     
-    init(date: Date, dateDelegate: APODDateDelegate, manager: APODManager) {
+    init(date: Date, dateDelegate: APODDateDelegate?, manager: APODManager, vcType: APODVCType) {
         self.date = date
         self.apodInfoView.dateDelegate = dateDelegate
         self.manager = manager
+        self.vcType = vcType
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -51,7 +58,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         getAPOD()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         toggleTabBar()
         
@@ -105,7 +112,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func getAPOD() {
         // checks favorites before hitting api
-        if let apod = manager.favorites.fetchAPOD(date: date.yyyyMMdd()) {
+        if let apod = manager?.favorites.fetchAPOD(date: date.yyyyMMdd()) {
             DispatchQueue.main.async {
                 self.apodInfoView.populateInfo(from: apod)
                 if apod.mediaType == .image {
@@ -118,7 +125,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func loadAPOD() {
-        manager.data.getAPOD(from: date) { (apod, errorMessage) in
+        manager?.data.getAPOD(from: date) { (apod, errorMessage) in
             guard let apod = apod else {
                 self.alertFactory.showErrorAlert(message: errorMessage!)
                 return
@@ -129,7 +136,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
             
             if apod.mediaType == .image {
                 if let hdurl = apod.hdurl {
-                    self.manager.data.getImage(url: hdurl) { (data, errorMessage) in
+                    self.manager?.data.getImage(url: hdurl) { (data, errorMessage) in
                         guard let data = data else {
                             self.alertFactory.showErrorAlert(message: errorMessage!)
                             return
@@ -185,9 +192,9 @@ extension APODViewController: APODViewDelegate {
         guard let apod = apod else { return }
         
         if apod.isFavorite {
-            manager.favorites.delete(apod)
+            manager?.favorites.delete(apod)
         } else {
-            manager.favorites.save(apod)
+            manager?.favorites.save(apod)
         }
         DispatchQueue.main.async {
             self.apodInfoView.populateInfo(from: apod)

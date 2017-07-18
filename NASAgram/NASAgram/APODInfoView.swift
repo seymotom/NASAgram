@@ -11,7 +11,7 @@ import UIKit
 class APODInfoView: UIView, UIGestureRecognizerDelegate {
     
     var viewDelegate: APODViewDelegate!
-    var dateDelegate: APODDateDelegate!
+    var dateDelegate: APODDateDelegate?
     
     var mediaType: MediaType!
     
@@ -136,11 +136,14 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
     }
     
     func datePickerDidChange(sender: UIDatePicker) {
-        dateDelegate.dateSelected(date: sender.date)
+        dateDelegate?.dateSelected(date: sender.date)
         isHidden = mediaType == .image ? true : false
     }
     
     func favoriteButtonTapped(sender: UIButton) {
+        
+        print("FAVORITE TAPPED")
+        
         viewDelegate.toggleFavorite()
     }
     

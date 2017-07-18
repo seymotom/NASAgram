@@ -28,6 +28,7 @@ class FavoritesViewController: UIViewController {
         setupTableView()
         setupConstraints()
         manager.favorites.tableView = tableView
+        manager.favorites.favoritesViewController = self
         manager.favorites.initializeFetchedResultsController()
     }
     

@@ -20,6 +20,7 @@ class FavoritesManager: NSObject {
     }
     
     var tableView: UITableView!
+    var favoritesViewController: FavoritesViewController!
     var fetchedResultsController: NSFetchedResultsController<FavAPOD>!
     
     init(dataManager: DataManager) {
@@ -132,7 +133,7 @@ extension FavoritesManager: NSFetchedResultsControllerDelegate {
         case .insert:
             tableView.insertRows(at: [newIndexPath!], with: .automatic)
         case .delete:
-            tableView.deleteRows(at: [indexPath!], with: .automatic)
+            tableView.deleteRows(at: [indexPath!], with: .left)
         case .update:
             tableView.reloadRows(at: [indexPath!], with: .automatic)
         case .move:
@@ -163,6 +164,12 @@ extension FavoritesManager: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let apod = fetchedResultsController.object(at: indexPath).apod()
+        let apodVC = APODViewController(date: apod.date, dateDelegate: nil, manager: favoritesViewController.manager, vcType: .favorite)
+        favoritesViewController.present(apodVC, animated: true, completion: nil)
+    }
+    
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
@@ -176,7 +183,6 @@ extension FavoritesManager: UITableViewDelegate, UITableViewDataSource {
             let favApod = fetchedResultsController.object(at: indexPath)
             deleteFromCoreData(favApod: favApod)
         }
-        initializeFetchedResultsController()
     }
     
 }

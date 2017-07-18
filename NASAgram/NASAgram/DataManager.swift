@@ -37,7 +37,6 @@ class DataManager {
         }
     }
     
-    // probably wanna add an error to these completion handlers
     func getAPOD(from date: Date, completion: @escaping (APOD?, String?) -> ()) {
         apiManager.getData(endpoint: apodEndpoint + date.yyyyMMdd()) { (data, errorMessage) in
             if let error = errorMessage {
