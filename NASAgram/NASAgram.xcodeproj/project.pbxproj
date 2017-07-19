@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		1812ED3D614F3F103C6F5C38 /* Pods_NASAgramUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 544C1C32652D480D73C40647 /* Pods_NASAgramUITests.framework */; };
 		A8D1C7F4D50F10D317305DEC /* Pods_NASAgramTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5687EAE1666678C578181A11 /* Pods_NASAgramTests.framework */; };
+		DE19D8BA1F1FB55A0084872E /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE19D8B91F1FB55A0084872E /* DetailView.swift */; };
+		DE19D8BC1F1FB8F40084872E /* DateSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE19D8BB1F1FB8F40084872E /* DateSearchView.swift */; };
+		DE19D8BE1F1FB91A0084872E /* ToolBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE19D8BD1F1FB91A0084872E /* ToolBarView.swift */; };
 		DE1AF1221F092FC2001474A0 /* APODImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1AF1211F092FC2001474A0 /* APODImageView.swift */; };
 		DE1AF1241F096BBF001474A0 /* APODInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1AF1231F096BBF001474A0 /* APODInfoView.swift */; };
 		DE1AF1261F09754C001474A0 /* DetailLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1AF1251F09754C001474A0 /* DetailLabel.swift */; };
@@ -60,6 +63,9 @@
 		C97C0F81A47C9FC3164FA679 /* Pods-NASAgram.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NASAgram.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NASAgram/Pods-NASAgram.debug.xcconfig"; sourceTree = "<group>"; };
 		D66B842FB0B556870985D402 /* Pods-NASAgramUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NASAgramUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NASAgramUITests/Pods-NASAgramUITests.release.xcconfig"; sourceTree = "<group>"; };
 		D98DBAA20347FDEE5A9CE598 /* Pods-NASAgramTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NASAgramTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NASAgramTests/Pods-NASAgramTests.debug.xcconfig"; sourceTree = "<group>"; };
+		DE19D8B91F1FB55A0084872E /* DetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
+		DE19D8BB1F1FB8F40084872E /* DateSearchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateSearchView.swift; sourceTree = "<group>"; };
+		DE19D8BD1F1FB91A0084872E /* ToolBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolBarView.swift; sourceTree = "<group>"; };
 		DE1AF1211F092FC2001474A0 /* APODImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APODImageView.swift; sourceTree = "<group>"; };
 		DE1AF1231F096BBF001474A0 /* APODInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APODInfoView.swift; sourceTree = "<group>"; };
 		DE1AF1251F09754C001474A0 /* DetailLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailLabel.swift; sourceTree = "<group>"; };
@@ -134,6 +140,9 @@
 			children = (
 				DE1AF1211F092FC2001474A0 /* APODImageView.swift */,
 				DE1AF1231F096BBF001474A0 /* APODInfoView.swift */,
+				DE19D8BD1F1FB91A0084872E /* ToolBarView.swift */,
+				DE19D8B91F1FB55A0084872E /* DetailView.swift */,
+				DE19D8BB1F1FB8F40084872E /* DateSearchView.swift */,
 				DE1AF1251F09754C001474A0 /* DetailLabel.swift */,
 				DEDA0E671F13D28D004BCB0F /* FavoritesTableViewCell.swift */,
 			);
@@ -550,13 +559,16 @@
 				DEAD51E31F018F76002486B1 /* DataManager.swift in Sources */,
 				DE1AF1281F0E8D7E001474A0 /* FavoritesManager.swift in Sources */,
 				DE1AF12D1F0FCBF8001474A0 /* Extension+String.swift in Sources */,
+				DE19D8BE1F1FB91A0084872E /* ToolBarView.swift in Sources */,
 				DE39A7351F030A86004212DD /* Extension+Date.swift in Sources */,
 				DE5DACB21F165DC0000B8607 /* APODManager.swift in Sources */,
 				DE1AF12B1F0FCA6C001474A0 /* Extension+FavAPOD.swift in Sources */,
 				DEAD51E01F018F16002486B1 /* APOD.swift in Sources */,
 				DE1AF1261F09754C001474A0 /* DetailLabel.swift in Sources */,
+				DE19D8BC1F1FB8F40084872E /* DateSearchView.swift in Sources */,
 				DEDA0E681F13D28D004BCB0F /* FavoritesTableViewCell.swift in Sources */,
 				DEDA0E661F13C7DB004BCB0F /* FavoritesViewController.swift in Sources */,
+				DE19D8BA1F1FB55A0084872E /* DetailView.swift in Sources */,
 				DEAD51AC1F018C6F002486B1 /* AppDelegate.swift in Sources */,
 				DE5DACB41F167383000B8607 /* AlertFactory.swift in Sources */,
 			);

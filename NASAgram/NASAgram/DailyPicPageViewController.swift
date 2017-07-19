@@ -45,7 +45,7 @@ class DailyPicPageViewController: UIPageViewController {
         dataSource = self
         delegate = self
         
-        let todayVC = APODViewController(date: thisDate, dateDelegate: self, manager: manager, vcType: .daily)
+        let todayVC = getAPODVC(for: thisDate)
         setViewControllers([todayVC], direction: .reverse, animated: true) { (_) in
             self.loadSurroundingVCs(for: self.thisDate, viewController: todayVC)
         }

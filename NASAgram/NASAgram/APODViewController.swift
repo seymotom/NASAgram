@@ -17,7 +17,7 @@ protocol APODViewDelegate {
     func toggleFavorite()
     func toggleTabBar()
     func openVideoURL()
-//    func handleGesture(sender: UITapGestureRecognizer)
+    func dismissVC()
 }
 
 class APODViewController: UIViewController, UIGestureRecognizerDelegate {
@@ -31,17 +31,15 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     let apodImageView = APODImageView()
-    let apodInfoView = APODInfoView()
-    
-    let vcType: APODVCType!
+    let apodInfoView: APODInfoView!
     
     var alertFactory: AlertFactory!
     
     init(date: Date, dateDelegate: APODDateDelegate?, manager: APODManager, vcType: APODVCType) {
         self.date = date
-        self.apodInfoView.dateDelegate = dateDelegate
         self.manager = manager
-        self.vcType = vcType
+        apodInfoView = APODInfoView(vcType: vcType)
+        self.apodInfoView.dateDelegate = dateDelegate
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -61,6 +59,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         toggleTabBar()
+        apodImageView.resetForRotation()
         
         // reset the favorites star if deleted from favorites
         if let apod = apod {
@@ -106,7 +105,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
             recognizer.delegate = self
             recognizer.addTarget(self, action: #selector(handleGesture(sender:)))
             recognizer.cancelsTouchesInView = false
-            view.addGestureRecognizer(recognizer)
+            apodImageView.addGestureRecognizer(recognizer)
         }
     }
     
@@ -154,19 +153,15 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func handleGesture(sender: UITapGestureRecognizer) {
-        if apodInfoView.isHidden {
-            switch sender.numberOfTapsRequired {
-            case 1:
-//                apodInfoView.isHidden = apodInfoView.isHidden ? false : true
-                apodInfoView.isHidden = false
-                toggleTabBar()
-            case 2 where apodInfoView.isHidden && apod?.mediaType == .image:
-                apodImageView.doubleTapZoom(for: sender)
-            default:
-                break
-            }
+        switch sender.numberOfTapsRequired {
+        case 1:
+            apodInfoView.isHidden = false
+            toggleTabBar()
+        case 2:
+            apodImageView.doubleTapZoom(for: sender)
+        default:
+            break
         }
-        
     }
     
     // MARK:- Rotation
@@ -175,7 +170,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         super.viewWillTransition(to: size, with: coordinator)
         
         coordinator.animate(alongsideTransition: { (context) in
-            self.apodImageView.rotate()
+            self.apodImageView.resetForRotation()
         }) { (context) in
         }
     }
@@ -204,6 +199,10 @@ extension APODViewController: APODViewDelegate {
     func openVideoURL() {
         guard let apod = apod, let url = URL(string: apod.url) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+    
+    func dismissVC() {
+        self.dismiss(animated: true)
     }
 }
 

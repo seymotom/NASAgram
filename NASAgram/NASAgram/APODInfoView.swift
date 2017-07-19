@@ -15,25 +15,24 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
     
     var mediaType: MediaType!
     
-    var dateLabel = DetailLabel()
-    var titleLabel = DetailLabel()
-    var explanationLabel = DetailLabel()
-    var videoLabel = DetailLabel()
+    var detailView: DetailView!
+    var toolBarView: ToolBarView!
+    var dateSearchView: DateSearchView!
     
-    var favoriteButton = UIButton()
+//    let datePicker = UIDatePicker()
     
-    var backgroundView: UIVisualEffectView!
-    
-    let datePicker = UIDatePicker()
+    convenience init(vcType: APODVCType) {
+        self.init(frame: CGRect.zero)
+        toolBarView = ToolBarView(delegate: self, vcType: vcType)
+        setup()
+    }
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
-        setup()
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setup()
     }
     
     private func setup() {
@@ -43,37 +42,15 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
     
     private func setupViews() {
         backgroundColor = .clear
-        let effect = UIBlurEffect(style: .dark)
-        backgroundView = UIVisualEffectView(effect: effect)
-        addSubview(backgroundView)
-        addSubview(dateLabel)
-        dateLabel.textAlignment = .center
-        titleLabel.textAlignment = .center
 
-        addSubview(titleLabel)
+        detailView = DetailView(delegate: self)
+        addSubview(detailView)
         
-        let videoTap = UITapGestureRecognizer()
-        videoTap.delegate = self
-        videoTap.numberOfTapsRequired = 1
-        videoTap.addTarget(self, action: #selector (videoLabelTapped))
-        videoLabel.addGestureRecognizer(videoTap)
-        videoLabel.text = "This is a video, open in browser?"
-        videoLabel.isUserInteractionEnabled = true
-        addSubview(videoLabel)
+        dateSearchView = DateSearchView(delegate: self)
+        addSubview(dateSearchView)
+        dateSearchView.isHidden = true
         
-        explanationLabel.numberOfLines = 0
-        explanationLabel.font = UIFont.systemFont(ofSize: 10)
-        addSubview(explanationLabel)
-        
-        datePicker.maximumDate = Date()
-        datePicker.datePickerMode = .date
-        datePicker.addTarget(self, action: #selector (datePickerDidChange(sender:)), for: .valueChanged)
-        datePicker.backgroundColor = .white
-        addSubview(datePicker)
-        
-        favoriteButton.addTarget(self, action: #selector (favoriteButtonTapped(sender:)), for: .touchUpInside)
-        addSubview(favoriteButton)
-        
+        addSubview(toolBarView)
         
         // have to put a tap gesture on this view to dismiss the info
         let recognizer = UITapGestureRecognizer()
@@ -86,31 +63,19 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
     }
     
     private func setupConstraints() {
-        backgroundView.snp.makeConstraints { (view) in
-            view.leading.trailing.top.bottom.equalToSuperview()
+        
+        detailView.snp.makeConstraints { (view) in
+            view.center.equalToSuperview()
+            view.width.equalToSuperview().multipliedBy(0.8)
         }
-        dateLabel.snp.makeConstraints { (view) in
-            view.top.equalToSuperview().offset(50)
-            view.leading.trailing.equalToSuperview()
+        
+        toolBarView.snp.makeConstraints { (view) in
+            view.top.leading.trailing.equalToSuperview()
         }
-        titleLabel.snp.makeConstraints { (view) in
-            view.leading.trailing.equalToSuperview()
-            view.top.equalTo(dateLabel.snp.bottom)
-        }
-        explanationLabel.snp.makeConstraints { (view) in
-            view.leading.trailing.equalToSuperview()
-            view.top.equalTo(titleLabel.snp.bottom)
-        }
-        datePicker.snp.makeConstraints { (view) in
-            view.leading.trailing.equalToSuperview()
-            view.top.equalTo(explanationLabel.snp.bottom).offset(20)
-        }
-        favoriteButton.snp.makeConstraints { (view) in
-            view.leading.top.equalToSuperview().offset(10)
-        }
-        videoLabel.snp.makeConstraints { (view) in
-            view.leading.trailing.equalToSuperview()
-            view.top.equalTo(datePicker.snp.bottom)
+        
+        dateSearchView.snp.makeConstraints { (view) in
+            view.leading.trailing.equalTo(detailView)
+            view.top.equalTo(toolBarView.snp.bottom)
         }
     }
     
@@ -119,14 +84,14 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         if mediaType == .video  {
             isHidden = false
         }
-        videoLabel.isHidden = mediaType == .image ? true : false
+        detailView.videoLabel.isHidden = mediaType == .image ? true : false
+        detailView.dateLabel.text = apod.date.displayString()
+        detailView.titleLabel.text = apod.title
+        detailView.explanationLabel.text = apod.explanation
         
-        dateLabel.text = apod.date.displayString()
-        datePicker.date = apod.date
-        titleLabel.text = apod.title
-        explanationLabel.text = apod.explanation
+        dateSearchView.datePicker.date = apod.date
         let fav = apod.isFavorite ? "⭐️" : "☆"
-        favoriteButton.setTitle(fav, for: .normal)
+        toolBarView.favoriteButton.setTitle(fav, for: .normal)
         layoutIfNeeded()
     }
     
@@ -135,16 +100,25 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         viewDelegate.toggleTabBar()
     }
     
-    func datePickerDidChange(sender: UIDatePicker) {
-        dateDelegate?.dateSelected(date: sender.date)
+    func datePickerDidChange() {
+        dateDelegate?.dateSelected(date: dateSearchView.datePicker.date)
         isHidden = mediaType == .image ? true : false
     }
     
     func favoriteButtonTapped(sender: UIButton) {
-        
-        print("FAVORITE TAPPED")
-        
         viewDelegate.toggleFavorite()
+    }
+    
+    func optionsButtonTapped(sender: UIButton) {
+        print("hamburger")
+    }
+    
+    func dateSearchButtonTapped(sender: UIButton) {
+        dateSearchView.isHidden = dateSearchView.isHidden ? false : true
+    }
+    
+    func dismissButtonTapped(sender: UIButton) {
+        viewDelegate.dismissVC()
     }
     
     func videoLabelTapped() {
@@ -153,7 +127,7 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         // cancel gesture if tap is in the button or datePicker
-        if touch.view == favoriteButton || touch.view == datePicker {
+        if touch.view == toolBarView || touch.view?.superview == toolBarView { // || touch.view == datePicker {
             return false
         }
         return true

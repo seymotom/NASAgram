@@ -122,7 +122,7 @@ class APODImageView: UIScrollView {
     
     // MARK: - Internal Methods
     
-    func rotate() {
+    func resetForRotation() {
         setZoom()
         updateImageConstraints()
     }
