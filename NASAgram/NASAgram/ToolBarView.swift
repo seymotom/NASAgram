@@ -19,6 +19,7 @@ class ToolBarView: UIView {
     var delegate: APODInfoView!
     var vcType: APODVCType!
     
+    let height = 50.0
     let margin = 8.0
     
     var backgroundView: UIVisualEffectView!

@@ -71,7 +71,8 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         
         toolBarView.snp.makeConstraints { (view) in
             view.leading.trailing.equalToSuperview()
-            view.top.equalToSuperview().offset(-50)
+            view.top.equalToSuperview().offset(-self.toolBarView.height)
+            view.height.equalTo(self.toolBarView.height)
         }
         
         dateSearchView.snp.makeConstraints { (view) in
@@ -83,7 +84,7 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
     func populateInfo(from apod: APOD) {
         mediaType = apod.mediaType
         if mediaType == .video  {
-            hideInfo(false)
+            hideInfo(false, animated: false)
         }
         detailView.videoLabel.isHidden = mediaType == .image ? true : false
         detailView.dateLabel.text = apod.date.displayString()
@@ -96,51 +97,55 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         layoutIfNeeded()
     }
     
-    func hideInfo(_ hide: Bool) {
+    func hideInfo(_ hide: Bool, animated: Bool) {
         
-//        isHidden = show ? false : true
-        
-        if hide {
-            let animator = UIViewPropertyAnimator(duration: 0.5, curve: .easeOut, animations: {
-                self.toolBarView.snp.remakeConstraints({ (view) in
-                    view.leading.trailing.equalToSuperview()
-                    view.top.equalToSuperview().offset(-50)
+        if animated {
+            if hide {
+                let animator = UIViewPropertyAnimator(duration: 0.3, curve: .easeOut, animations: {
+                    self.toolBarView.snp.remakeConstraints({ (view) in
+                        view.leading.trailing.equalToSuperview()
+                        view.top.equalToSuperview().offset(-self.toolBarView.height)
+                    })
+                    self.detailView.alpha = 0
+                    self.layoutIfNeeded()
                 })
-                self.detailView.alpha = 0
-                self.layoutIfNeeded()
-            })
-            animator.addCompletion({ (_) in
-                self.isHidden = true
-                self.viewDelegate.toggleTabBar()
-            })
-            animator.startAnimation()
-        } else {
-            isHidden = false
-            let animator = UIViewPropertyAnimator(duration: 1.0, curve: .linear) {
-                self.toolBarView.snp.remakeConstraints({ (view) in
-                    view.leading.trailing.top.equalToSuperview()
+                animator.addCompletion({ (_) in
+                    self.isHidden = true
+                    self.viewDelegate.toggleTabBar()
                 })
-                
-                self.detailView.alpha = 1.0
-                self.layoutIfNeeded()
+                animator.startAnimation()
+            } else {
+                isHidden = false
+                viewDelegate.toggleTabBar()
+                let animator = UIViewPropertyAnimator(duration: 0.3, curve: .linear) {
+                    self.toolBarView.snp.remakeConstraints({ (view) in
+                        view.leading.trailing.top.equalToSuperview()
+                    })
+                    
+                    self.detailView.alpha = 1.0
+                    self.layoutIfNeeded()
+                }
+                animator.startAnimation()
             }
-            animator.startAnimation()
+            
+        } else {
+            isHidden = !hide ? false : true
+            viewDelegate.toggleTabBar()
         }
+        
         
         
         
     }
     
     func handleGesture(sender: UITapGestureRecognizer) {
-        let show = mediaType == .image ? true : false
-        hideInfo(true)
-        viewDelegate.toggleTabBar()
+        hideInfo(true, animated: true)
     }
     
     func datePickerDidChange() {
         dateDelegate?.dateSelected(date: dateSearchView.datePicker.date)
         let show = mediaType == .image ? true : false
-        hideInfo(show)
+        hideInfo(show, animated: true)
     }
     
     func favoriteButtonTapped(sender: UIButton) {

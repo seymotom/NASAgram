@@ -73,8 +73,8 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         view.addSubview(apodImageView)
         
         view.addSubview(apodInfoView)
-        apodInfoView.hideInfo(true)
         apodInfoView.viewDelegate = self
+        apodInfoView.hideInfo(true, animated: false)
     }
     
     func setupConstraints() {
@@ -155,8 +155,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     func handleGesture(sender: UITapGestureRecognizer) {
         switch sender.numberOfTapsRequired {
         case 1:
-            apodInfoView.hideInfo(false)
-            toggleTabBar()
+            apodInfoView.hideInfo(false, animated: true)
         case 2:
             apodImageView.doubleTapZoom(for: sender)
         default:
