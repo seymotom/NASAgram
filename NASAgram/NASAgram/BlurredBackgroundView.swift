@@ -1,5 +1,5 @@
 //
-//  StatusBarBackgroundView.swift
+//  BlurredBackgroundView.swift
 //  NASAgram
 //
 //  Created by Tom Seymour on 7/27/17.
@@ -8,30 +8,33 @@
 
 import UIKit
 
-class StatusBarBackgroundView: UIView {
+class BlurredBackgroundView: UIView {
     
-    var backgroundView: UIVisualEffectView!
+    private var backgroundView: UIVisualEffectView!
+    
+    private var style: UIBlurEffectStyle!
+    
+    convenience init(style: UIBlurEffectStyle = .dark) {
+        self.init(frame: CGRect.zero)
+        self.style = style
+        setup()
+    }
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
-        self.setup()
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setup()
     }
     
     private func setup() {
         backgroundColor = .clear
-        let effect = UIBlurEffect(style: .dark)
-        backgroundView = UIVisualEffectView(effect: effect)
+        backgroundView = UIVisualEffectView(effect: UIBlurEffect(style: style))
         addSubview(backgroundView)
         
         backgroundView.snp.makeConstraints { (view) in
             view.leading.trailing.top.bottom.equalToSuperview()
         }
     }
-    
-    
 }

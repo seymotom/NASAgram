@@ -17,7 +17,7 @@ class DateSearchView: UIView {
     var datePicker = UIDatePicker()
     var doneButton = UIButton()
     
-    var backgroundView: UIVisualEffectView!
+    let backgroundView = BlurredBackgroundView(style: .regular)
     
     convenience init(delegate: APODInfoView) {
         self.init(frame: CGRect.zero)
@@ -41,10 +41,6 @@ class DateSearchView: UIView {
     
     
     func setupViews() {
-        
-        backgroundColor = .clear
-        let effect = UIBlurEffect(style: .regular)
-        backgroundView = UIVisualEffectView(effect: effect)
         addSubview(backgroundView)
         
         datePicker.maximumDate = Date()

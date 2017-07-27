@@ -22,7 +22,7 @@ class ToolBarView: UIView {
     let height = 50.0
     let margin = 8.0
     
-    var backgroundView: UIVisualEffectView!
+    let backgroundView = BlurredBackgroundView(style: .dark)
     
     convenience init(delegate: APODInfoView, vcType: APODVCType) {
         self.init(frame: CGRect.zero)
@@ -46,9 +46,6 @@ class ToolBarView: UIView {
     
     
     func setupViews() {
-        backgroundColor = .clear
-        let effect = UIBlurEffect(style: .dark)
-        backgroundView = UIVisualEffectView(effect: effect)
         addSubview(backgroundView)
         titleLabel.text = "NASAgram"
         titleLabel.contentMode = .center

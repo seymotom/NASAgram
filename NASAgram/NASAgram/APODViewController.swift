@@ -32,7 +32,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     let apodImageView = APODImageView()
     let apodInfoView: APODInfoView!
-    let statusBarBackgorundView = StatusBarBackgroundView()
+    let statusBarBackgorundView = BlurredBackgroundView(style: .dark)
     
     var alertFactory: AlertFactory!
     
@@ -169,23 +169,27 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    // Now handling rotaion from pageVC
+    
     // MARK:- Rotation
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        
-        coordinator.animate(alongsideTransition: { (context) in
-            self.apodImageView.resetForRotation()
-        }) { (context) in
-        }
-    }
+//    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+//        super.viewWillTransition(to: size, with: coordinator)
+////        toggleTabBar() // only for the pageViewControllers current view
+//        coordinator.animate(alongsideTransition: { (context) in
+//            self.apodImageView.resetForRotation()
+//        }) { (context) in
+//        }
+//    }
 }
 
 extension APODViewController: APODViewDelegate {
     
     func toggleTabBar() {
         tabBarController?.tabBar.isHidden = apodInfoView.isHidden ? true : false
-        UIApplication.shared.isStatusBarHidden = apodInfoView.isHidden ? true : false
+        // this is getting called 3 times for all the paveViewControllers VCs, fucking up.
+        UIApplication.shared.isStatusBarHidden = apodInfoView.isHidden || UIDevice.current.orientation.isLandscape ? true : false
+//        print("isStatusBarHidden == \(UIApplication.shared.isStatusBarHidden)")
         statusBarBackgorundView.isHidden = apodInfoView.isHidden ? true : false
         statusBarBackgorundView.snp.remakeConstraints { (view) in
             view.leading.trailing.top.equalToSuperview()

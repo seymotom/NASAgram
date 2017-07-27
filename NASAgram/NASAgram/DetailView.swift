@@ -14,12 +14,12 @@ class DetailView: UIView {
     
     let margin = 20.0
 
-    var dateLabel = DetailLabel()
+//    var dateLabel = DetailLabel()
     var titleLabel = DetailLabel()
     var explanationLabel = DetailLabel()
     var videoLabel = DetailLabel()
     
-    var backgroundView: UIVisualEffectView!
+    let backgroundView = BlurredBackgroundView(style: .dark)
     
     convenience init(delegate: APODInfoView) {
         self.init(frame: CGRect.zero)
@@ -43,13 +43,9 @@ class DetailView: UIView {
 
     
     func setupViews() {
-        
-        backgroundColor = .clear
-        let effect = UIBlurEffect(style: .dark)
-        backgroundView = UIVisualEffectView(effect: effect)
         addSubview(backgroundView)
-        addSubview(dateLabel)
-        dateLabel.textAlignment = .center
+//        addSubview(dateLabel)
+//        dateLabel.textAlignment = .center
         titleLabel.textAlignment = .center
         
         addSubview(titleLabel)
@@ -73,20 +69,20 @@ class DetailView: UIView {
         backgroundView.snp.makeConstraints { (view) in
             view.leading.trailing.top.bottom.equalToSuperview()
         }
-        dateLabel.snp.makeConstraints { (view) in
+//        dateLabel.snp.makeConstraints { (view) in
+//            view.top.leading.equalToSuperview().offset(margin)
+//            view.trailing.equalToSuperview().offset(-margin)
+//        }
+        titleLabel.snp.makeConstraints { (view) in
             view.top.leading.equalToSuperview().offset(margin)
             view.trailing.equalToSuperview().offset(-margin)
         }
-        titleLabel.snp.makeConstraints { (view) in
-            view.leading.trailing.equalTo(dateLabel)
-            view.top.equalTo(dateLabel.snp.bottom)
-        }
         explanationLabel.snp.makeConstraints { (view) in
-            view.leading.trailing.equalTo(dateLabel)
+            view.leading.trailing.equalTo(titleLabel)
             view.top.equalTo(titleLabel.snp.bottom)
         }
         videoLabel.snp.makeConstraints { (view) in
-            view.leading.trailing.equalTo(dateLabel)
+            view.leading.trailing.equalTo(titleLabel)
             view.top.equalTo(explanationLabel.snp.bottom).offset(margin)
             view.bottom.equalToSuperview().offset(-margin)
         }

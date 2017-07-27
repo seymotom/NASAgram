@@ -18,7 +18,8 @@
 		DE1AF1281F0E8D7E001474A0 /* FavoritesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1AF1271F0E8D7E001474A0 /* FavoritesManager.swift */; };
 		DE1AF12B1F0FCA6C001474A0 /* Extension+FavAPOD.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1AF12A1F0FCA6C001474A0 /* Extension+FavAPOD.swift */; };
 		DE1AF12D1F0FCBF8001474A0 /* Extension+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1AF12C1F0FCBF8001474A0 /* Extension+String.swift */; };
-		DE248C561F2A5071001F2F45 /* StatusBarBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE248C551F2A5071001F2F45 /* StatusBarBackgroundView.swift */; };
+		DE248C581F2A7BF2001F2F45 /* BlurredBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE248C571F2A7BF2001F2F45 /* BlurredBackgroundView.swift */; };
+		DE248C5A1F2A828D001F2F45 /* DateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE248C591F2A828D001F2F45 /* DateView.swift */; };
 		DE39A7311F02F123004212DD /* DailyPicPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE39A7301F02F123004212DD /* DailyPicPageViewController.swift */; };
 		DE39A7331F02F15F004212DD /* APODViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE39A7321F02F15E004212DD /* APODViewController.swift */; };
 		DE39A7351F030A86004212DD /* Extension+Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE39A7341F030A86004212DD /* Extension+Date.swift */; };
@@ -73,7 +74,8 @@
 		DE1AF1271F0E8D7E001474A0 /* FavoritesManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesManager.swift; sourceTree = "<group>"; };
 		DE1AF12A1F0FCA6C001474A0 /* Extension+FavAPOD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extension+FavAPOD.swift"; sourceTree = "<group>"; };
 		DE1AF12C1F0FCBF8001474A0 /* Extension+String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extension+String.swift"; sourceTree = "<group>"; };
-		DE248C551F2A5071001F2F45 /* StatusBarBackgroundView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusBarBackgroundView.swift; sourceTree = "<group>"; };
+		DE248C571F2A7BF2001F2F45 /* BlurredBackgroundView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurredBackgroundView.swift; sourceTree = "<group>"; };
+		DE248C591F2A828D001F2F45 /* DateView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateView.swift; sourceTree = "<group>"; };
 		DE39A7301F02F123004212DD /* DailyPicPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DailyPicPageViewController.swift; sourceTree = "<group>"; };
 		DE39A7321F02F15E004212DD /* APODViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APODViewController.swift; sourceTree = "<group>"; };
 		DE39A7341F030A86004212DD /* Extension+Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extension+Date.swift"; sourceTree = "<group>"; };
@@ -143,10 +145,11 @@
 				DE1AF1211F092FC2001474A0 /* APODImageView.swift */,
 				DE1AF1231F096BBF001474A0 /* APODInfoView.swift */,
 				DE19D8BD1F1FB91A0084872E /* ToolBarView.swift */,
-				DE248C551F2A5071001F2F45 /* StatusBarBackgroundView.swift */,
+				DE248C591F2A828D001F2F45 /* DateView.swift */,
 				DE19D8B91F1FB55A0084872E /* DetailView.swift */,
 				DE19D8BB1F1FB8F40084872E /* DateSearchView.swift */,
 				DE1AF1251F09754C001474A0 /* DetailLabel.swift */,
+				DE248C571F2A7BF2001F2F45 /* BlurredBackgroundView.swift */,
 				DEDA0E671F13D28D004BCB0F /* FavoritesTableViewCell.swift */,
 			);
 			name = Views;
@@ -554,6 +557,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DE1AF1221F092FC2001474A0 /* APODImageView.swift in Sources */,
+				DE248C5A1F2A828D001F2F45 /* DateView.swift in Sources */,
 				DE39A7311F02F123004212DD /* DailyPicPageViewController.swift in Sources */,
 				DEAD51E61F01B391002486B1 /* APIManager.swift in Sources */,
 				DEAD51B41F018C6F002486B1 /* NASAgram.xcdatamodeld in Sources */,
@@ -565,7 +569,7 @@
 				DE19D8BE1F1FB91A0084872E /* ToolBarView.swift in Sources */,
 				DE39A7351F030A86004212DD /* Extension+Date.swift in Sources */,
 				DE5DACB21F165DC0000B8607 /* APODManager.swift in Sources */,
-				DE248C561F2A5071001F2F45 /* StatusBarBackgroundView.swift in Sources */,
+				DE248C581F2A7BF2001F2F45 /* BlurredBackgroundView.swift in Sources */,
 				DE1AF12B1F0FCA6C001474A0 /* Extension+FavAPOD.swift in Sources */,
 				DEAD51E01F018F16002486B1 /* APOD.swift in Sources */,
 				DE1AF1261F09754C001474A0 /* DetailLabel.swift in Sources */,

@@ -18,8 +18,6 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
     var detailView: DetailView!
     var toolBarView: ToolBarView!
     var dateSearchView: DateSearchView!
-//    var statusBarBackgroundView: StatusBarBackgroundView!
-    
     
     convenience init(vcType: APODVCType) {
         self.init(frame: CGRect.zero)
@@ -53,9 +51,6 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         
         addSubview(toolBarView)
         
-//        statusBarBackgroundView = StatusBarBackgroundView()
-//        addSubview(statusBarBackgroundView)
-        
         // have to put a tap gesture on this view to dismiss the info
         let recognizer = UITapGestureRecognizer()
         recognizer.numberOfTapsRequired = 1
@@ -79,10 +74,6 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
             view.height.equalTo(self.toolBarView.height)
         }
         
-//        statusBarBackgroundView.snp.makeConstraints { (view) in
-//            view.leading.trailing.top.equalToSuperview()
-//        }
-        
         dateSearchView.snp.makeConstraints { (view) in
             view.leading.trailing.equalTo(detailView)
             view.top.equalTo(toolBarView.snp.bottom)
@@ -95,7 +86,7 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
             hideInfo(false, animated: false)
         }
         detailView.videoLabel.isHidden = mediaType == .image ? true : false
-        detailView.dateLabel.text = apod.date.displayString()
+//        detailView.dateLabel.text = apod.date.displayString()
         detailView.titleLabel.text = apod.title
         detailView.explanationLabel.text = apod.explanation
         
@@ -109,7 +100,7 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         
         if animated {
             if hide {
-                let animator = UIViewPropertyAnimator(duration: 0.3, curve: .easeOut, animations: {
+                let animator = UIViewPropertyAnimator(duration: 0.2, curve: .easeOut, animations: {
                     self.toolBarView.snp.remakeConstraints({ (view) in
                         view.leading.trailing.equalToSuperview()
                         view.top.equalToSuperview().offset(-self.toolBarView.height)
@@ -125,7 +116,7 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
             } else {
                 isHidden = false
                 viewDelegate.toggleTabBar()
-                let animator = UIViewPropertyAnimator(duration: 0.3, curve: .linear) {
+                let animator = UIViewPropertyAnimator(duration: 0.2, curve: .linear) {
                     self.toolBarView.snp.remakeConstraints({ (view) in
                         view.leading.trailing.top.equalToSuperview()
                     })
@@ -139,9 +130,6 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
             isHidden = !hide ? false : true
             viewDelegate.toggleTabBar()
         }
-        
-        
-        
         
     }
     
