@@ -18,6 +18,7 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
     var detailView: DetailView!
     var toolBarView: ToolBarView!
     var dateSearchView: DateSearchView!
+//    var statusBarBackgroundView: StatusBarBackgroundView!
     
     
     convenience init(vcType: APODVCType) {
@@ -52,6 +53,9 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         
         addSubview(toolBarView)
         
+//        statusBarBackgroundView = StatusBarBackgroundView()
+//        addSubview(statusBarBackgroundView)
+        
         // have to put a tap gesture on this view to dismiss the info
         let recognizer = UITapGestureRecognizer()
         recognizer.numberOfTapsRequired = 1
@@ -74,6 +78,10 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
             view.top.equalToSuperview().offset(-self.toolBarView.height)
             view.height.equalTo(self.toolBarView.height)
         }
+        
+//        statusBarBackgroundView.snp.makeConstraints { (view) in
+//            view.leading.trailing.top.equalToSuperview()
+//        }
         
         dateSearchView.snp.makeConstraints { (view) in
             view.leading.trailing.equalTo(detailView)
@@ -121,7 +129,6 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
                     self.toolBarView.snp.remakeConstraints({ (view) in
                         view.leading.trailing.top.equalToSuperview()
                     })
-                    
                     self.detailView.alpha = 1.0
                     self.layoutIfNeeded()
                 }

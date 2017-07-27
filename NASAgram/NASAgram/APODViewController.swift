@@ -32,6 +32,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     let apodImageView = APODImageView()
     let apodInfoView: APODInfoView!
+    let statusBarBackgorundView = StatusBarBackgroundView()
     
     var alertFactory: AlertFactory!
     
@@ -71,7 +72,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     func setupView() {
         view.backgroundColor = .black
         view.addSubview(apodImageView)
-        
+        view.addSubview(statusBarBackgorundView)
         view.addSubview(apodInfoView)
         apodInfoView.viewDelegate = self
         apodInfoView.hideInfo(true, animated: false)
@@ -80,6 +81,11 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     func setupConstraints() {
         apodImageView.snp.makeConstraints { (view) in
             view.leading.trailing.bottom.top.equalToSuperview()
+        }
+        
+        statusBarBackgorundView.snp.makeConstraints { (view) in
+            view.leading.trailing.top.equalToSuperview()
+            view.height.equalTo(UIApplication.shared.statusBarFrame.height)
         }
         
         apodInfoView.snp.makeConstraints { (view) in
@@ -179,6 +185,12 @@ extension APODViewController: APODViewDelegate {
     
     func toggleTabBar() {
         tabBarController?.tabBar.isHidden = apodInfoView.isHidden ? true : false
+        UIApplication.shared.isStatusBarHidden = apodInfoView.isHidden ? true : false
+        statusBarBackgorundView.isHidden = apodInfoView.isHidden ? true : false
+        statusBarBackgorundView.snp.remakeConstraints { (view) in
+            view.leading.trailing.top.equalToSuperview()
+            view.height.equalTo(UIApplication.shared.statusBarFrame.height)
+        }
     }
     
     func toggleFavorite() {
