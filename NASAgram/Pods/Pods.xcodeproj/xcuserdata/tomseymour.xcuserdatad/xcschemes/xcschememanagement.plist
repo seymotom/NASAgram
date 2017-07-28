@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>DGActivityIndicatorView.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-NASAgram.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -27,12 +32,7 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>1CDAF3478899169DE37BD526076CE0E2</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>306A7DA48B2515DD9DF25C12F383877D</key>
+		<key>3814077B60A225441E135CD435F07186</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -43,6 +43,16 @@
 			<true/>
 		</dict>
 		<key>9C200C522C032D50B37247640ED8C456</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>EDC1C96F925912A1B857C49DFBC5D5AC</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FC2DC7FD528EE1937915CE86872F37E2</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -8,20 +8,25 @@
 
 import UIKit
 import SnapKit
+import DGActivityIndicatorView
 
 class APODImageView: UIScrollView {
     
+    private let fadeInAnimationDuration = 0.2
+    private let activityIndicatorSize: CGFloat = 100
+    
     fileprivate var imageView = UIImageView()
     
-    private var activityIndicator = UIActivityIndicatorView()
+    private var activityIndicator: DGActivityIndicatorView!
     
     fileprivate var currentZoomPoint: CGPoint?
     
     var image: UIImage? {
         didSet {
             imageView.image = image
+            fadeInImageView()
             setZoom()
-            activityIndicator.stopAnimating()
+            activityIndicator?.stopAnimating()
         }
     }
     
@@ -44,12 +49,12 @@ class APODImageView: UIScrollView {
         delegate = self
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
+        imageView.alpha = 0.0
         addSubview(imageView)
         
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.color = .white
-        addSubview(activityIndicator)
-        activityIndicator.startAnimating()
+        activityIndicator = DGActivityIndicatorView(type: .ballClipRotateMultiple, tintColor: .lightGray, size: activityIndicatorSize)
+        addSubview(activityIndicator!)
+        activityIndicator?.startAnimating()
     }
     
     private func setupConstraints() {
@@ -57,9 +62,15 @@ class APODImageView: UIScrollView {
             view.leading.trailing.top.bottom.equalToSuperview()
         }
         
-        activityIndicator.snp.makeConstraints { (view) in
+        activityIndicator?.snp.makeConstraints { (view) in
             view.center.equalToSuperview()
         }
+    }
+    
+    private func fadeInImageView() {
+        UIView.animate(withDuration: fadeInAnimationDuration, animations: {
+            self.imageView.alpha = 1.0
+        })
     }
     
     private func setZoom() {
@@ -138,6 +149,12 @@ class APODImageView: UIScrollView {
             // zoom out
             setZoomScale(minimumZoomScale, animated: true)
             currentZoomPoint = nil
+        }
+    }
+    
+    func stopActivityIndicator() {
+        DispatchQueue.main.async {
+            self.activityIndicator.stopAnimating()
         }
     }
     

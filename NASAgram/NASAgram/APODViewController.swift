@@ -30,7 +30,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         return manager?.data.apod(for: date.yyyyMMdd())
     }
     
-    let apodImageView = APODImageView()
+    var apodImageView:APODImageView!
     let apodInfoView: APODInfoView!
     let statusBarBackgorundView = BlurredBackgroundView(style: .dark)
     
@@ -71,6 +71,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func setupView() {
         view.backgroundColor = .black
+        apodImageView = APODImageView()
         view.addSubview(apodImageView)
         view.addSubview(statusBarBackgorundView)
         view.addSubview(apodInfoView)
@@ -120,8 +121,11 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         if let apod = manager?.favorites.fetchAPOD(date: date.yyyyMMdd()) {
             DispatchQueue.main.async {
                 self.apodInfoView.populateInfo(from: apod)
-                if apod.mediaType == .image {
+                switch apod.mediaType {
+                case .image:
                     self.apodImageView.image = UIImage(data: apod.hdImageData! as Data)
+                case .video:
+                    self.apodImageView.stopActivityIndicator()
                 }
             }
         } else {
@@ -130,6 +134,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func loadAPOD() {
+        
         manager?.data.getAPOD(from: date) { (apod, errorMessage) in
             guard let apod = apod else {
                 self.alertFactory.showErrorAlert(message: errorMessage!)
@@ -139,11 +144,13 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
                 self.apodInfoView.populateInfo(from: apod)
             }
             
-            if apod.mediaType == .image {
+            switch apod.mediaType {
+            case .image:
                 if let hdurl = apod.hdurl {
                     self.manager?.data.getImage(url: hdurl) { (data, errorMessage) in
                         guard let data = data else {
                             self.alertFactory.showErrorAlert(message: errorMessage!)
+                            self.apodImageView.stopActivityIndicator()
                             return
                         }
                         self.apod?.hdImageData = data as NSData
@@ -154,9 +161,12 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
                         }
                     }
                 }
+            case .video:
+                self.apodImageView.stopActivityIndicator()
             }
         }
     }
+    
     
     func handleGesture(sender: UITapGestureRecognizer) {
         switch sender.numberOfTapsRequired {
@@ -187,9 +197,7 @@ extension APODViewController: APODViewDelegate {
     
     func toggleTabBar() {
         tabBarController?.tabBar.isHidden = apodInfoView.isHidden ? true : false
-        // this is getting called 3 times for all the paveViewControllers VCs, fucking up.
         UIApplication.shared.isStatusBarHidden = apodInfoView.isHidden || UIDevice.current.orientation.isLandscape ? true : false
-//        print("isStatusBarHidden == \(UIApplication.shared.isStatusBarHidden)")
         statusBarBackgorundView.isHidden = apodInfoView.isHidden ? true : false
         statusBarBackgorundView.snp.remakeConstraints { (view) in
             view.leading.trailing.top.equalToSuperview()

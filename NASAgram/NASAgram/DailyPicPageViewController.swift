@@ -74,6 +74,15 @@ class DailyPicPageViewController: UIPageViewController {
         seenVCs[date.advanceDay(by: 1).yyyyMMdd()] = after
     }
     
+    /*
+ 
+    // fix the video screen. Currently loading indefinately and not showing info on didAppear
+    
+    */
+    
+    
+    // better to handle rotation from pageVc as we can control just the currentVC and not the adjoining VCs
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         // on rotate only toggle the tabBar for the current VC. Weird shit happens when toggleTabBar gets called for all VCs as the tabBar and statusBar are global singletons.
