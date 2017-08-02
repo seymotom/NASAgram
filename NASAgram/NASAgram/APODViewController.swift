@@ -66,7 +66,9 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         super.viewWillAppear(animated)
         isViewAppeared = true
         toggleTabBar()
-        apodImageView.resetForRotation()
+        DispatchQueue.main.async {
+            self.apodImageView.resetForOrientation()
+        }
         
         // reset the favorites star if deleted from favorites
         if let apod = apod {
@@ -238,11 +240,9 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         toggleTabBar()
         coordinator.animate(alongsideTransition: { (context) in
             if self.isViewAppeared {
-                self.apodImageView.resetForRotation()
-                print("reseting for rotaion \(self.date.displayString())")
+                self.apodImageView.resetForOrientation()
             }
         }) { (context) in
-//            self.apodImageView.resetForRotation()
         }
     }
 }

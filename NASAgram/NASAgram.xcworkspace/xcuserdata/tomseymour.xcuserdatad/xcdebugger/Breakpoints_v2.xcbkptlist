@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NASAgram/APODViewController.swift"
-            timestampString = "523294228.284512"
+            timestampString = "523375176.491513"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "75"
-            endingLineNumber = "75"
+            startingLineNumber = "78"
+            endingLineNumber = "78"
             landmarkName = "viewWillAppear(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NASAgram/APODImageView.swift"
-            timestampString = "523298589.886307"
+            timestampString = "523375176.491513"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "81"
-            endingLineNumber = "81"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
             landmarkName = "setZoom()"
             landmarkType = "7">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NASAgram/APODInfoView.swift"
-            timestampString = "523299461.71188"
+            timestampString = "523374498.040827"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "183"
-            endingLineNumber = "183"
+            startingLineNumber = "182"
+            endingLineNumber = "182"
             landmarkName = "gestureRecognizer(_:shouldReceive:)"
             landmarkType = "7">
          </BreakpointContent>

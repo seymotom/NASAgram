@@ -26,7 +26,6 @@ class APODImageView: UIScrollView {
             imageView.image = image
             fadeInImageView()
             setZoom()
-//            updateImageConstraints()
             activityIndicator?.stopAnimating()
         }
     }
@@ -134,7 +133,7 @@ class APODImageView: UIScrollView {
     
     // MARK: - Internal Methods
     
-    func resetForRotation() {
+    func resetForOrientation() {
         setZoom()
         updateImageConstraints()
     }
