@@ -26,6 +26,7 @@ class APODImageView: UIScrollView {
             imageView.image = image
             fadeInImageView()
             setZoom()
+//            updateImageConstraints()
             activityIndicator?.stopAnimating()
         }
     }
@@ -139,6 +140,9 @@ class APODImageView: UIScrollView {
     }
     
     func doubleTapZoom(for doubleTap: UITapGestureRecognizer) {
+        // don't zoom in on no image
+        guard image != nil else { return }
+        
         if zoomScale == minimumZoomScale {
             // zoom in
             // Save the point to zoom in on in case of rotation

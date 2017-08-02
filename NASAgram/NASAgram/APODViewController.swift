@@ -16,6 +16,7 @@ enum APODVCType {
 protocol APODViewDelegate {
     func toggleFavorite()
     func toggleTabBar()
+    func hideDateView(_ hide: Bool)
     func openVideoURL()
     func dismissVC()
 }
@@ -32,14 +33,18 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     var apodImageView:APODImageView!
     let apodInfoView: APODInfoView!
+    var dateView: DateView!
     let statusBarBackgorundView = BlurredBackgroundView(style: .dark)
     
     var alertFactory: AlertFactory!
     
+    var isViewAppeared: Bool = false
+    
     init(date: Date, dateDelegate: APODDateDelegate?, manager: APODManager, vcType: APODVCType) {
         self.date = date
         self.manager = manager
-        apodInfoView = APODInfoView(vcType: vcType)
+        apodInfoView = APODInfoView(vcType: vcType, date: date)
+        dateView = DateView(date: date)
         self.apodInfoView.dateDelegate = dateDelegate
         super.init(nibName: nil, bundle: nil)
     }
@@ -59,13 +64,25 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        isViewAppeared = true
         toggleTabBar()
         apodImageView.resetForRotation()
         
         // reset the favorites star if deleted from favorites
         if let apod = apod {
             apodInfoView.populateInfo(from: apod)
+            if apod.mediaType == .video {
+                apodInfoView.hideInfo(false, animated: true)
+            }
         }
+        dateView.isHidden = false
+        dateView.alpha = 1.0
+        Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(dateTimerIsUp), userInfo: nil, repeats: false)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        isViewAppeared = false
     }
     
     
@@ -74,6 +91,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         apodImageView = APODImageView()
         view.addSubview(apodImageView)
         view.addSubview(statusBarBackgorundView)
+        view.addSubview(dateView)
         view.addSubview(apodInfoView)
         apodInfoView.viewDelegate = self
         apodInfoView.hideInfo(true, animated: false)
@@ -90,9 +108,15 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         }
         
         apodInfoView.snp.makeConstraints { (view) in
-            view.leading.trailing.equalToSuperview()
+            view.leading.trailing.bottom.equalToSuperview()
             view.top.equalTo(topLayoutGuide.snp.bottom)
-            view.bottom.equalTo(bottomLayoutGuide.snp.top)
+        }
+        
+        dateView.snp.makeConstraints { (view) in
+            view.top.equalToSuperview().offset(70)
+            view.width.equalToSuperview().multipliedBy(0.8)
+            view.height.equalTo(50)
+            view.centerX.equalToSuperview()
         }
     }
     
@@ -126,6 +150,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
                     self.apodImageView.image = UIImage(data: apod.hdImageData! as Data)
                 case .video:
                     self.apodImageView.stopActivityIndicator()
+                    self.apodInfoView.hideInfo(false, animated: true)
                 }
             }
         } else {
@@ -163,6 +188,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
                 }
             case .video:
                 self.apodImageView.stopActivityIndicator()
+                self.apodInfoView.hideInfo(false, animated: true)
             }
         }
     }
@@ -170,8 +196,9 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func handleGesture(sender: UITapGestureRecognizer) {
         switch sender.numberOfTapsRequired {
-        case 1:
+        case 1 where apod != nil:
             apodInfoView.hideInfo(false, animated: true)
+            hideDateView(false)
         case 2:
             apodImageView.doubleTapZoom(for: sender)
         default:
@@ -179,36 +206,64 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    // Now handling rotaion from pageVC
+    func dateTimerIsUp() {
+        if apodInfoView.isHidden {
+            hideDateView(true)
+        }
+    }
+    
+    func hideDateView(_ hide: Bool) {
+        
+        let alpha: CGFloat = hide ? 0 : 1
+        
+        if !hide {
+            dateView.isHidden = false
+            dateView.alpha = 0
+        }
+        
+        UIView.animate(withDuration: 0.2, animations: { 
+            self.dateView.alpha = alpha
+        }) { (_) in
+            if hide {
+                self.dateView.isHidden = true
+            }
+        }
+    }
+    
     
     // MARK:- Rotation
     
-//    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-//        super.viewWillTransition(to: size, with: coordinator)
-////        toggleTabBar() // only for the pageViewControllers current view
-//        coordinator.animate(alongsideTransition: { (context) in
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        toggleTabBar()
+        coordinator.animate(alongsideTransition: { (context) in
+            if self.isViewAppeared {
+                self.apodImageView.resetForRotation()
+                print("reseting for rotaion \(self.date.displayString())")
+            }
+        }) { (context) in
 //            self.apodImageView.resetForRotation()
-//        }) { (context) in
-//        }
-//    }
+        }
+    }
 }
 
 extension APODViewController: APODViewDelegate {
     
     func toggleTabBar() {
-        tabBarController?.tabBar.isHidden = apodInfoView.isHidden ? true : false
-        UIApplication.shared.isStatusBarHidden = apodInfoView.isHidden || UIDevice.current.orientation.isLandscape ? true : false
-        statusBarBackgorundView.isHidden = apodInfoView.isHidden ? true : false
-        statusBarBackgorundView.snp.remakeConstraints { (view) in
-            view.leading.trailing.top.equalToSuperview()
-            view.height.equalTo(UIApplication.shared.statusBarFrame.height)
+        // only toggleTabBar if this view is on screen as toggleTabBar gets called by adjacent viewControllers
+        if isViewAppeared {
+            tabBarController?.tabBar.isHidden = apodInfoView.isHidden ? true : false
+            UIApplication.shared.isStatusBarHidden = apodInfoView.isHidden || UIDevice.current.orientation.isLandscape ? true : false
+            statusBarBackgorundView.isHidden = apodInfoView.isHidden ? true : false
+            statusBarBackgorundView.snp.remakeConstraints { (view) in
+                view.leading.trailing.top.equalToSuperview()
+                view.height.equalTo(UIApplication.shared.statusBarFrame.height)
+            }
         }
     }
     
     func toggleFavorite() {
-        
         guard let apod = apod else { return }
-        
         if apod.isFavorite {
             manager?.favorites.delete(apod)
         } else {

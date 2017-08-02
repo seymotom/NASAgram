@@ -13,15 +13,20 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
     var viewDelegate: APODViewDelegate!
     var dateDelegate: APODDateDelegate?
     
-    var mediaType: MediaType!
+    var mediaType: MediaType?
     
     var detailView: DetailView!
+//    var dateView: DateView!
     var toolBarView: ToolBarView!
     var dateSearchView: DateSearchView!
     
-    convenience init(vcType: APODVCType) {
+    convenience init(vcType: APODVCType, date: Date) {
         self.init(frame: CGRect.zero)
         toolBarView = ToolBarView(delegate: self, vcType: vcType)
+        
+        // remove the date from the init
+        
+//        dateView = DateView(date: date)
         setup()
     }
     
@@ -44,12 +49,12 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         detailView = DetailView(delegate: self)
         detailView.alpha = 0.0
         addSubview(detailView)
+        addSubview(toolBarView)
+//        addSubview(dateView)
         
         dateSearchView = DateSearchView(delegate: self)
         addSubview(dateSearchView)
         dateSearchView.isHidden = true
-        
-        addSubview(toolBarView)
         
         // have to put a tap gesture on this view to dismiss the info
         let recognizer = UITapGestureRecognizer()
@@ -74,17 +79,21 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
             view.height.equalTo(self.toolBarView.height)
         }
         
+//        dateView.snp.makeConstraints { (view) in
+//            view.top.equalToSuperview().offset(100)
+//            view.width.equalTo(detailView)
+//            view.centerX.equalToSuperview()
+//            view.height.equalTo(50)
+//        }
+        
         dateSearchView.snp.makeConstraints { (view) in
             view.leading.trailing.equalTo(detailView)
             view.top.equalTo(toolBarView.snp.bottom)
         }
     }
-    
+        
     func populateInfo(from apod: APOD) {
         mediaType = apod.mediaType
-        if mediaType == .video  {
-            hideInfo(false, animated: false)
-        }
         detailView.videoLabel.isHidden = mediaType == .image ? true : false
 //        detailView.dateLabel.text = apod.date.displayString()
         detailView.titleLabel.text = apod.title
@@ -99,33 +108,36 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
     func hideInfo(_ hide: Bool, animated: Bool) {
         
         if animated {
-            if hide {
-                let animator = UIViewPropertyAnimator(duration: 0.2, curve: .easeOut, animations: {
-                    self.toolBarView.snp.remakeConstraints({ (view) in
-                        view.leading.trailing.equalToSuperview()
-                        view.top.equalToSuperview().offset(-self.toolBarView.height)
-                    })
-                    self.detailView.alpha = 0
-                    self.layoutIfNeeded()
-                })
-                animator.addCompletion({ (_) in
-                    self.isHidden = true
-                    self.viewDelegate.toggleTabBar()
-                })
-                animator.startAnimation()
-            } else {
-                isHidden = false
-                viewDelegate.toggleTabBar()
-                let animator = UIViewPropertyAnimator(duration: 0.2, curve: .linear) {
-                    self.toolBarView.snp.remakeConstraints({ (view) in
-                        view.leading.trailing.top.equalToSuperview()
-                    })
-                    self.detailView.alpha = 1.0
-                    self.layoutIfNeeded()
-                }
-                animator.startAnimation()
-            }
             
+            DispatchQueue.main.async {
+                
+                if hide {
+                    let animator = UIViewPropertyAnimator(duration: 0.2, curve: .easeOut, animations: {
+                        self.toolBarView.snp.remakeConstraints({ (view) in
+                            view.leading.trailing.equalToSuperview()
+                            view.top.equalToSuperview().offset(-self.toolBarView.height)
+                        })
+                        self.detailView.alpha = 0
+                        self.layoutIfNeeded()
+                    })
+                    animator.addCompletion({ (_) in
+                        self.isHidden = true
+                        self.viewDelegate.toggleTabBar()
+                    })
+                    animator.startAnimation()
+                } else {
+                    self.isHidden = false
+                    self.viewDelegate.toggleTabBar()
+                    let animator = UIViewPropertyAnimator(duration: 0.2, curve: .linear) {
+                        self.toolBarView.snp.remakeConstraints({ (view) in
+                            view.leading.trailing.top.equalToSuperview()
+                        })
+                        self.detailView.alpha = 1.0
+                        self.layoutIfNeeded()
+                    }
+                    animator.startAnimation()
+                }
+            }
         } else {
             isHidden = !hide ? false : true
             viewDelegate.toggleTabBar()
@@ -134,7 +146,10 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
     }
     
     func handleGesture(sender: UITapGestureRecognizer) {
-        hideInfo(true, animated: true)
+        if mediaType == .image {
+            hideInfo(true, animated: true)
+            viewDelegate.hideDateView(true)
+        }
     }
     
     func datePickerDidChange() {
