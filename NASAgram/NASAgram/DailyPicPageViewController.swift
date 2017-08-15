@@ -11,8 +11,9 @@ import UIKit
 protocol APODPageViewDelegate {
     func dateSelected(date: Date)
     var statusBarHidden: Bool { get set }
-//    var navBarHidden: Bool { get set }
     func setNavbarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void)
+    func setTabBarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void)
+    
 }
 
 class DailyPicPageViewController: UIPageViewController {
@@ -35,14 +36,17 @@ class DailyPicPageViewController: UIPageViewController {
         }
     }
     
-//    var navBarHidden = true {
-//        didSet {
-//            DispatchQueue.main.async {
-//                
-//                self.navigationController?.setNavigationBarHidden(self.navBarHidden, animated: true)
-//            }
-//        }
-//    }
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return statusBarHidden
+    }
+    
+    override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
+        return .slide
+    }
     
     init(manager: APODManager) {
         self.manager = manager
@@ -58,18 +62,13 @@ class DailyPicPageViewController: UIPageViewController {
         setupPageVC()
         setupView()
         
-//        self.navigationItem.title = "NASAgram"
-//        let refreshButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTapped))
-//        self.navigationItem.rightBarButtonItem = refreshButton
-//        
-//        navigationController?.isNavigationBarHidden = true
-        
     }
     
-    func addTapped() {
-        print("add")
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setTabBarVisible(visible: false, animated: false) { (_) in }
+        setNavbarVisible(visible: false, animated: false) { (_) in }
     }
-
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -100,7 +99,7 @@ class DailyPicPageViewController: UIPageViewController {
         
         navbarView.snp.makeConstraints { (view) in
             view.leading.trailing.equalToSuperview()
-            view.top.equalToSuperview().offset(-50)
+            view.top.equalToSuperview()
             view.height.equalTo(50)
         }
         
@@ -135,40 +134,6 @@ class DailyPicPageViewController: UIPageViewController {
     
     
     
-    func setNavbarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void) {
-        
-        guard let vc = viewControllers?.first as? APODViewController else { return }
-        
-        print("VC for \(vc.date.displayString()) is set to visible: \(visible) ")
-        
-        
-        // bail if the current state matches the desired state
-        if navbarIsVisible == visible {
-            return
-        }
-        
-        // get a frame calculation ready
-        let height = navbarView.frame.size.height
-        let offsetY = (visible ? height : -height)
-        
-        // zero duration means no animation
-        let duration = (animated ? 0.2 : 0.0)
-        
-        UIView.animate(withDuration: duration, animations: {
-            let frame = self.navbarView.frame
-            self.navbarView.frame = frame.offsetBy(dx: 0, dy: offsetY);
-        }, completion:completion)
-        
-        
-    }
-    
-    var navbarIsVisible: Bool {
-        if navbarView == nil {
-            print("navbar is nil")
-            return false
-        }
-        return navbarView.frame.origin.y >= view.frame.origin.y
-    }
 
     
     
@@ -202,6 +167,68 @@ extension DailyPicPageViewController: UIPageViewControllerDelegate {
 }
 
 extension DailyPicPageViewController: APODPageViewDelegate {
+    
+    func setNavbarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void) {
+        
+        guard let vc = viewControllers?.first as? APODViewController else { return }
+        
+        print("VC for \(vc.date.displayString()) is set to visible: \(visible) ")
+        
+        
+        // bail if the current state matches the desired state
+        if navbarIsVisible == visible {
+            return
+        }
+        
+        // get a frame calculation ready
+        let height = navbarView.frame.size.height
+        let offsetY = (visible ? height : -height)
+        
+        // zero duration means no animation
+        let duration = (animated ? 0.2 : 0.0)
+        
+        print("animated = \(animated)")
+        
+        UIView.animate(withDuration: duration, animations: {
+            let frame = self.navbarView.frame
+            self.navbarView.frame = frame.offsetBy(dx: 0, dy: offsetY);
+        }, completion:completion)
+        
+        
+    }
+    
+    var navbarIsVisible: Bool {
+        if navbarView == nil {
+            print("navbarView is nil")
+            return false
+        }
+        return navbarView.frame.origin.y >= view.frame.origin.y
+    }
+
+    
+    func setTabBarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void) {
+        // bail if the current state matches the desired state
+        if tabBarIsVisible == visible {
+            return
+        }
+        
+        // get a frame calculation ready
+        let height = tabBarController!.tabBar.frame.size.height
+        let offsetY = (visible ? -height : height)
+        
+        // zero duration means no animation
+        let duration = (animated ? 0.2 : 0.0)
+        
+        UIView.animate(withDuration: duration, animations: {
+            let frame = self.tabBarController!.tabBar.frame
+            self.tabBarController!.tabBar.frame = frame.offsetBy(dx: 0, dy: offsetY);
+        }, completion:completion)
+    }
+    
+    var tabBarIsVisible: Bool {
+        return tabBarController!.tabBar.frame.origin.y < view.frame.maxY
+    }
+
     func dateSelected(date: Date) {
         guard date != thisDate else { return }
         let direction: UIPageViewControllerNavigationDirection = date < thisDate ? .reverse : .forward
@@ -211,19 +238,6 @@ extension DailyPicPageViewController: APODPageViewDelegate {
         }
         thisDate = date
     }
-    
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
-    
-    override var prefersStatusBarHidden: Bool {
-        return statusBarHidden
-    }
-    
-    override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
-        return .slide
-    }
-
     
 }
 

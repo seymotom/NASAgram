@@ -65,16 +65,8 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         setupGestures()
         getAPOD()
         
-//        self.navigationItem.title = "NASAgram"
-//        let refreshButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTapped))
-//        self.navigationItem.rightBarButtonItem = refreshButton
-        
-        
     }
     
-//    func addTapped() {
-//        print("add")
-//    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -82,8 +74,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         toggleStatusBar()
         
         setTabBarVisible(visible: !apodInfoView.isBeingHidden, animated: true, completion: {_ in })
-        pageViewDelegate.setNavbarVisible(visible: !apodInfoView.isBeingHidden, animated: true, completion:{_ in })
-//        navigationController?.setNavigationBarHidden(!apodInfoView.isBeingHidden, animated: true)
+        setNavbarVisible(visible: !apodInfoView.isBeingHidden, animated: true, completion:{_ in })
         
         DispatchQueue.main.async {
             self.apodImageView.resetForOrientation()
@@ -96,9 +87,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
                 apodInfoView.hideInfo(false, animated: true)
             }
         }
-        dateView.isHidden = false
-        dateView.alpha = 1.0
-        Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(dateTimerIsUp), userInfo: nil, repeats: false)
+        setupDateView()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -130,7 +119,6 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         
         apodInfoView.snp.makeConstraints { (view) in
             view.leading.trailing.top.bottom.equalToSuperview()
-//            view.top.equalTo(topLayoutGuide.snp.bottom)
         }
         
         dateView.snp.makeConstraints { (view) in
@@ -227,6 +215,12 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    func setupDateView() {
+        dateView.isHidden = false
+        dateView.alpha = 1.0
+        Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(dateTimerIsUp), userInfo: nil, repeats: false)
+    }
+    
     func dateTimerIsUp() {
         if apodInfoView.isHidden {
             hideDateView(true)
@@ -272,48 +266,15 @@ extension APODViewController: APODViewDelegate {
     func toggleStatusBar() {
         // only toggleTabBar if this view is on screen as toggleTabBar gets called by adjacent viewControllers
         if isViewAppeared {
-            
-//            tabBarController?.tabBar.isHidden = apodInfoView.isHidden ? true : false
             pageViewDelegate.statusBarHidden = apodInfoView.isBeingHidden || UIDevice.current.orientation.isLandscape ? true : false
-//            pageViewDelegate.navBarHidden apodInfoView.isBeingHidden
-//            navigationController?.setNavigationBarHidden(!visible, animated: true)
-//            statusBarBackgorundView.isHidden = apodInfoView.isHidden ? true : false
-//            statusBarBackgorundView.snp.remakeConstraints { (view) in
-//                view.leading.trailing.top.equalToSuperview()
-//                view.height.equalTo(UIApplication.shared.statusBarFrame.height)
-//            }
         }
     }
     
     // pass a param to describe the state change, an animated flag and a completion block matching UIView animations completion
     func setTabBarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void) {
-        
-        
-        // bail if the current state matches the desired state
-        if tabBarIsVisible == visible {
-            return
-        }
-        
-        // get a frame calculation ready
-        let height = tabBarController!.tabBar.frame.size.height
-        let offsetY = (visible ? -height : height)
-        
-        // zero duration means no animation
-        let duration = (animated ? 0.2 : 0.0)
-        
-        UIView.animate(withDuration: duration, animations: {
-            let frame = self.tabBarController!.tabBar.frame
-            self.tabBarController!.tabBar.frame = frame.offsetBy(dx: 0, dy: offsetY);
-        }, completion:completion)
-        
-        
+        pageViewDelegate.setTabBarVisible(visible: visible, animated: animated, completion: completion)
     }
     
-    var tabBarIsVisible: Bool {
-        print(tabBarController ?? "nil")
-        return tabBarController!.tabBar.frame.origin.y < view.frame.maxY
-    }
-
     func setNavbarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void) {
         pageViewDelegate.setNavbarVisible(visible: visible, animated: animated, completion: completion)
     }

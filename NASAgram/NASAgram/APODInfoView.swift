@@ -16,7 +16,6 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
     var mediaType: MediaType?
     
     var detailView: DetailView!
-//    var toolBarView: ToolBarView!
     var dateSearchView: DateSearchView!
     
     convenience init(vcType: APODVCType) {
@@ -44,8 +43,6 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         detailView = DetailView(delegate: self)
         detailView.alpha = 0.0
         addSubview(detailView)
-//        addSubview(toolBarView)
-//        addSubview(dateView)
         
         dateSearchView = DateSearchView(delegate: self)
         addSubview(dateSearchView)
@@ -68,19 +65,6 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
             view.width.equalToSuperview().multipliedBy(0.8)
         }
         
-//        toolBarView.snp.makeConstraints { (view) in
-//            view.leading.trailing.equalToSuperview()
-//            view.top.equalToSuperview().offset(-self.toolBarView.height)
-//            view.height.equalTo(self.toolBarView.height)
-//        }
-        
-//        dateView.snp.makeConstraints { (view) in
-//            view.top.equalToSuperview().offset(100)
-//            view.width.equalTo(detailView)
-//            view.centerX.equalToSuperview()
-//            view.height.equalTo(50)
-//        }
-        
         dateSearchView.snp.makeConstraints { (view) in
             view.leading.trailing.equalTo(detailView)
             view.top.equalToSuperview()
@@ -90,10 +74,8 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
     func populateInfo(from apod: APOD) {
         mediaType = apod.mediaType
         detailView.videoLabel.isHidden = mediaType == .image ? true : false
-//        detailView.dateLabel.text = apod.date.displayString()
         detailView.titleLabel.text = apod.title
         detailView.explanationLabel.text = apod.explanation
-        
         dateSearchView.datePicker.date = apod.date
 //        let fav = apod.isFavorite ? "⭐️" : "☆"
 //        toolBarView.favoriteButton.setTitle(fav, for: .normal)
@@ -116,10 +98,6 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
                     
                     
                     let animator = UIViewPropertyAnimator(duration: 0.2, curve: .easeOut, animations: {
-//                        self.toolBarView.snp.remakeConstraints({ (view) in
-//                            view.leading.trailing.equalToSuperview()
-//                            view.top.equalToSuperview().offset(-self.toolBarView.height)
-//                        })
                         self.detailView.alpha = 0
                         self.layoutIfNeeded()
                     })
@@ -134,9 +112,6 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
                     self.viewDelegate.setTabBarVisible(visible: true, animated: true, completion: {_ in })
                     self.viewDelegate.setNavbarVisible(visible: true, animated: true, completion: {_ in })
                     let animator = UIViewPropertyAnimator(duration: 0.2, curve: .linear) {
-//                        self.toolBarView.snp.remakeConstraints({ (view) in
-//                            view.leading.trailing.top.equalToSuperview()
-//                        })
                         self.detailView.alpha = 1.0
                         self.layoutIfNeeded()
                     }
