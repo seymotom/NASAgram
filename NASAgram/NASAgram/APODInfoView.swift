@@ -11,22 +11,17 @@ import UIKit
 class APODInfoView: UIView, UIGestureRecognizerDelegate {
     
     var viewDelegate: APODViewDelegate!
-    var dateDelegate: APODDateDelegate?
+    var pageViewDelegate: APODPageViewDelegate!
     
     var mediaType: MediaType?
     
     var detailView: DetailView!
-//    var dateView: DateView!
-    var toolBarView: ToolBarView!
+//    var toolBarView: ToolBarView!
     var dateSearchView: DateSearchView!
     
-    convenience init(vcType: APODVCType, date: Date) {
+    convenience init(vcType: APODVCType) {
         self.init(frame: CGRect.zero)
-        toolBarView = ToolBarView(delegate: self, vcType: vcType)
-        
-        // remove the date from the init
-        
-//        dateView = DateView(date: date)
+//        toolBarView = ToolBarView(delegate: self, vcType: vcType)
         setup()
     }
     
@@ -49,7 +44,7 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         detailView = DetailView(delegate: self)
         detailView.alpha = 0.0
         addSubview(detailView)
-        addSubview(toolBarView)
+//        addSubview(toolBarView)
 //        addSubview(dateView)
         
         dateSearchView = DateSearchView(delegate: self)
@@ -73,11 +68,11 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
             view.width.equalToSuperview().multipliedBy(0.8)
         }
         
-        toolBarView.snp.makeConstraints { (view) in
-            view.leading.trailing.equalToSuperview()
-            view.top.equalToSuperview().offset(-self.toolBarView.height)
-            view.height.equalTo(self.toolBarView.height)
-        }
+//        toolBarView.snp.makeConstraints { (view) in
+//            view.leading.trailing.equalToSuperview()
+//            view.top.equalToSuperview().offset(-self.toolBarView.height)
+//            view.height.equalTo(self.toolBarView.height)
+//        }
         
 //        dateView.snp.makeConstraints { (view) in
 //            view.top.equalToSuperview().offset(100)
@@ -88,7 +83,7 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         
         dateSearchView.snp.makeConstraints { (view) in
             view.leading.trailing.equalTo(detailView)
-            view.top.equalTo(toolBarView.snp.bottom)
+            view.top.equalToSuperview()
         }
     }
         
@@ -100,10 +95,12 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         detailView.explanationLabel.text = apod.explanation
         
         dateSearchView.datePicker.date = apod.date
-        let fav = apod.isFavorite ? "⭐️" : "☆"
-        toolBarView.favoriteButton.setTitle(fav, for: .normal)
+//        let fav = apod.isFavorite ? "⭐️" : "☆"
+//        toolBarView.favoriteButton.setTitle(fav, for: .normal)
         layoutIfNeeded()
     }
+    
+    var isBeingHidden = true
     
     func hideInfo(_ hide: Bool, animated: Bool) {
         
@@ -112,26 +109,34 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
             DispatchQueue.main.async {
                 
                 if hide {
+                    self.isBeingHidden = true
+                    self.viewDelegate.setTabBarVisible(visible: false, animated: true, completion: {_ in })
+                    self.viewDelegate.setNavbarVisible(visible: false, animated: true, completion: {_ in })
+                    self.viewDelegate.toggleStatusBar()
+                    
+                    
                     let animator = UIViewPropertyAnimator(duration: 0.2, curve: .easeOut, animations: {
-                        self.toolBarView.snp.remakeConstraints({ (view) in
-                            view.leading.trailing.equalToSuperview()
-                            view.top.equalToSuperview().offset(-self.toolBarView.height)
-                        })
+//                        self.toolBarView.snp.remakeConstraints({ (view) in
+//                            view.leading.trailing.equalToSuperview()
+//                            view.top.equalToSuperview().offset(-self.toolBarView.height)
+//                        })
                         self.detailView.alpha = 0
                         self.layoutIfNeeded()
                     })
                     animator.addCompletion({ (_) in
                         self.isHidden = true
-                        self.viewDelegate.toggleTabBar()
                     })
                     animator.startAnimation()
                 } else {
                     self.isHidden = false
-                    self.viewDelegate.toggleTabBar()
+                    self.isBeingHidden = false
+                    self.viewDelegate.toggleStatusBar()
+                    self.viewDelegate.setTabBarVisible(visible: true, animated: true, completion: {_ in })
+                    self.viewDelegate.setNavbarVisible(visible: true, animated: true, completion: {_ in })
                     let animator = UIViewPropertyAnimator(duration: 0.2, curve: .linear) {
-                        self.toolBarView.snp.remakeConstraints({ (view) in
-                            view.leading.trailing.top.equalToSuperview()
-                        })
+//                        self.toolBarView.snp.remakeConstraints({ (view) in
+//                            view.leading.trailing.top.equalToSuperview()
+//                        })
                         self.detailView.alpha = 1.0
                         self.layoutIfNeeded()
                     }
@@ -140,7 +145,8 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
             }
         } else {
             isHidden = !hide ? false : true
-            viewDelegate.toggleTabBar()
+            isBeingHidden = isHidden
+            viewDelegate.toggleStatusBar()
         }
         
     }
@@ -153,7 +159,7 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
     }
     
     func datePickerDidChange() {
-        dateDelegate?.dateSelected(date: dateSearchView.datePicker.date)
+        pageViewDelegate?.dateSelected(date: dateSearchView.datePicker.date)
         let show = mediaType == .image ? true : false
         hideInfo(show, animated: true)
     }
@@ -180,9 +186,10 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         // cancel gesture if tap is in the button or datePicker
-        if touch.view == toolBarView || touch.view?.superview == toolBarView { // || touch.view == datePicker {
-            return false
-        }
+//        if touch.view == toolBarView || touch.view?.superview == toolBarView { // || touch.view == datePicker {
+//            return false
+//        }
+        
         return true
     }
     

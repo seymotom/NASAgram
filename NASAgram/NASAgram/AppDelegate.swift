@@ -32,15 +32,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let dataManager = DataManager(apiManager: apiManager)
         let favoitesManager = FavoritesManager(dataManager: dataManager)
         let apodManager = APODManager(dataManager: dataManager, favoritesManager: favoitesManager)
+//        let pageVC = UINavigationController(rootViewController: DailyPicPageViewController(manager: apodManager))
+        let favVC = UINavigationController(rootViewController: FavoritesViewController(manager: apodManager))
         
         let pageVC = DailyPicPageViewController(manager: apodManager)
-        let favVc = FavoritesViewController(manager: apodManager)
+//        let favVC = FavoritesViewController(manager: apodManager)
         
         pageVC.tabBarItem = UITabBarItem(title: "Daily", image: nil, selectedImage: nil)
-        favVc.tabBarItem = UITabBarItem(title: "Favorites", image: nil, selectedImage: nil)
+        favVC.tabBarItem = UITabBarItem(title: "Favorites", image: nil, selectedImage: nil)
         
         let tabController = UITabBarController()
-        tabController.viewControllers = [pageVC, favVc]
+        tabController.viewControllers = [pageVC, favVC]
         return tabController
     }
 

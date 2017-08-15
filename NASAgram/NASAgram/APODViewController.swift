@@ -1,4 +1,4 @@
-//
+
 //  APODViewController.swift
 //  NASAgram
 //
@@ -15,10 +15,12 @@ enum APODVCType {
 
 protocol APODViewDelegate {
     func toggleFavorite()
-    func toggleTabBar()
+    func toggleStatusBar()
     func hideDateView(_ hide: Bool)
     func openVideoURL()
     func dismissVC()
+    func setTabBarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void)
+    func setNavbarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void)
 }
 
 class APODViewController: UIViewController, UIGestureRecognizerDelegate {
@@ -34,18 +36,20 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     var apodImageView:APODImageView!
     let apodInfoView: APODInfoView!
     var dateView: DateView!
-    let statusBarBackgorundView = BlurredBackgroundView(style: .dark)
+//    let statusBarBackgorundView = BlurredBackgroundView(style: .dark)
     
     var alertFactory: AlertFactory!
+    var pageViewDelegate: APODPageViewDelegate!
     
     var isViewAppeared: Bool = false
     
-    init(date: Date, dateDelegate: APODDateDelegate?, manager: APODManager, vcType: APODVCType) {
+    init(date: Date, pageViewDelegate: APODPageViewDelegate?, manager: APODManager, vcType: APODVCType) {
         self.date = date
         self.manager = manager
-        apodInfoView = APODInfoView(vcType: vcType, date: date)
+        self.pageViewDelegate = pageViewDelegate
+        apodInfoView = APODInfoView(vcType: vcType)
         dateView = DateView(date: date)
-        self.apodInfoView.dateDelegate = dateDelegate
+        self.apodInfoView.pageViewDelegate = pageViewDelegate
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -60,12 +64,27 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         setupConstraints()
         setupGestures()
         getAPOD()
+        
+//        self.navigationItem.title = "NASAgram"
+//        let refreshButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTapped))
+//        self.navigationItem.rightBarButtonItem = refreshButton
+        
+        
     }
+    
+//    func addTapped() {
+//        print("add")
+//    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         isViewAppeared = true
-        toggleTabBar()
+        toggleStatusBar()
+        
+        setTabBarVisible(visible: !apodInfoView.isBeingHidden, animated: true, completion: {_ in })
+        pageViewDelegate.setNavbarVisible(visible: !apodInfoView.isBeingHidden, animated: true, completion:{_ in })
+//        navigationController?.setNavigationBarHidden(!apodInfoView.isBeingHidden, animated: true)
+        
         DispatchQueue.main.async {
             self.apodImageView.resetForOrientation()
         }
@@ -92,7 +111,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         view.backgroundColor = .black
         apodImageView = APODImageView()
         view.addSubview(apodImageView)
-        view.addSubview(statusBarBackgorundView)
+//        view.addSubview(statusBarBackgorundView)
         view.addSubview(dateView)
         view.addSubview(apodInfoView)
         apodInfoView.viewDelegate = self
@@ -104,14 +123,14 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
             view.leading.trailing.bottom.top.equalToSuperview()
         }
         
-        statusBarBackgorundView.snp.makeConstraints { (view) in
-            view.leading.trailing.top.equalToSuperview()
-            view.height.equalTo(UIApplication.shared.statusBarFrame.height)
-        }
+//        statusBarBackgorundView.snp.makeConstraints { (view) in
+//            view.leading.trailing.top.equalToSuperview()
+//            view.height.equalTo(UIApplication.shared.statusBarFrame.height)
+//        }
         
         apodInfoView.snp.makeConstraints { (view) in
-            view.leading.trailing.bottom.equalToSuperview()
-            view.top.equalTo(topLayoutGuide.snp.bottom)
+            view.leading.trailing.top.bottom.equalToSuperview()
+//            view.top.equalTo(topLayoutGuide.snp.bottom)
         }
         
         dateView.snp.makeConstraints { (view) in
@@ -152,7 +171,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
                     self.apodImageView.image = UIImage(data: apod.hdImageData! as Data)
                 case .video:
                     self.apodImageView.stopActivityIndicator()
-                    self.apodInfoView.hideInfo(false, animated: true)
+                    self.apodInfoView.hideInfo(false, animated: false)
                 }
             }
         } else {
@@ -237,7 +256,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        toggleTabBar()
+        toggleStatusBar()
         coordinator.animate(alongsideTransition: { (context) in
             if self.isViewAppeared {
                 self.apodImageView.resetForOrientation()
@@ -245,22 +264,60 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         }) { (context) in
         }
     }
+    
 }
 
 extension APODViewController: APODViewDelegate {
     
-    func toggleTabBar() {
+    func toggleStatusBar() {
         // only toggleTabBar if this view is on screen as toggleTabBar gets called by adjacent viewControllers
         if isViewAppeared {
-            tabBarController?.tabBar.isHidden = apodInfoView.isHidden ? true : false
-            UIApplication.shared.isStatusBarHidden = apodInfoView.isHidden || UIDevice.current.orientation.isLandscape ? true : false
-            statusBarBackgorundView.isHidden = apodInfoView.isHidden ? true : false
-            statusBarBackgorundView.snp.remakeConstraints { (view) in
-                view.leading.trailing.top.equalToSuperview()
-                view.height.equalTo(UIApplication.shared.statusBarFrame.height)
-            }
+            
+//            tabBarController?.tabBar.isHidden = apodInfoView.isHidden ? true : false
+            pageViewDelegate.statusBarHidden = apodInfoView.isBeingHidden || UIDevice.current.orientation.isLandscape ? true : false
+//            pageViewDelegate.navBarHidden apodInfoView.isBeingHidden
+//            navigationController?.setNavigationBarHidden(!visible, animated: true)
+//            statusBarBackgorundView.isHidden = apodInfoView.isHidden ? true : false
+//            statusBarBackgorundView.snp.remakeConstraints { (view) in
+//                view.leading.trailing.top.equalToSuperview()
+//                view.height.equalTo(UIApplication.shared.statusBarFrame.height)
+//            }
         }
     }
+    
+    // pass a param to describe the state change, an animated flag and a completion block matching UIView animations completion
+    func setTabBarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void) {
+        
+        
+        // bail if the current state matches the desired state
+        if tabBarIsVisible == visible {
+            return
+        }
+        
+        // get a frame calculation ready
+        let height = tabBarController!.tabBar.frame.size.height
+        let offsetY = (visible ? -height : height)
+        
+        // zero duration means no animation
+        let duration = (animated ? 0.2 : 0.0)
+        
+        UIView.animate(withDuration: duration, animations: {
+            let frame = self.tabBarController!.tabBar.frame
+            self.tabBarController!.tabBar.frame = frame.offsetBy(dx: 0, dy: offsetY);
+        }, completion:completion)
+        
+        
+    }
+    
+    var tabBarIsVisible: Bool {
+        print(tabBarController ?? "nil")
+        return tabBarController!.tabBar.frame.origin.y < view.frame.maxY
+    }
+
+    func setNavbarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void) {
+        pageViewDelegate.setNavbarVisible(visible: visible, animated: animated, completion: completion)
+    }
+    
     
     func toggleFavorite() {
         guard let apod = apod else { return }

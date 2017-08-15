@@ -8,8 +8,11 @@
 
 import UIKit
 
-protocol APODDateDelegate {
+protocol APODPageViewDelegate {
     func dateSelected(date: Date)
+    var statusBarHidden: Bool { get set }
+//    var navBarHidden: Bool { get set }
+    func setNavbarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void)
 }
 
 class DailyPicPageViewController: UIPageViewController {
@@ -19,6 +22,27 @@ class DailyPicPageViewController: UIPageViewController {
     var seenVCs: [String: UIViewController] = [:]
     
     let manager: APODManager!
+    
+//    let statusBarBackgorundView = BlurredBackgroundView(style: .dark)
+    
+    var navbarView: ToolBarView!
+    
+    var statusBarHidden = true {
+        didSet {
+            UIView.animate(withDuration: 0.2) { () -> Void in
+                self.setNeedsStatusBarAppearanceUpdate()
+            }
+        }
+    }
+    
+//    var navBarHidden = true {
+//        didSet {
+//            DispatchQueue.main.async {
+//                
+//                self.navigationController?.setNavigationBarHidden(self.navBarHidden, animated: true)
+//            }
+//        }
+//    }
     
     init(manager: APODManager) {
         self.manager = manager
@@ -32,7 +56,20 @@ class DailyPicPageViewController: UIPageViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupPageVC()
+        setupView()
+        
+//        self.navigationItem.title = "NASAgram"
+//        let refreshButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTapped))
+//        self.navigationItem.rightBarButtonItem = refreshButton
+//        
+//        navigationController?.isNavigationBarHidden = true
+        
     }
+    
+    func addTapped() {
+        print("add")
+    }
+
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -52,12 +89,34 @@ class DailyPicPageViewController: UIPageViewController {
         seenVCs[thisDate.yyyyMMdd()] = todayVC
     }
     
+    func setupView() {
+        guard let currentVC = self.viewControllers?.first as? APODViewController else {
+            return
+        }
+        
+        navbarView = ToolBarView(delegate: currentVC.apodInfoView, vcType: .daily)
+        view.addSubview(navbarView)
+        
+        
+        navbarView.snp.makeConstraints { (view) in
+            view.leading.trailing.equalToSuperview()
+            view.top.equalToSuperview().offset(-50)
+            view.height.equalTo(50)
+        }
+        
+//        view.addSubview(statusBarBackgorundView)
+//        statusBarBackgorundView.snp.makeConstraints { (view) in
+//            view.leading.trailing.top.equalToSuperview()
+//            view.bottom.equalTo(topLayoutGuide.snp.bottom)
+//        }
+    }
+    
     // put this in the dataManager
     func getAPODVC(for date: Date) -> UIViewController {
         if let nextVC = seenVCs[date.yyyyMMdd()] {
             return nextVC
         } else {
-            let nextVC = APODViewController(date: date, dateDelegate: self, manager: manager, vcType: .daily)
+            let nextVC = APODViewController(date: date, pageViewDelegate: self, manager: manager, vcType: .daily)
             seenVCs[date.yyyyMMdd()] = nextVC
             return nextVC
         }
@@ -74,29 +133,46 @@ class DailyPicPageViewController: UIPageViewController {
         seenVCs[date.advanceDay(by: 1).yyyyMMdd()] = after
     }
     
-    /*
- 
-    // fix the video screen. Currently loading indefinately and not showing info on didAppear
-    
-    */
     
     
-    // better to handle rotation from pageVc as we can control just the currentVC and not the adjoining VCs
+    func setNavbarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void) {
+        
+        guard let vc = viewControllers?.first as? APODViewController else { return }
+        
+        print("VC for \(vc.date.displayString()) is set to visible: \(visible) ")
+        
+        
+        // bail if the current state matches the desired state
+        if navbarIsVisible == visible {
+            return
+        }
+        
+        // get a frame calculation ready
+        let height = navbarView.frame.size.height
+        let offsetY = (visible ? height : -height)
+        
+        // zero duration means no animation
+        let duration = (animated ? 0.2 : 0.0)
+        
+        UIView.animate(withDuration: duration, animations: {
+            let frame = self.navbarView.frame
+            self.navbarView.frame = frame.offsetBy(dx: 0, dy: offsetY);
+        }, completion:completion)
+        
+        
+    }
     
-//    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-//        super.viewWillTransition(to: size, with: coordinator)
-//        // on rotate only toggle the tabBar for the current VC. Weird shit happens when toggleTabBar gets called for all VCs as the tabBar and statusBar are global singletons.
-//        guard let currentVC = viewControllers?.first as? APODViewController else {
-//            return
-//        }
-//        currentVC.toggleTabBar()
-//        
-//        coordinator.animate(alongsideTransition: { (context) in
-//            currentVC.apodImageView.resetForRotation()
-//        }) { (context) in
-//        }
-//    }
+    var navbarIsVisible: Bool {
+        if navbarView == nil {
+            print("navbar is nil")
+            return false
+        }
+        return navbarView.frame.origin.y >= view.frame.origin.y
+    }
 
+    
+    
+    
 }
 
 extension DailyPicPageViewController: UIPageViewControllerDataSource {
@@ -125,7 +201,7 @@ extension DailyPicPageViewController: UIPageViewControllerDelegate {
     }
 }
 
-extension DailyPicPageViewController: APODDateDelegate {
+extension DailyPicPageViewController: APODPageViewDelegate {
     func dateSelected(date: Date) {
         guard date != thisDate else { return }
         let direction: UIPageViewControllerNavigationDirection = date < thisDate ? .reverse : .forward
@@ -135,5 +211,19 @@ extension DailyPicPageViewController: APODDateDelegate {
         }
         thisDate = date
     }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return statusBarHidden
+    }
+    
+    override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
+        return .slide
+    }
+
+    
 }
 

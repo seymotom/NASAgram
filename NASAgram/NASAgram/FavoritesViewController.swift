@@ -14,6 +14,10 @@ class FavoritesViewController: UIViewController {
     
     let manager: APODManager!
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     init(manager: APODManager) {
         self.manager = manager
         super.init(nibName: nil, bundle: nil)
