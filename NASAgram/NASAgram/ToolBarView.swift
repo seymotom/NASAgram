@@ -8,6 +8,13 @@
 
 import UIKit
 
+@objc protocol ToolBarViewDelegate {
+    func favoriteButtonTapped(sender: UIButton)
+    func optionsButtonTapped(sender: UIButton)
+    func dateSearchButtonTapped(sender: UIButton)
+    func dismissButtonTapped(sender: UIButton)
+}
+
 class ToolBarView: UIView {
     
     var titleLabel = DetailLabel()
@@ -16,7 +23,7 @@ class ToolBarView: UIView {
     var dismissButton = UIButton()
     var dateSearchButton = UIButton()
 
-    var delegate: APODInfoView!
+    var delegate: ToolBarViewDelegate!
     var vcType: APODVCType!
     
     let height = 50.0
@@ -24,7 +31,7 @@ class ToolBarView: UIView {
     
     let backgroundView = BlurredBackgroundView(style: .dark)
     
-    convenience init(delegate: APODInfoView, vcType: APODVCType) {
+    convenience init(delegate: ToolBarViewDelegate, vcType: APODVCType) {
         self.init(frame: CGRect.zero)
         self.delegate = delegate
         self.vcType = vcType
@@ -102,5 +109,5 @@ class ToolBarView: UIView {
             view.centerY.equalToSuperview()
         }
         
-    }
+    }    
 }

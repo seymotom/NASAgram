@@ -23,6 +23,10 @@ protocol APODViewDelegate {
     func setNavbarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void)
 }
 
+@objc protocol DetailViewDelegate {
+    func videoLabelTapped()
+}
+
 class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     let date: Date!
@@ -33,23 +37,25 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         return manager?.data.apod(for: date.yyyyMMdd())
     }
     
-    var apodImageView:APODImageView!
-    let apodInfoView: APODInfoView!
     var dateView: DateView!
-//    let statusBarBackgorundView = BlurredBackgroundView(style: .dark)
+    var apodImageView:APODImageView!
+//    let apodInfoView: APODInfoView!
+    var apodDetailView: DetailView!
     
     var alertFactory: AlertFactory!
     var pageViewDelegate: APODPageViewDelegate!
     
     var isViewAppeared: Bool = false
     
+    var isHidingDetail: Bool = true
+    
     init(date: Date, pageViewDelegate: APODPageViewDelegate?, manager: APODManager, vcType: APODVCType) {
         self.date = date
         self.manager = manager
         self.pageViewDelegate = pageViewDelegate
-        apodInfoView = APODInfoView(vcType: vcType)
+//        apodInfoView = APODInfoView(vcType: vcType)
+//        self.apodInfoView.pageViewDelegate = pageViewDelegate
         dateView = DateView(date: date)
-        self.apodInfoView.pageViewDelegate = pageViewDelegate
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -71,22 +77,22 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         isViewAppeared = true
-        toggleStatusBar()
+//        toggleStatusBar()
         
-        setTabBarVisible(visible: !apodInfoView.isBeingHidden, animated: true, completion: {_ in })
-        setNavbarVisible(visible: !apodInfoView.isBeingHidden, animated: true, completion:{_ in })
+//        setTabBarVisible(visible: !apodInfoView.isBeingHidden, animated: true, completion: {_ in })
+//        setNavbarVisible(visible: !apodInfoView.isBeingHidden, animated: true, completion:{_ in })
         
         DispatchQueue.main.async {
             self.apodImageView.resetForOrientation()
         }
         
         // reset the favorites star if deleted from favorites
-        if let apod = apod {
-            apodInfoView.populateInfo(from: apod)
-            if apod.mediaType == .video {
-                apodInfoView.hideInfo(false, animated: true)
-            }
-        }
+//        if let apod = apod {
+//            apodInfoView.populateInfo(from: apod)
+//            if apod.mediaType == .video {
+//                apodInfoView.hideInfo(false, animated: true)
+//            }
+//        }
         setupDateView()
     }
     
@@ -100,11 +106,13 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         view.backgroundColor = .black
         apodImageView = APODImageView()
         view.addSubview(apodImageView)
-//        view.addSubview(statusBarBackgorundView)
+        apodDetailView = DetailView(delegate: self)
+        view.addSubview(apodDetailView)
         view.addSubview(dateView)
-        view.addSubview(apodInfoView)
-        apodInfoView.viewDelegate = self
-        apodInfoView.hideInfo(true, animated: false)
+        apodDetailView.isHidden = isHidingDetail
+//        view.addSubview(apodInfoView)
+//        apodInfoView.viewDelegate = self
+//        apodInfoView.hideInfo(true, animated: false)
     }
     
     func setupConstraints() {
@@ -112,20 +120,16 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
             view.leading.trailing.bottom.top.equalToSuperview()
         }
         
-//        statusBarBackgorundView.snp.makeConstraints { (view) in
-//            view.leading.trailing.top.equalToSuperview()
-//            view.height.equalTo(UIApplication.shared.statusBarFrame.height)
-//        }
-        
-        apodInfoView.snp.makeConstraints { (view) in
-            view.leading.trailing.top.bottom.equalToSuperview()
-        }
-        
         dateView.snp.makeConstraints { (view) in
             view.top.equalToSuperview().offset(70)
             view.width.equalToSuperview().multipliedBy(0.8)
             view.height.equalTo(50)
             view.centerX.equalToSuperview()
+        }
+        
+        apodDetailView.snp.makeConstraints { (view) in
+            view.width.centerX.equalTo(dateView)
+            view.bottom.equalToSuperview().offset(-50)
         }
     }
     
@@ -153,17 +157,17 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         // checks favorites before hitting api
         if let apod = manager?.favorites.fetchAPOD(date: date.yyyyMMdd()) {
             DispatchQueue.main.async {
-                self.apodInfoView.populateInfo(from: apod)
+                self.apodDetailView.populateInfo(from: apod)
                 switch apod.mediaType {
                 case .image:
                     self.apodImageView.image = UIImage(data: apod.hdImageData! as Data)
                 case .video:
                     self.apodImageView.stopActivityIndicator()
-                    self.apodInfoView.hideInfo(false, animated: false)
+//                    self.apodInfoView.hideInfo(false, animated: false)
                 }
             }
         } else {
-            self.loadAPOD()
+            loadAPOD()
         }
     }
     
@@ -175,7 +179,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
                 return
             }
             DispatchQueue.main.async {
-                self.apodInfoView.populateInfo(from: apod)
+                self.apodDetailView.populateInfo(from: apod)
             }
             
             switch apod.mediaType {
@@ -197,7 +201,8 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
                 }
             case .video:
                 self.apodImageView.stopActivityIndicator()
-                self.apodInfoView.hideInfo(false, animated: true)
+                self.isHidingDetail = false
+                self.fadeView(self.apodDetailView, hide: self.isHidingDetail)
             }
         }
     }
@@ -205,9 +210,14 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func handleGesture(sender: UITapGestureRecognizer) {
         switch sender.numberOfTapsRequired {
-        case 1 where apod != nil:
-            apodInfoView.hideInfo(false, animated: true)
-            hideDateView(false)
+        case 1:
+            // only hide/show view
+            if let apod = apod, apod.mediaType == .image {
+                isHidingDetail = !isHidingDetail
+                fadeView(dateView, hide: isHidingDetail)
+                fadeView(apodDetailView, hide: isHidingDetail)
+            }
+            
         case 2:
             apodImageView.doubleTapZoom(for: sender)
         default:
@@ -216,31 +226,30 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func setupDateView() {
-        dateView.isHidden = false
-        dateView.alpha = 1.0
+        fadeView(dateView, hide: false)
         Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(dateTimerIsUp), userInfo: nil, repeats: false)
     }
     
     func dateTimerIsUp() {
-        if apodInfoView.isHidden {
-            hideDateView(true)
+        if isHidingDetail {
+           fadeView(dateView, hide: true)
         }
     }
     
-    func hideDateView(_ hide: Bool) {
+    func fadeView(_ view: UIView, hide: Bool) {
         
         let alpha: CGFloat = hide ? 0 : 1
         
         if !hide {
-            dateView.isHidden = false
-            dateView.alpha = 0
+            view.isHidden = false
+            view.alpha = 0
         }
         
         UIView.animate(withDuration: 0.2, animations: { 
-            self.dateView.alpha = alpha
+            view.alpha = alpha
         }) { (_) in
             if hide {
-                self.dateView.isHidden = true
+                view.isHidden = true
             }
         }
     }
@@ -250,7 +259,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        toggleStatusBar()
+//        toggleStatusBar()
         coordinator.animate(alongsideTransition: { (context) in
             if self.isViewAppeared {
                 self.apodImageView.resetForOrientation()
@@ -259,48 +268,59 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    
+    
+    
 }
 
-extension APODViewController: APODViewDelegate {
+extension APODViewController: DetailViewDelegate {
     
-    func toggleStatusBar() {
-        // only toggleTabBar if this view is on screen as toggleTabBar gets called by adjacent viewControllers
-        if isViewAppeared {
-            pageViewDelegate.statusBarHidden = apodInfoView.isBeingHidden || UIDevice.current.orientation.isLandscape ? true : false
-        }
-    }
-    
-    // pass a param to describe the state change, an animated flag and a completion block matching UIView animations completion
-    func setTabBarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void) {
-        pageViewDelegate.setTabBarVisible(visible: visible, animated: animated, completion: completion)
-    }
-    
-    func setNavbarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void) {
-        pageViewDelegate.setNavbarVisible(visible: visible, animated: animated, completion: completion)
-    }
-    
-    
-    func toggleFavorite() {
-        guard let apod = apod else { return }
-        if apod.isFavorite {
-            manager?.favorites.delete(apod)
-        } else {
-            manager?.favorites.save(apod)
-        }
-        DispatchQueue.main.async {
-            self.apodInfoView.populateInfo(from: apod)
-        }
-    }
-    
-    func openVideoURL() {
+    func videoLabelTapped() {
         guard let apod = apod, let url = URL(string: apod.url) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
-    
-    func dismissVC() {
-        self.dismiss(animated: true)
-    }
 }
 
+//extension APODViewController: APODViewDelegate {
+//    
+//    func toggleStatusBar() {
+//        // only toggleTabBar if this view is on screen as toggleTabBar gets called by adjacent viewControllers
+//        if isViewAppeared {
+////            pageViewDelegate.statusBarHidden = apodInfoView.isBeingHidden || UIDevice.current.orientation.isLandscape ? true : false
+//        }
+//    }
+//    
+//    // pass a param to describe the state change, an animated flag and a completion block matching UIView animations completion
+//    func setTabBarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void) {
+//        pageViewDelegate.setTabBarVisible(visible: visible, animated: animated, completion: completion)
+//    }
+//    
+//    func setNavbarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void) {
+//        pageViewDelegate.setNavbarVisible(visible: visible, animated: animated, completion: completion)
+//    }
+//    
+//    
+//    func toggleFavorite() {
+//        guard let apod = apod else { return }
+//        if apod.isFavorite {
+//            manager?.favorites.delete(apod)
+//        } else {
+//            manager?.favorites.save(apod)
+//        }
+////        DispatchQueue.main.async {
+////            self.apodInfoView.populateInfo(from: apod)
+////        }
+//    }
+//    
+//    func openVideoURL() {
+//        guard let apod = apod, let url = URL(string: apod.url) else { return }
+//        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+//    }
+//    
+//    func dismissVC() {
+//        self.dismiss(animated: true)
+//    }
+//}
+//
 
 

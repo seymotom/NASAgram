@@ -10,18 +10,17 @@ import UIKit
 
 class DetailView: UIView {
     
-    var delegate: APODInfoView!
+    var delegate: DetailViewDelegate!
     
     let margin = 20.0
 
-//    var dateLabel = DetailLabel()
     var titleLabel = DetailLabel()
     var explanationLabel = DetailLabel()
     var videoLabel = DetailLabel()
     
     let backgroundView = BlurredBackgroundView(style: .dark)
     
-    convenience init(delegate: APODInfoView) {
+    convenience init(delegate: DetailViewDelegate) {
         self.init(frame: CGRect.zero)
         self.delegate = delegate
         setup()
@@ -44,8 +43,6 @@ class DetailView: UIView {
     
     func setupViews() {
         addSubview(backgroundView)
-//        addSubview(dateLabel)
-//        dateLabel.textAlignment = .center
         titleLabel.textAlignment = .center
         
         addSubview(titleLabel)
@@ -59,7 +56,7 @@ class DetailView: UIView {
         addSubview(explanationLabel)
         
         let videoTap = UITapGestureRecognizer()
-        videoTap.delegate = delegate
+        videoTap.delegate = delegate as? UIGestureRecognizerDelegate
         videoTap.numberOfTapsRequired = 1
         videoTap.addTarget(delegate , action: #selector (delegate.videoLabelTapped))
         videoLabel.addGestureRecognizer(videoTap)
@@ -69,10 +66,6 @@ class DetailView: UIView {
         backgroundView.snp.makeConstraints { (view) in
             view.leading.trailing.top.bottom.equalToSuperview()
         }
-//        dateLabel.snp.makeConstraints { (view) in
-//            view.top.leading.equalToSuperview().offset(margin)
-//            view.trailing.equalToSuperview().offset(-margin)
-//        }
         titleLabel.snp.makeConstraints { (view) in
             view.top.leading.equalToSuperview().offset(margin)
             view.trailing.equalToSuperview().offset(-margin)
@@ -86,5 +79,13 @@ class DetailView: UIView {
             view.top.equalTo(explanationLabel.snp.bottom).offset(margin)
             view.bottom.equalToSuperview().offset(-margin)
         }
+    }
+    
+    func populateInfo(from apod: APOD) {
+        let mediaType = apod.mediaType
+        videoLabel.isHidden = mediaType == .image ? true : false
+        titleLabel.text = apod.title
+        explanationLabel.text = apod.explanation
+        layoutIfNeeded()
     }
 }

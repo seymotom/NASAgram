@@ -36,6 +36,10 @@ class DailyPicPageViewController: UIPageViewController {
         }
     }
     
+    var currentAPODViewController: APODViewController? {
+        return viewControllers?.first as? APODViewController
+    }
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -89,11 +93,11 @@ class DailyPicPageViewController: UIPageViewController {
     }
     
     func setupView() {
-        guard let currentVC = self.viewControllers?.first as? APODViewController else {
-            return
-        }
+//        guard let currentVC = self.viewControllers?.first as? APODViewController else {
+//            return
+//        }
         
-        navbarView = ToolBarView(delegate: currentVC.apodInfoView, vcType: .daily)
+        navbarView = ToolBarView(delegate: self, vcType: .daily)
         view.addSubview(navbarView)
         
         
@@ -158,7 +162,7 @@ extension DailyPicPageViewController: UIPageViewControllerDataSource {
 extension DailyPicPageViewController: UIPageViewControllerDelegate {
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         
-        guard let currentVC = self.viewControllers?.first as? APODViewController else {
+        guard let currentVC = currentAPODViewController else {
             return
         }
         // this increments or decrements the currentDate
@@ -170,9 +174,10 @@ extension DailyPicPageViewController: APODPageViewDelegate {
     
     func setNavbarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void) {
         
-        guard let vc = viewControllers?.first as? APODViewController else { return }
-        
-        print("VC for \(vc.date.displayString()) is set to visible: \(visible) ")
+//        guard let currentVC = currentAPODViewController else {
+//            return
+//        }
+//        print("VC for \(currentVC.date.displayString()) is set to visible: \(visible) ")
         
         
         // bail if the current state matches the desired state
@@ -239,5 +244,22 @@ extension DailyPicPageViewController: APODPageViewDelegate {
         thisDate = date
     }
     
+}
+
+extension DailyPicPageViewController: ToolBarViewDelegate {
+    
+    func favoriteButtonTapped(sender: UIButton) {
+        print("fav tapped for \(currentAPODViewController!.date.displayString())")
+    }
+    func optionsButtonTapped(sender: UIButton) {
+        print("burger tapped for \(currentAPODViewController!.date.displayString())")
+
+    }
+    func dateSearchButtonTapped(sender: UIButton) {
+        print("search tapped for \(currentAPODViewController!.date.displayString())")
+    }
+    func dismissButtonTapped(sender: UIButton) {
+        print("dismiss tapped for \(currentAPODViewController!.date.displayString())")
+    }
 }
 

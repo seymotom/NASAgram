@@ -40,7 +40,7 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
     private func setupViews() {
         backgroundColor = .clear
 
-        detailView = DetailView(delegate: self)
+//        detailView = DetailView(delegate: self)
         detailView.alpha = 0.0
         addSubview(detailView)
         
