@@ -11,18 +11,18 @@ import UIKit
 class APODInfoView: UIView, UIGestureRecognizerDelegate {
     
 //    var viewDelegate: APODViewDelegate!
-    var pageViewDelegate: APODPageViewDelegate!
+//    var pageViewDelegate: APODPageViewDelegate!
     
     var mediaType: MediaType?
     
     var detailView: DetailView!
     var dateSearchView: DateSearchView!
     
-    convenience init(vcType: APODVCType) {
-        self.init(frame: CGRect.zero)
-//        toolBarView = ToolBarView(delegate: self, vcType: vcType)
-        setup()
-    }
+//    convenience init(vcType: APODVCType) {
+//        self.init(frame: CGRect.zero)
+////        toolBarView = ToolBarView(delegate: self, vcType: vcType)
+//        setup()
+//    }
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!

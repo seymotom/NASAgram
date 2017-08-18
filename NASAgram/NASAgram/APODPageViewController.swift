@@ -1,29 +1,27 @@
 //
-//  DailyPicPageViewController.swift
+//  APODPageViewController.swift
 //  NASAgram
 //
-//  Created by Tom Seymour on 6/27/17.
+//  Created by Tom Seymour on 8/18/17.
 //  Copyright © 2017 seymotom. All rights reserved.
 //
 
 import UIKit
 
-//enum APODPageViewType {
-//    case daily, favorite
-//}
-//
-//protocol APODPageViewDelegate {
-//    var statusBarHeightWhenNotHidden: CGFloat { get }
-//    func showToolTabStatusBars(_ show: Bool)
-//}
+enum APODPageViewType {
+    case daily, favorite
+}
 
-class DailyPicPageViewController: UIPageViewController {
-    
-    var thisDate: Date = Date()
-    
-    var seenVCs: [String: UIViewController] = [:]
+protocol APODPageViewDelegate {
+    var statusBarHeightWhenNotHidden: CGFloat { get }
+    func showToolTabStatusBars(_ show: Bool)
+}
+
+class APODPageViewController: UIPageViewController {
 
     let apodManager: APODManager!
+    
+    var pageViewManager: APODPageViewManagerDelegate!
     
     let pageViewType: APODPageViewType!
     
@@ -61,7 +59,7 @@ class DailyPicPageViewController: UIPageViewController {
     init(manager: APODManager, pageViewType: APODPageViewType) {
         self.apodManager = manager
         self.pageViewType = pageViewType
-        // StatusBar height is 0 when hidden so have to capture the value here so the APODVC can use it to constrain the date
+        // statusBar height is 0 when hidden so have to capture the value here so the APODVC can use it to constrain the date
         statusBarHeightWhenNotHidden = UIApplication.shared.statusBarFrame.height
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     }
@@ -85,24 +83,20 @@ class DailyPicPageViewController: UIPageViewController {
         super.didReceiveMemoryWarning()
         print("/n/n/n>>>>>>>>>>> !!! MEMORY WARNING !!! <<<<<<<<<<<<<\n\n\n")
         // empty the dictionary if using too much memory
-        seenVCs = [:]
+        //        seenVCs = [:]
     }
     
     func setupPageVC() {
-        dataSource = self
-        delegate = self
-        
-        let todayVC = getAPODVC(for: thisDate)
-        setViewControllers([todayVC], direction: .reverse, animated: true) { (_) in
-            self.loadSurroundingVCs(for: self.thisDate, viewController: todayVC)
-        }
-        seenVCs[thisDate.yyyyMMdd()] = todayVC
+        pageViewManager = DailyPageViewManager(pageViewController: self, apodManager: apodManager)
+        dataSource = pageViewManager
+        delegate = pageViewManager
+        pageViewManager.setupPageVC()
     }
     
     func setupView() {
         toolBarView = ToolBarView(delegate: self, pageViewType: pageViewType)
         view.addSubview(toolBarView)
-        dateSearchView = DateSearchView(delegate: self)
+        dateSearchView = DateSearchView(delegate: pageViewManager)
         view.addSubview(dateSearchView)
         dateSearchView.isHidden = true
         view.addSubview(statusBarBackgorundView)
@@ -124,28 +118,6 @@ class DailyPicPageViewController: UIPageViewController {
         }
     }
     
-//    // put this in the dataManager
-    func getAPODVC(for date: Date) -> UIViewController {
-        if let nextVC = seenVCs[date.yyyyMMdd()] {
-            return nextVC
-        } else {
-            let nextVC = APODViewController(date: date, pageViewDelegate: self, manager: apodManager)
-            seenVCs[date.yyyyMMdd()] = nextVC
-            return nextVC
-        }
-    }
-    
-    func loadSurroundingVCs(for date: Date, viewController: UIViewController) {
-        let before = pageViewController(self, viewControllerBefore: viewController)
-        let after = pageViewController(self, viewControllerAfter: viewController)
-        // accessing the viewController's view loads it so it can prepopulate
-        let _ = before?.view
-        let _ = after?.view
-        
-        seenVCs[date.advanceDay(by: -1).yyyyMMdd()] = before
-        seenVCs[date.advanceDay(by: 1).yyyyMMdd()] = after
-    }
-    
     
     // MARK:- Rotation
     
@@ -165,33 +137,8 @@ class DailyPicPageViewController: UIPageViewController {
     }
 }
 
-extension DailyPicPageViewController: UIPageViewControllerDataSource {
-    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        if thisDate.yyyyMMdd() == Date().yyyyMMdd() {
-            return nil
-        }
-        let tomorrow = thisDate.advanceDay(by: 1)
-        return getAPODVC(for: tomorrow)
-    }
-    
-    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        let yesterday = thisDate.advanceDay(by: -1)
-        return getAPODVC(for: yesterday)
-    }
-}
 
-extension DailyPicPageViewController: UIPageViewControllerDelegate {
-    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-        
-        guard let currentVC = currentAPODViewController else {
-            return
-        }
-        // this increments or decrements the currentDate
-        thisDate = currentVC.date
-    }
-}
-
-extension DailyPicPageViewController: APODPageViewDelegate {
+extension APODPageViewController: APODPageViewDelegate {
     
     func setToolBarVisible(visible: Bool, animated: Bool) {
         
@@ -221,7 +168,7 @@ extension DailyPicPageViewController: APODPageViewDelegate {
         guard toolBarView != nil else { return false }
         return toolBarView.frame.origin.y >= view.frame.origin.y
     }
-
+    
     
     func setTabBarVisible(visible: Bool, animated: Bool) {
         // bail if the current state matches the desired state
@@ -253,23 +200,23 @@ extension DailyPicPageViewController: APODPageViewDelegate {
         statusBarHidden = UIDevice.current.orientation.isLandscape || !show ? true : false
     }
     
-
+    
     
 }
 
-extension DailyPicPageViewController: DateSearchViewDelegate {
-    func dateSelected(date: Date) {
-        guard date != thisDate else { return }
-        let direction: UIPageViewControllerNavigationDirection = date < thisDate ? .reverse : .forward
-        let newVC = getAPODVC(for: date)
-        setViewControllers([newVC], direction: direction, animated: true) { (_) in
-            self.loadSurroundingVCs(for: date, viewController: newVC)
-        }
-        thisDate = date
-    }
-}
+//extension APODPageViewController: DateSearchViewDelegate {
+//    func dateSelected(date: Date) {
+//        //        guard date != thisDate else { return }
+//        //        let direction: UIPageViewControllerNavigationDirection = date < thisDate ? .reverse : .forward
+//        //        let newVC = getAPODVC(for: date)
+//        //        setViewControllers([newVC], direction: direction, animated: true) { (_) in
+//        //            self.loadSurroundingVCs(for: date, viewController: newVC)
+//        //        }
+//        //        thisDate = date
+//    }
+//}
 
-extension DailyPicPageViewController: ToolBarViewDelegate {
+extension APODPageViewController: ToolBarViewDelegate {
     
     func favoriteButtonTapped(sender: UIButton) {
         print("fav tapped for \(currentAPODViewController!.date.displayString())")
@@ -281,7 +228,7 @@ extension DailyPicPageViewController: ToolBarViewDelegate {
         } else {
             apodManager?.favorites.save(apod)
         }
-      
+        
         toolBarView.setFavorite(apod.isFavorite)
     }
     

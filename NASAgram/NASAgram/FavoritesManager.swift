@@ -165,9 +165,10 @@ extension FavoritesManager: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let apod = fetchedResultsController.object(at: indexPath).apod()
-        let apodVC = APODViewController(date: apod.date, pageViewDelegate: nil, manager: favoritesViewController.manager, vcType: .favorite)
-        favoritesViewController.present(apodVC, animated: true, completion: nil)
+//        let apod = fetchedResultsController.object(at: indexPath).apod()
+//        let apodVC = APODViewController(date: apod.date, pageViewDelegate: nil, manager: favoritesViewController.manager, vcType: .favorite)
+//        favoritesViewController.present(apodVC, animated: true, completion: nil)
+        
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

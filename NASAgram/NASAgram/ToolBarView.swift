@@ -24,17 +24,17 @@ class ToolBarView: UIView {
     var dateSearchButton = UIButton()
 
     var delegate: ToolBarViewDelegate!
-    var vcType: APODVCType!
+    var pageViewType: APODPageViewType!
     
     static let height: CGFloat = 50.0
     let margin = 8.0
     
     let backgroundView = BlurredBackgroundView(style: .dark)
     
-    convenience init(delegate: ToolBarViewDelegate, vcType: APODVCType) {
+    convenience init(delegate: ToolBarViewDelegate, pageViewType: APODPageViewType) {
         self.init(frame: CGRect.zero)
         self.delegate = delegate
-        self.vcType = vcType
+        self.pageViewType = pageViewType
         setup()
     }
     
@@ -70,7 +70,7 @@ class ToolBarView: UIView {
         dismissButton.setTitle("✕", for: .normal)
         addSubview(dismissButton)
         
-        switch vcType! {
+        switch pageViewType! {
         case .daily:
             dismissButton.isHidden = true
         case .favorite:

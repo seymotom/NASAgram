@@ -9,9 +9,6 @@
 import UIKit
 import SnapKit
 
-enum APODVCType {
-    case daily, favorite
-}
 
 @objc protocol DetailViewDelegate {
     func videoLabelTapped()
@@ -38,7 +35,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     var isHidingDetail: Bool = true
     
-    init(date: Date, pageViewDelegate: APODPageViewDelegate?, manager: APODManager, vcType: APODVCType) {
+    init(date: Date, pageViewDelegate: APODPageViewDelegate?, manager: APODManager) {
         self.date = date
         self.manager = manager
         self.pageViewDelegate = pageViewDelegate
