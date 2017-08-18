@@ -44,7 +44,7 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         detailView.alpha = 0.0
         addSubview(detailView)
         
-        dateSearchView = DateSearchView(delegate: self)
+//        dateSearchView = DateSearchView(delegate: self)
         addSubview(dateSearchView)
         dateSearchView.isHidden = true
         
@@ -133,11 +133,11 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         }
     }
     
-    func datePickerDidChange() {
-        pageViewDelegate?.dateSelected(date: dateSearchView.datePicker.date)
-        let show = mediaType == .image ? true : false
-        hideInfo(show, animated: true)
-    }
+//    func datePickerDidChange() {
+//        pageViewDelegate?.dateSelected(date: dateSearchView.datePicker.date)
+//        let show = mediaType == .image ? true : false
+//        hideInfo(show, animated: true)
+//    }
     
     func favoriteButtonTapped(sender: UIButton) {
 //        viewDelegate.toggleFavorite()

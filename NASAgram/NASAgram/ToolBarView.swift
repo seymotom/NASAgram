@@ -109,5 +109,9 @@ class ToolBarView: UIView {
             view.centerY.equalToSuperview()
         }
         
-    }    
+    }
+    
+    func setFavorite(_ isFavorite: Bool) {
+        favoriteButton.setTitle(isFavorite ? "⭐️" : "☆", for: .normal)
+    }
 }

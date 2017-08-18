@@ -13,16 +13,6 @@ enum APODVCType {
     case daily, favorite
 }
 
-//protocol APODViewDelegate {
-//    func toggleFavorite()
-//    func toggleStatusBar()
-//    func hideDateView(_ hide: Bool)
-//    func openVideoURL()
-//    func dismissVC()
-//    func setTabBarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void)
-//    func setNavbarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void)
-//}
-
 @objc protocol DetailViewDelegate {
     func videoLabelTapped()
 }
@@ -68,7 +58,6 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         setupConstraints()
         setupGestures()
         getAPOD()
-        
     }
     
     
@@ -76,13 +65,12 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         super.viewWillAppear(animated)
         isViewAppeared = true
         
-        pageViewDelegate.showNavTabStatusBars(!isHidingDetail)
+        pageViewDelegate.showToolTabStatusBars(!isHidingDetail)
         setupDateView()
         
         DispatchQueue.main.async {
             self.apodImageView.resetForOrientation()
         }
-        
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -102,7 +90,6 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func setupConstraints() {
-        constrainDateView()
         
         apodImageView.snp.makeConstraints { (view) in
             view.leading.trailing.bottom.top.equalToSuperview()
@@ -111,11 +98,12 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
             view.width.centerX.equalTo(dateView)
             view.bottom.equalTo(bottomLayoutGuide.snp.top)
         }
+        constrainDateView()
     }
     
     func constrainDateView() {
         // UIDevice.current.orientation.isLandscape doesn't detect isLandscape on first load so comparing the screen height and width to tell if landscape
-        let offset = UIScreen.main.bounds.width > UIScreen.main.bounds.height ? ToolBarView.height : UIApplication.shared.statusBarFrame.height + ToolBarView.height
+        let offset = UIScreen.main.bounds.width > UIScreen.main.bounds.height ? ToolBarView.height : pageViewDelegate.statusBarHeightWhenNotHidden + ToolBarView.height
         dateView.snp.remakeConstraints { (view) in
             view.top.equalToSuperview().offset(offset)
             view.width.equalToSuperview().multipliedBy(DateView.widthMultiplier)
@@ -229,7 +217,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
                 isHidingDetail = !isHidingDetail
                 fadeView(dateView, hide: isHidingDetail)
                 fadeView(apodDetailView, hide: isHidingDetail)
-                pageViewDelegate.showNavTabStatusBars(!isHidingDetail)
+                pageViewDelegate.showToolTabStatusBars(!isHidingDetail)
             }
             
         case 2:

@@ -8,9 +8,13 @@
 
 import UIKit
 
+@objc protocol DateSearchViewDelegate {
+    func dateSelected(date: Date)
+}
+
 class DateSearchView: UIView {
 
-    var delegate: APODInfoView!
+    var delegate: DateSearchViewDelegate!
     
     let margin = 20.0
     
@@ -19,7 +23,7 @@ class DateSearchView: UIView {
     
     let backgroundView = BlurredBackgroundView(style: .regular)
     
-    convenience init(delegate: APODInfoView) {
+    convenience init(delegate: DateSearchViewDelegate) {
         self.init(frame: CGRect.zero)
         self.delegate = delegate
         setup()
@@ -48,7 +52,7 @@ class DateSearchView: UIView {
         addSubview(datePicker)
         
         doneButton.setTitle("Done", for: .normal)
-        doneButton.addTarget(delegate, action: #selector (delegate.datePickerDidChange), for: .touchUpInside)
+        doneButton.addTarget(self, action: #selector (datePickerDidChange), for: .touchUpInside)
         addSubview(doneButton)
     }
     
@@ -66,6 +70,11 @@ class DateSearchView: UIView {
             view.top.equalTo(datePicker.snp.bottom)
             view.bottom.equalToSuperview()
         }
+    }
+    
+    func datePickerDidChange() {
+        delegate.dateSelected(date: datePicker.date)
+        isHidden = true
     }
 
 
