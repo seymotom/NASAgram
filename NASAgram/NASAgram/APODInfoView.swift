@@ -10,7 +10,7 @@ import UIKit
 
 class APODInfoView: UIView, UIGestureRecognizerDelegate {
     
-    var viewDelegate: APODViewDelegate!
+//    var viewDelegate: APODViewDelegate!
     var pageViewDelegate: APODPageViewDelegate!
     
     var mediaType: MediaType?
@@ -92,9 +92,9 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
                 
                 if hide {
                     self.isBeingHidden = true
-                    self.viewDelegate.setTabBarVisible(visible: false, animated: true, completion: {_ in })
-                    self.viewDelegate.setNavbarVisible(visible: false, animated: true, completion: {_ in })
-                    self.viewDelegate.toggleStatusBar()
+//                    self.viewDelegate.setTabBarVisible(visible: false, animated: true, completion: {_ in })
+//                    self.viewDelegate.setNavbarVisible(visible: false, animated: true, completion: {_ in })
+//                    self.viewDelegate.toggleStatusBar()
                     
                     
                     let animator = UIViewPropertyAnimator(duration: 0.2, curve: .easeOut, animations: {
@@ -108,9 +108,9 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
                 } else {
                     self.isHidden = false
                     self.isBeingHidden = false
-                    self.viewDelegate.toggleStatusBar()
-                    self.viewDelegate.setTabBarVisible(visible: true, animated: true, completion: {_ in })
-                    self.viewDelegate.setNavbarVisible(visible: true, animated: true, completion: {_ in })
+//                    self.viewDelegate.toggleStatusBar()
+//                    self.viewDelegate.setTabBarVisible(visible: true, animated: true, completion: {_ in })
+//                    self.viewDelegate.setNavbarVisible(visible: true, animated: true, completion: {_ in })
                     let animator = UIViewPropertyAnimator(duration: 0.2, curve: .linear) {
                         self.detailView.alpha = 1.0
                         self.layoutIfNeeded()
@@ -121,7 +121,7 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
         } else {
             isHidden = !hide ? false : true
             isBeingHidden = isHidden
-            viewDelegate.toggleStatusBar()
+//            viewDelegate.toggleStatusBar()
         }
         
     }
@@ -129,7 +129,7 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
     func handleGesture(sender: UITapGestureRecognizer) {
         if mediaType == .image {
             hideInfo(true, animated: true)
-            viewDelegate.hideDateView(true)
+//            viewDelegate.hideDateView(true)
         }
     }
     
@@ -140,7 +140,7 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
     }
     
     func favoriteButtonTapped(sender: UIButton) {
-        viewDelegate.toggleFavorite()
+//        viewDelegate.toggleFavorite()
     }
     
     func optionsButtonTapped(sender: UIButton) {
@@ -152,11 +152,11 @@ class APODInfoView: UIView, UIGestureRecognizerDelegate {
     }
     
     func dismissButtonTapped(sender: UIButton) {
-        viewDelegate.dismissVC()
+//        viewDelegate.dismissVC()
     }
     
     func videoLabelTapped() {
-        viewDelegate.openVideoURL()
+//        viewDelegate.openVideoURL()
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {

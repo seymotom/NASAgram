@@ -29,7 +29,6 @@ class BlurredBackgroundView: UIView {
     }
     
     private func setup() {
-        backgroundColor = .yellow
         backgroundView = UIVisualEffectView(effect: UIBlurEffect(style: style))
         addSubview(backgroundView)
         

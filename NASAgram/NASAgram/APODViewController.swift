@@ -13,15 +13,15 @@ enum APODVCType {
     case daily, favorite
 }
 
-protocol APODViewDelegate {
-    func toggleFavorite()
-    func toggleStatusBar()
-    func hideDateView(_ hide: Bool)
-    func openVideoURL()
-    func dismissVC()
-    func setTabBarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void)
-    func setNavbarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void)
-}
+//protocol APODViewDelegate {
+//    func toggleFavorite()
+//    func toggleStatusBar()
+//    func hideDateView(_ hide: Bool)
+//    func openVideoURL()
+//    func dismissVC()
+//    func setTabBarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void)
+//    func setNavbarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void)
+//}
 
 @objc protocol DetailViewDelegate {
     func videoLabelTapped()
@@ -77,24 +77,16 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         isViewAppeared = true
-//        toggleStatusBar()
         
-//        setTabBarVisible(visible: !apodInfoView.isBeingHidden, animated: true, completion: {_ in })
-//        setNavbarVisible(visible: !apodInfoView.isBeingHidden, animated: true, completion:{_ in })
+        pageViewDelegate.showNavTabStatusBars(!isHidingDetail)
         
         DispatchQueue.main.async {
             self.apodImageView.resetForOrientation()
         }
         
-        // reset the favorites star if deleted from favorites
-//        if let apod = apod {
-//            apodInfoView.populateInfo(from: apod)
-//            if apod.mediaType == .video {
-//                apodInfoView.hideInfo(false, animated: true)
-//            }
-//        }
         setupDateView()
     }
+
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -110,9 +102,6 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         view.addSubview(apodDetailView)
         view.addSubview(dateView)
         apodDetailView.isHidden = isHidingDetail
-//        view.addSubview(apodInfoView)
-//        apodInfoView.viewDelegate = self
-//        apodInfoView.hideInfo(true, animated: false)
     }
     
     func setupConstraints() {
@@ -162,8 +151,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
                 case .image:
                     self.apodImageView.image = UIImage(data: apod.hdImageData! as Data)
                 case .video:
-                    self.apodImageView.stopActivityIndicator()
-//                    self.apodInfoView.hideInfo(false, animated: false)
+                    self.configureViewForVideo()
                 }
             }
         } else {
@@ -200,9 +188,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
                     }
                 }
             case .video:
-                self.apodImageView.stopActivityIndicator()
-                self.isHidingDetail = false
-                self.fadeView(self.apodDetailView, hide: self.isHidingDetail)
+                self.configureViewForVideo()
             }
         }
     }
@@ -216,6 +202,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
                 isHidingDetail = !isHidingDetail
                 fadeView(dateView, hide: isHidingDetail)
                 fadeView(apodDetailView, hide: isHidingDetail)
+                pageViewDelegate.showNavTabStatusBars(!isHidingDetail)
             }
             
         case 2:
@@ -225,8 +212,17 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    func configureViewForVideo() {
+        apodImageView.stopActivityIndicator()
+        isHidingDetail = false
+        apodDetailView.isHidden = false
+        dateView.isHidden = false
+    }
+    
     func setupDateView() {
-        fadeView(dateView, hide: false)
+        if isHidingDetail {
+            fadeView(dateView, hide: false)
+        }
         Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(dateTimerIsUp), userInfo: nil, repeats: false)
     }
     
@@ -244,32 +240,12 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
             view.isHidden = false
             view.alpha = 0
         }
-        
-        UIView.animate(withDuration: 0.2, animations: { 
+        UIView.animate(withDuration: 0.2, animations: {
             view.alpha = alpha
         }) { (_) in
-            if hide {
-                view.isHidden = true
-            }
+            view.isHidden = hide ? true : false
         }
     }
-    
-    
-    // MARK:- Rotation
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-//        toggleStatusBar()
-        coordinator.animate(alongsideTransition: { (context) in
-            if self.isViewAppeared {
-                self.apodImageView.resetForOrientation()
-            }
-        }) { (context) in
-        }
-    }
-    
-    
-    
     
 }
 

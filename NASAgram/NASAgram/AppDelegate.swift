@@ -43,6 +43,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let tabController = UITabBarController()
         tabController.viewControllers = [pageVC, favVC]
+        
+        let tabBarAppearance = UITabBar.appearance()
+        tabBarAppearance.barTintColor = .clear
+        
+        tabController.tabBar.tintColor = .red
         return tabController
     }
 

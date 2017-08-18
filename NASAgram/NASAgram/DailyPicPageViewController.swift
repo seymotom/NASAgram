@@ -10,10 +10,8 @@ import UIKit
 
 protocol APODPageViewDelegate {
     func dateSelected(date: Date)
-    var statusBarHidden: Bool { get set }
-    func setNavbarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void)
-    func setTabBarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void)
     
+    func showNavTabStatusBars(_ show: Bool)
 }
 
 class DailyPicPageViewController: UIPageViewController {
@@ -24,7 +22,7 @@ class DailyPicPageViewController: UIPageViewController {
     
     let manager: APODManager!
     
-//    let statusBarBackgorundView = BlurredBackgroundView(style: .dark)
+    let statusBarBackgorundView = BlurredBackgroundView(style: .dark)
     
     var navbarView: ToolBarView!
     
@@ -65,13 +63,11 @@ class DailyPicPageViewController: UIPageViewController {
         super.viewDidLoad()
         setupPageVC()
         setupView()
-        
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setTabBarVisible(visible: false, animated: false) { (_) in }
-        setNavbarVisible(visible: false, animated: false) { (_) in }
     }
     
     override func didReceiveMemoryWarning() {
@@ -93,25 +89,21 @@ class DailyPicPageViewController: UIPageViewController {
     }
     
     func setupView() {
-//        guard let currentVC = self.viewControllers?.first as? APODViewController else {
-//            return
-//        }
-        
+                
         navbarView = ToolBarView(delegate: self, vcType: .daily)
         view.addSubview(navbarView)
         
-        
         navbarView.snp.makeConstraints { (view) in
             view.leading.trailing.equalToSuperview()
-            view.top.equalToSuperview()
             view.height.equalTo(50)
+            view.bottom.equalTo(self.view.snp.top)
         }
         
-//        view.addSubview(statusBarBackgorundView)
-//        statusBarBackgorundView.snp.makeConstraints { (view) in
-//            view.leading.trailing.top.equalToSuperview()
-//            view.bottom.equalTo(topLayoutGuide.snp.bottom)
-//        }
+        view.addSubview(statusBarBackgorundView)
+        statusBarBackgorundView.snp.makeConstraints { (view) in
+            view.leading.trailing.top.equalToSuperview()
+            view.bottom.equalTo(topLayoutGuide.snp.bottom)
+        }
     }
     
     // put this in the dataManager
@@ -137,7 +129,22 @@ class DailyPicPageViewController: UIPageViewController {
     }
     
     
+    // MARK:- Rotation
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        
+        if let apodVC = self.viewControllers?.first as? APODViewController {
+            statusBarHidden = UIDevice.current.orientation.isLandscape || apodVC.isHidingDetail ? true : false
+        }
+        
+        coordinator.animate(alongsideTransition: { (context) in
+            if let apodVC = self.viewControllers?.first as? APODViewController {
+                apodVC.apodImageView.resetForOrientation()
+            }
+        }) { (context) in
+        }
+    }
 
     
     
@@ -172,34 +179,28 @@ extension DailyPicPageViewController: UIPageViewControllerDelegate {
 
 extension DailyPicPageViewController: APODPageViewDelegate {
     
-    func setNavbarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void) {
-        
-//        guard let currentVC = currentAPODViewController else {
-//            return
-//        }
-//        print("VC for \(currentVC.date.displayString()) is set to visible: \(visible) ")
-        
+    func setNavbarVisible(visible: Bool, animated: Bool) {
         
         // bail if the current state matches the desired state
         if navbarIsVisible == visible {
             return
         }
         
-        // get a frame calculation ready
-        let height = navbarView.frame.size.height
-        let offsetY = (visible ? height : -height)
-        
         // zero duration means no animation
         let duration = (animated ? 0.2 : 0.0)
-        
-        print("animated = \(animated)")
+        self.navbarView.snp.remakeConstraints({ (view) in
+            view.leading.trailing.equalToSuperview()
+            view.height.equalTo(50)
+            if visible {
+                view.top.equalTo(self.topLayoutGuide.snp.bottom)
+            } else {
+                view.bottom.equalTo(self.view.snp.top)
+            }
+        })
         
         UIView.animate(withDuration: duration, animations: {
-            let frame = self.navbarView.frame
-            self.navbarView.frame = frame.offsetBy(dx: 0, dy: offsetY);
-        }, completion:completion)
-        
-        
+            self.view.layoutIfNeeded()
+        }, completion: nil)
     }
     
     var navbarIsVisible: Bool {
@@ -211,7 +212,7 @@ extension DailyPicPageViewController: APODPageViewDelegate {
     }
 
     
-    func setTabBarVisible(visible: Bool, animated: Bool, completion: @escaping (Bool) -> Void) {
+    func setTabBarVisible(visible: Bool, animated: Bool) {
         // bail if the current state matches the desired state
         if tabBarIsVisible == visible {
             return
@@ -227,12 +228,21 @@ extension DailyPicPageViewController: APODPageViewDelegate {
         UIView.animate(withDuration: duration, animations: {
             let frame = self.tabBarController!.tabBar.frame
             self.tabBarController!.tabBar.frame = frame.offsetBy(dx: 0, dy: offsetY);
-        }, completion:completion)
+        }, completion: nil)
+        
     }
     
     var tabBarIsVisible: Bool {
         return tabBarController!.tabBar.frame.origin.y < view.frame.maxY
     }
+    
+    func showNavTabStatusBars(_ show: Bool) {
+        setNavbarVisible(visible: show, animated: true)
+        setTabBarVisible(visible: show, animated: true)
+        
+        statusBarHidden = UIDevice.current.orientation.isLandscape || !show ? true : false
+    }
+    
 
     func dateSelected(date: Date) {
         guard date != thisDate else { return }
@@ -253,7 +263,6 @@ extension DailyPicPageViewController: ToolBarViewDelegate {
     }
     func optionsButtonTapped(sender: UIButton) {
         print("burger tapped for \(currentAPODViewController!.date.displayString())")
-
     }
     func dateSearchButtonTapped(sender: UIButton) {
         print("search tapped for \(currentAPODViewController!.date.displayString())")
