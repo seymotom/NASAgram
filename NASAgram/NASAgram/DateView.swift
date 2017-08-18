@@ -10,6 +10,9 @@ import UIKit
 
 class DateView: UIView {
     
+    static let height: CGFloat = 40
+    static let widthMultiplier: CGFloat = 0.8
+    
     let margin = 20.0
     
     var dateLabel = DetailLabel()

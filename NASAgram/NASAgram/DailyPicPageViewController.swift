@@ -89,17 +89,17 @@ class DailyPicPageViewController: UIPageViewController {
     }
     
     func setupView() {
-                
         navbarView = ToolBarView(delegate: self, vcType: .daily)
         view.addSubview(navbarView)
-        
+        view.addSubview(statusBarBackgorundView)
+    }
+    
+    func setupConstraints() {
         navbarView.snp.makeConstraints { (view) in
             view.leading.trailing.equalToSuperview()
-            view.height.equalTo(50)
+            view.height.equalTo(ToolBarView.height)
             view.bottom.equalTo(self.view.snp.top)
         }
-        
-        view.addSubview(statusBarBackgorundView)
         statusBarBackgorundView.snp.makeConstraints { (view) in
             view.leading.trailing.top.equalToSuperview()
             view.bottom.equalTo(topLayoutGuide.snp.bottom)
@@ -140,7 +140,7 @@ class DailyPicPageViewController: UIPageViewController {
         
         coordinator.animate(alongsideTransition: { (context) in
             if let apodVC = self.viewControllers?.first as? APODViewController {
-                apodVC.apodImageView.resetForOrientation()
+                apodVC.resetForRotation()
             }
         }) { (context) in
         }

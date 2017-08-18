@@ -26,7 +26,7 @@ class ToolBarView: UIView {
     var delegate: ToolBarViewDelegate!
     var vcType: APODVCType!
     
-    let height = 50.0
+    static let height: CGFloat = 50.0
     let margin = 8.0
     
     let backgroundView = BlurredBackgroundView(style: .dark)
