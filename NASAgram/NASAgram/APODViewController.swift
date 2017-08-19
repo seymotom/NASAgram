@@ -24,6 +24,8 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         return manager?.data.apod(for: date.yyyyMMdd())
     }
     
+    var indexPath: IndexPath?
+    
     var dateView: DateView!
     var apodImageView:APODImageView!
     var apodDetailView: DetailView!
@@ -67,6 +69,9 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         
         DispatchQueue.main.async {
             self.apodImageView.resetForOrientation()
+            if let apod = self.apod {
+                self.pageViewDelegate.toolBarView.setFavorite(apod.isFavorite)
+            }
         }
     }
 
@@ -158,6 +163,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         // checks favorites before hitting api
         if let apod = manager?.favorites.fetchAPOD(date: date.yyyyMMdd()) {
             DispatchQueue.main.async {
+                self.pageViewDelegate.toolBarView.setFavorite(apod.isFavorite)
                 self.apodDetailView.populateInfo(from: apod)
                 switch apod.mediaType {
                 case .image:

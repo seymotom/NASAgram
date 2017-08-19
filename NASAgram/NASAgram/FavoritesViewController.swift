@@ -37,6 +37,7 @@ class FavoritesViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.isHidden = false
         manager.favorites.initializeFetchedResultsController()
     }
 
@@ -49,7 +50,6 @@ class FavoritesViewController: UIViewController {
         tableView.estimatedRowHeight = 150
         tableView.separatorStyle = .none
         tableView.backgroundColor = .black
-
     }
     
     func setupConstraints() {

@@ -165,10 +165,26 @@ extension FavoritesManager: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let apod = fetchedResultsController.object(at: indexPath).apod()
-//        let apodVC = APODViewController(date: apod.date, pageViewDelegate: nil, manager: favoritesViewController.manager, vcType: .favorite)
-//        favoritesViewController.present(apodVC, animated: true, completion: nil)
+        let apodManager = APODManager(dataManager: dataManager, favoritesManager: self)
+        let favoritesPVC = APODPageViewController(apodManager: apodManager, pageViewType: .favorite, indexPath: indexPath)
         
+//        let dailyPVC =  favoritesViewController.tabBarController!.viewControllers!.first!
+//        
+//        dailyPVC.tabBarItem = UITabBarItem(title: "Daily", image: nil, selectedImage: nil)
+//        favoritesPVC.tabBarItem = UITabBarItem(title: "Favorites", image: nil, selectedImage: nil)
+//        
+//        
+//        let newTabController = UITabBarController()
+//        newTabController.tabBar.tintColor = .red
+//        let tabBarAppearance = UITabBar.appearance()
+//        tabBarAppearance.barTintColor = .clear
+//        
+//        newTabController.viewControllers = [dailyPVC, favoritesPVC]
+//        favoritesPVC.present(newTabController, animated: true, completion: nil)
+        
+        favoritesViewController.navigationController?.pushViewController(favoritesPVC, animated: true)
+        
+//        UIApplication.shared.keyWindow?.rootViewController?.present(newTabController, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

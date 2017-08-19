@@ -34,8 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let apodManager = APODManager(dataManager: dataManager, favoritesManager: favoitesManager)
         
         let favVC = UINavigationController(rootViewController: FavoritesViewController(manager: apodManager))
-//        let pageVC = DailyPicPageViewController(manager: apodManager, pageViewType: .daily)
-        let pageVC = APODPageViewController(manager: apodManager, pageViewType: .daily)
+        let pageVC = APODPageViewController(apodManager: apodManager, pageViewType: .daily)
         
         pageVC.tabBarItem = UITabBarItem(title: "Daily", image: nil, selectedImage: nil)
         favVC.tabBarItem = UITabBarItem(title: "Favorites", image: nil, selectedImage: nil)

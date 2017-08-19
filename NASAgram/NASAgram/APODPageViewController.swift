@@ -15,6 +15,7 @@ enum APODPageViewType {
 protocol APODPageViewDelegate {
     var statusBarHeightWhenNotHidden: CGFloat { get }
     func showToolTabStatusBars(_ show: Bool)
+    var toolBarView: ToolBarView! { get }
 }
 
 class APODPageViewController: UIPageViewController {
@@ -23,11 +24,12 @@ class APODPageViewController: UIPageViewController {
     
     var pageViewManager: APODPageViewManagerDelegate!
     
-    let pageViewType: APODPageViewType!
+    let pageViewType: APODPageViewType
     
     let statusBarBackgorundView = BlurredBackgroundView(style: .dark)
     
     var toolBarView: ToolBarView!
+    
     var dateSearchView: DateSearchView!
     
     var statusBarHidden = true {
@@ -56,12 +58,18 @@ class APODPageViewController: UIPageViewController {
         return .slide
     }
     
-    init(manager: APODManager, pageViewType: APODPageViewType) {
-        self.apodManager = manager
+    init(apodManager: APODManager, pageViewType: APODPageViewType, indexPath: IndexPath? = nil) {
+        self.apodManager = apodManager
         self.pageViewType = pageViewType
         // statusBar height is 0 when hidden so have to capture the value here so the APODVC can use it to constrain the date
         statusBarHeightWhenNotHidden = UIApplication.shared.statusBarFrame.height
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+        switch pageViewType {
+        case .daily:
+            pageViewManager = DailyPageViewManager(pageViewController: self, apodManager: apodManager)
+        case .favorite:
+            pageViewManager = FavoritesPageViewManager(pageViewController: self, apodManager: apodManager, indexPath: indexPath)
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -70,6 +78,7 @@ class APODPageViewController: UIPageViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.isHidden = true
         setupPageVC()
         setupView()
         setupConstraints()
@@ -87,7 +96,6 @@ class APODPageViewController: UIPageViewController {
     }
     
     func setupPageVC() {
-        pageViewManager = DailyPageViewManager(pageViewController: self, apodManager: apodManager)
         dataSource = pageViewManager
         delegate = pageViewManager
         pageViewManager.setupPageVC()
@@ -139,6 +147,7 @@ class APODPageViewController: UIPageViewController {
 
 
 extension APODPageViewController: APODPageViewDelegate {
+    
     
     func setToolBarVisible(visible: Bool, animated: Bool) {
         
@@ -199,36 +208,17 @@ extension APODPageViewController: APODPageViewDelegate {
         setTabBarVisible(visible: show, animated: true)
         statusBarHidden = UIDevice.current.orientation.isLandscape || !show ? true : false
     }
-    
-    
-    
 }
-
-//extension APODPageViewController: DateSearchViewDelegate {
-//    func dateSelected(date: Date) {
-//        //        guard date != thisDate else { return }
-//        //        let direction: UIPageViewControllerNavigationDirection = date < thisDate ? .reverse : .forward
-//        //        let newVC = getAPODVC(for: date)
-//        //        setViewControllers([newVC], direction: direction, animated: true) { (_) in
-//        //            self.loadSurroundingVCs(for: date, viewController: newVC)
-//        //        }
-//        //        thisDate = date
-//    }
-//}
 
 extension APODPageViewController: ToolBarViewDelegate {
     
     func favoriteButtonTapped(sender: UIButton) {
-        print("fav tapped for \(currentAPODViewController!.date.displayString())")
-        
         guard let vc = currentAPODViewController, let apod = vc.apod else { return }
-        
         if apod.isFavorite {
             apodManager?.favorites.delete(apod)
         } else {
             apodManager?.favorites.save(apod)
         }
-        
         toolBarView.setFavorite(apod.isFavorite)
     }
     
@@ -239,7 +229,8 @@ extension APODPageViewController: ToolBarViewDelegate {
         dateSearchView.isHidden = dateSearchView.isHidden ? false : true
     }
     func dismissButtonTapped(sender: UIButton) {
-        dismiss(animated: true, completion: nil)
+//        dismiss(animated: true, completion: nil)
+        navigationController?.popViewController(animated: true)
     }
 }
 

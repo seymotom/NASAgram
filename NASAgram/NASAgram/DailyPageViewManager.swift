@@ -12,11 +12,14 @@ import Foundation
 protocol APODPageViewManagerDelegate: UIPageViewControllerDelegate, UIPageViewControllerDataSource, DateSearchViewDelegate {
     func setupPageVC()
     func dateSelected(date: Date)
+    var indexPath: IndexPath? { get set }
 }
 
 class DailyPageViewManager: NSObject, UIPageViewControllerDelegate, UIPageViewControllerDataSource, APODPageViewManagerDelegate {
     
     var thisDate: Date = Date()
+    
+    var indexPath: IndexPath?
     
     let apodPageViewController: APODPageViewController!
     let apodManager: APODManager!
