@@ -224,7 +224,6 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
                 fadeView(apodDetailView, hide: isHidingDetail)
                 pageViewDelegate.showToolTabStatusBars(!isHidingDetail)
             }
-            
         case 2:
             apodImageView.doubleTapZoom(for: sender)
         default:

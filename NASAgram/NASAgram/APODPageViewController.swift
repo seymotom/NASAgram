@@ -108,6 +108,7 @@ class APODPageViewController: UIPageViewController {
         view.addSubview(dateSearchView)
         dateSearchView.isHidden = true
         view.addSubview(statusBarBackgorundView)
+        statusBarBackgorundView.isHidden = UIScreen.main.bounds.width > UIScreen.main.bounds.height ? true : false
     }
     
     func setupConstraints() {
@@ -117,8 +118,9 @@ class APODPageViewController: UIPageViewController {
             view.bottom.equalTo(self.view.snp.top)
         }
         statusBarBackgorundView.snp.makeConstraints { (view) in
-            view.leading.trailing.top.equalToSuperview()
-            view.bottom.equalTo(topLayoutGuide.snp.bottom)
+            view.leading.trailing.equalToSuperview()
+            view.height.equalTo(statusBarHeightWhenNotHidden)
+            view.bottom.equalTo(self.view.snp.top)
         }
         dateSearchView.snp.makeConstraints { (view) in
             view.leading.trailing.equalToSuperview()
@@ -134,6 +136,7 @@ class APODPageViewController: UIPageViewController {
         
         if let apodVC = self.viewControllers?.first as? APODViewController {
             statusBarHidden = UIDevice.current.orientation.isLandscape || apodVC.isHidingDetail ? true : false
+            statusBarBackgorundView.isHidden = UIDevice.current.orientation.isLandscape || apodVC.isHidingDetail ? true : false
         }
         
         coordinator.animate(alongsideTransition: { (context) in
@@ -160,9 +163,19 @@ extension APODPageViewController: APODPageViewDelegate {
         let duration = (animated ? 0.2 : 0.0)
         self.toolBarView.snp.remakeConstraints({ (view) in
             view.leading.trailing.equalToSuperview()
-            view.height.equalTo(50)
+            view.height.equalTo(ToolBarView.height)
             if visible {
                 view.top.equalTo(self.topLayoutGuide.snp.bottom)
+            } else {
+                view.bottom.equalTo(self.view.snp.top)
+            }
+        })
+        
+        self.statusBarBackgorundView.snp.remakeConstraints({ (view) in
+            view.leading.trailing.equalToSuperview()
+            view.height.equalTo(statusBarHeightWhenNotHidden)
+            if visible {
+                view.top.equalToSuperview()
             } else {
                 view.bottom.equalTo(self.view.snp.top)
             }

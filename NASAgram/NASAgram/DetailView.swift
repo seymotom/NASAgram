@@ -17,6 +17,7 @@ class DetailView: UIView {
     var titleLabel = DetailLabel()
     var explanationScrollView = ExplanationScrollView()
 //    var videoLabel = DetailLabel()
+    var copyrightLabel = DetailLabel()
     
     let backgroundView = BlurredBackgroundView(style: .dark)
     
@@ -94,6 +95,28 @@ class DetailView: UIView {
 //        videoLabel.isHidden = apod.mediaType == .image ? true : false
         titleLabel.text = apod.title
         explanationScrollView.explanationLabel.text = apod.explanation
+        
+        if let copyright = apod.copyright {
+            copyrightLabel.text = "© \(copyright)"
+            addCopyrightLabel()
+        }
         layoutIfNeeded()
+    }
+    
+    func addCopyrightLabel() {
+        addSubview(copyrightLabel)
+        copyrightLabel.font = UIFont.systemFont(ofSize: 8)
+        copyrightLabel.textAlignment = .right
+        
+        explanationScrollView.snp.remakeConstraints { (view) in
+            view.leading.trailing.equalTo(titleLabel)
+            view.top.equalTo(titleLabel.snp.bottom).offset(margin)
+        }
+        
+        copyrightLabel.snp.makeConstraints { (view) in
+            view.leading.trailing.equalTo(titleLabel)
+            view.top.equalTo(explanationScrollView.snp.bottom).offset(margin)
+            view.bottom.equalToSuperview().offset(-margin)
+        }
     }
 }
