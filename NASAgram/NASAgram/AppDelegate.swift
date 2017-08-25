@@ -34,6 +34,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let apodManager = APODManager(dataManager: dataManager, favoritesManager: favoitesManager)
         
         let favVC = UINavigationController(rootViewController: FavoritesViewController(manager: apodManager))
+        favVC.navigationController?.navigationBar.tintColor = .red
+        
+        let navBarAppearance = UINavigationBar.appearance()
+        navBarAppearance.barTintColor = .clear
+        navBarAppearance.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        
         let pageVC = APODPageViewController(apodManager: apodManager, pageViewType: .daily)
         
         pageVC.tabBarItem = UITabBarItem(title: "Daily", image: nil, selectedImage: nil)

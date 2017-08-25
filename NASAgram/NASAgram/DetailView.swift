@@ -12,13 +12,18 @@ class DetailView: UIView {
     
     var delegate: DetailViewDelegate!
     
-    let margin = 20.0
+    let margin: CGFloat = 11.0
 
     var titleLabel = DetailLabel()
-    var explanationLabel = DetailLabel()
-    var videoLabel = DetailLabel()
+    var explanationScrollView = ExplanationScrollView()
+//    var videoLabel = DetailLabel()
     
     let backgroundView = BlurredBackgroundView(style: .dark)
+    
+//    override public func layoutSubviews() {
+//        super.layoutSubviews()
+//        round(corners: [.topLeft, .topRight], radius: 20)
+//    }
     
     convenience init(delegate: DetailViewDelegate) {
         self.init(frame: CGRect.zero)
@@ -44,22 +49,25 @@ class DetailView: UIView {
     func setupViews() {
         addSubview(backgroundView)
         titleLabel.textAlignment = .center
+        titleLabel.numberOfLines = 2
+        titleLabel.lineBreakMode = .byWordWrapping
         
         addSubview(titleLabel)
         
-        videoLabel.text = "This is a video, open in browser?"
-        videoLabel.isUserInteractionEnabled = true
-        addSubview(videoLabel)
+        addSubview(explanationScrollView)
         
-        explanationLabel.numberOfLines = 0
-        explanationLabel.font = UIFont.systemFont(ofSize: 10)
-        addSubview(explanationLabel)
+//        videoLabel.text = "This is a video, open in browser?"
+//        videoLabel.isUserInteractionEnabled = true
+//        addSubview(videoLabel)
+//        
+//        let videoTap = UITapGestureRecognizer()
+//        videoTap.delegate = delegate as? UIGestureRecognizerDelegate
+//        videoTap.numberOfTapsRequired = 1
+//        videoTap.addTarget(delegate , action: #selector (delegate.videoLabelTapped))
+//        videoLabel.addGestureRecognizer(videoTap)
         
-        let videoTap = UITapGestureRecognizer()
-        videoTap.delegate = delegate as? UIGestureRecognizerDelegate
-        videoTap.numberOfTapsRequired = 1
-        videoTap.addTarget(delegate , action: #selector (delegate.videoLabelTapped))
-        videoLabel.addGestureRecognizer(videoTap)
+        self.clipsToBounds = true
+        self.layer.cornerRadius = margin
     }
     
     func setupConstraints() {
@@ -70,22 +78,22 @@ class DetailView: UIView {
             view.top.leading.equalToSuperview().offset(margin)
             view.trailing.equalToSuperview().offset(-margin)
         }
-        explanationLabel.snp.makeConstraints { (view) in
+        explanationScrollView.snp.makeConstraints { (view) in
             view.leading.trailing.equalTo(titleLabel)
-            view.top.equalTo(titleLabel.snp.bottom)
-        }
-        videoLabel.snp.makeConstraints { (view) in
-            view.leading.trailing.equalTo(titleLabel)
-            view.top.equalTo(explanationLabel.snp.bottom).offset(margin)
+            view.top.equalTo(titleLabel.snp.bottom).offset(margin)
             view.bottom.equalToSuperview().offset(-margin)
         }
+//        videoLabel.snp.makeConstraints { (view) in
+//            view.leading.trailing.equalTo(titleLabel)
+//            view.top.equalTo(explanationScrollView.snp.bottom).offset(margin)
+//            view.bottom.equalToSuperview().offset(-margin)
+//        }
     }
     
     func populateInfo(from apod: APOD) {
-        let mediaType = apod.mediaType
-        videoLabel.isHidden = mediaType == .image ? true : false
+//        videoLabel.isHidden = apod.mediaType == .image ? true : false
         titleLabel.text = apod.title
-        explanationLabel.text = apod.explanation
+        explanationScrollView.explanationLabel.text = apod.explanation
         layoutIfNeeded()
     }
 }

@@ -34,6 +34,9 @@ class FavoritesViewController: UIViewController {
         manager.favorites.tableView = tableView
         manager.favorites.favoritesViewController = self
         manager.favorites.initializeFetchedResultsController()
+        navigationItem.title = "Favorites"
+        navigationController?.setNeedsStatusBarAppearanceUpdate()
+//        setNeedsStatusBarAppearanceUpdate()
     }
     
     override func viewWillAppear(_ animated: Bool) {

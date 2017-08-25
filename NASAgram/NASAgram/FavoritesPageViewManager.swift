@@ -10,9 +10,6 @@ import UIKit
 
 class FavoritesPageViewManager: NSObject {
     
-    // this will not be exactly the same date as the dailyPVM
-//    var thisDate: Date = Date()
-    
     var indexPath: IndexPath?
 
     let apodPageViewController: APODPageViewController!
@@ -51,19 +48,7 @@ extension FavoritesPageViewManager: UIPageViewControllerDelegate {
         }
         
         self.indexPath = indexPath
-        
-//        // this increments or decrements the currentDate
-//        thisDate = currentVC.date
-        
-        // update the indexPath after transition
-        
-//        let currentVC = (pageViewController as! APODPageViewController).currentAPODViewController?.date
-        
-    
     }
-
-    
-    
 }
 
 

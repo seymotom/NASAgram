@@ -98,7 +98,8 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         }
         apodDetailView.snp.makeConstraints { (view) in
             view.width.centerX.equalTo(dateView)
-            view.bottom.equalTo(bottomLayoutGuide.snp.top)
+            view.bottom.equalTo(bottomLayoutGuide.snp.top).offset(-apodDetailView.margin)
+            view.top.equalTo(self.view.snp.centerY)
         }
         constrainDateView()
     }
@@ -107,7 +108,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         // UIDevice.current.orientation.isLandscape doesn't detect isLandscape on first load so comparing the screen height and width to tell if landscape
         let offset = UIScreen.main.bounds.width > UIScreen.main.bounds.height ? ToolBarView.height : pageViewDelegate.statusBarHeightWhenNotHidden + ToolBarView.height
         dateView.snp.remakeConstraints { (view) in
-            view.top.equalToSuperview().offset(offset)
+            view.top.equalToSuperview().offset(offset + dateView.margin)
             view.width.equalToSuperview().multipliedBy(DateView.widthMultiplier)
             view.height.equalTo(DateView.height)
             view.centerX.equalToSuperview()
@@ -185,6 +186,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
                 return
             }
             DispatchQueue.main.async {
+                self.pageViewDelegate.toolBarView.setFavorite(apod.isFavorite)
                 self.apodDetailView.populateInfo(from: apod)
             }
             

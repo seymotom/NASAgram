@@ -13,11 +13,12 @@ class DateView: UIView {
     static let height: CGFloat = 40
     static let widthMultiplier: CGFloat = 0.8
     
-    let margin = 20.0
+    let margin: CGFloat = 11.0
     
     var dateLabel = DetailLabel()
     
     let backgroundView = BlurredBackgroundView(style: .dark)
+
     
     convenience init(date: Date) {
         self.init(frame: CGRect.zero)
@@ -44,6 +45,9 @@ class DateView: UIView {
         addSubview(backgroundView)
         addSubview(dateLabel)
         dateLabel.textAlignment = .center
+        
+        self.clipsToBounds = true
+        self.layer.cornerRadius = margin
     }
     
     func setupConstraints() {
@@ -52,7 +56,7 @@ class DateView: UIView {
         }
         dateLabel.snp.makeConstraints { (view) in
             view.top.leading.equalToSuperview().offset(margin)
-            view.trailing.equalToSuperview().offset(-margin)
+            view.trailing.bottom.equalToSuperview().offset(-margin)
         }
     }
     

@@ -17,6 +17,7 @@ class BlurredBackgroundView: UIView {
     convenience init(style: UIBlurEffectStyle = .dark) {
         self.init(frame: CGRect.zero)
         self.style = style
+        backgroundView = UIVisualEffectView(effect: UIBlurEffect(style: style))
         setup()
     }
     
@@ -29,7 +30,6 @@ class BlurredBackgroundView: UIView {
     }
     
     private func setup() {
-        backgroundView = UIVisualEffectView(effect: UIBlurEffect(style: style))
         addSubview(backgroundView)
         
         backgroundView.snp.makeConstraints { (view) in
