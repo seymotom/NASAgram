@@ -145,7 +145,9 @@ extension FavoritesManager: NSFetchedResultsControllerDelegate {
 extension FavoritesManager: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        guard let sections = fetchedResultsController.sections else { fatalError("No sections in fetched results controller")}
+        guard let sections = fetchedResultsController.sections else {
+            fatalError("No sections in fetched results controller")
+        }
         return sections.count
     }
     
@@ -167,24 +169,7 @@ extension FavoritesManager: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let apodManager = APODManager(dataManager: dataManager, favoritesManager: self)
         let favoritesPVC = APODPageViewController(apodManager: apodManager, pageViewType: .favorite, indexPath: indexPath)
-        
-//        let dailyPVC =  favoritesViewController.tabBarController!.viewControllers!.first!
-//        
-//        dailyPVC.tabBarItem = UITabBarItem(title: "Daily", image: nil, selectedImage: nil)
-//        favoritesPVC.tabBarItem = UITabBarItem(title: "Favorites", image: nil, selectedImage: nil)
-//        
-//        
-//        let newTabController = UITabBarController()
-//        newTabController.tabBar.tintColor = .red
-//        let tabBarAppearance = UITabBar.appearance()
-//        tabBarAppearance.barTintColor = .clear
-//        
-//        newTabController.viewControllers = [dailyPVC, favoritesPVC]
-//        favoritesPVC.present(newTabController, animated: true, completion: nil)
-        
-        favoritesViewController.navigationController?.pushViewController(favoritesPVC, animated: true)
-        
-//        UIApplication.shared.keyWindow?.rootViewController?.present(newTabController, animated: true, completion: nil)
+        favoritesViewController.present(favoritesPVC, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -201,7 +186,6 @@ extension FavoritesManager: UITableViewDelegate, UITableViewDataSource {
             deleteFromCoreData(favApod: favApod)
         }
     }
-    
 }
 
 

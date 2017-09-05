@@ -59,7 +59,4 @@ class DateView: UIView {
             view.trailing.bottom.equalToSuperview().offset(-margin)
         }
     }
-    
-    
-    
 }

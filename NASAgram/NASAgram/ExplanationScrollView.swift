@@ -40,5 +40,4 @@ class ExplanationScrollView: UIScrollView {
             view.width.centerX.equalToSuperview()
         }
     }
-
 }

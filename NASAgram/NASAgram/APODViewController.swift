@@ -57,6 +57,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         setupConstraints()
         setupGestures()
         getAPOD()
+        self.edgesForExtendedLayout = .top
     }
     
     
@@ -121,23 +122,21 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func setupGestures() {
-        var recognizers = [UIGestureRecognizer]()
         
         let tapRecognizer = UITapGestureRecognizer()
         tapRecognizer.numberOfTapsRequired = 1
-        recognizers.append(tapRecognizer)
-        
+        tapRecognizer.delegate = self
+        tapRecognizer.addTarget(self, action: #selector(handleGesture(sender:)))
+        tapRecognizer.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapRecognizer)
+
         let doubleTapRecognizer = UITapGestureRecognizer()
         doubleTapRecognizer.numberOfTapsRequired = 2
         tapRecognizer.require(toFail: doubleTapRecognizer)
-        recognizers.append(doubleTapRecognizer)
-        
-        recognizers.forEach { (recognizer) in
-            recognizer.delegate = self
-            recognizer.addTarget(self, action: #selector(handleGesture(sender:)))
-            recognizer.cancelsTouchesInView = false
-            apodImageView.addGestureRecognizer(recognizer)
-        }
+        doubleTapRecognizer.delegate = self
+        doubleTapRecognizer.addTarget(self, action: #selector(handleGesture(sender:)))
+        doubleTapRecognizer.cancelsTouchesInView = false
+        apodImageView.addGestureRecognizer(doubleTapRecognizer)
     }
     
     func configureViewForVideo() {

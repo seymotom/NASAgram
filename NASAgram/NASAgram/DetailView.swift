@@ -20,12 +20,7 @@ class DetailView: UIView {
     var copyrightLabel = DetailLabel()
     
     let backgroundView = BlurredBackgroundView(style: .dark)
-    
-//    override public func layoutSubviews() {
-//        super.layoutSubviews()
-//        round(corners: [.topLeft, .topRight], radius: 20)
-//    }
-    
+        
     convenience init(delegate: DetailViewDelegate) {
         self.init(frame: CGRect.zero)
         self.delegate = delegate

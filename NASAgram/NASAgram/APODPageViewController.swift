@@ -14,8 +14,8 @@ enum APODPageViewType {
 
 protocol APODPageViewDelegate {
     var statusBarHeightWhenNotHidden: CGFloat { get }
-    func showToolTabStatusBars(_ show: Bool)
     var toolBarView: ToolBarView! { get }
+    func showToolTabStatusBars(_ show: Bool)
 }
 
 class APODPageViewController: UIPageViewController {
@@ -78,7 +78,6 @@ class APODPageViewController: UIPageViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.isHidden = true
         setupPageVC()
         setupView()
         setupConstraints()
@@ -102,11 +101,11 @@ class APODPageViewController: UIPageViewController {
     }
     
     func setupView() {
-        toolBarView = ToolBarView(delegate: self, pageViewType: pageViewType)
-        view.addSubview(toolBarView)
         dateSearchView = DateSearchView(delegate: pageViewManager)
         view.addSubview(dateSearchView)
         dateSearchView.isHidden = true
+        toolBarView = ToolBarView(delegate: self, pageViewType: pageViewType)
+        view.addSubview(toolBarView)
         view.addSubview(statusBarBackgorundView)
         statusBarBackgorundView.isHidden = UIScreen.main.bounds.width > UIScreen.main.bounds.height ? true : false
     }
@@ -124,43 +123,17 @@ class APODPageViewController: UIPageViewController {
         }
         dateSearchView.snp.makeConstraints { (view) in
             view.leading.trailing.equalToSuperview()
-            view.top.equalTo(toolBarView.snp.bottom)
+            view.bottom.equalTo(self.view.snp.top)
         }
     }
-    
-    
-    // MARK:- Rotation
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        
-        if let apodVC = self.viewControllers?.first as? APODViewController {
-            statusBarHidden = UIDevice.current.orientation.isLandscape || apodVC.isHidingDetail ? true : false
-            statusBarBackgorundView.isHidden = UIDevice.current.orientation.isLandscape || apodVC.isHidingDetail ? true : false
-        }
-        
-        coordinator.animate(alongsideTransition: { (context) in
-            if let apodVC = self.viewControllers?.first as? APODViewController {
-                apodVC.resetForRotation()
-            }
-        }) { (context) in
-        }
-    }
-}
-
-
-extension APODPageViewController: APODPageViewDelegate {
-    
     
     func setToolBarVisible(visible: Bool, animated: Bool) {
         
-        // bail if the current state matches the desired state
-        if toolBarViewIsVisible == visible {
+        // bail if the toolBarView hasn't been set yet
+        if toolBarView == nil {
             return
         }
         
-        // zero duration means no animation
-        let duration = (animated ? 0.2 : 0.0)
         self.toolBarView.snp.remakeConstraints({ (view) in
             view.leading.trailing.equalToSuperview()
             view.height.equalTo(ToolBarView.height)
@@ -180,15 +153,12 @@ extension APODPageViewController: APODPageViewDelegate {
                 view.bottom.equalTo(self.view.snp.top)
             }
         })
+        // zero duration means no animation
+        let duration = (animated ? 0.2 : 0.0)
         
         UIView.animate(withDuration: duration, animations: {
             self.view.layoutIfNeeded()
         }, completion: nil)
-    }
-    
-    var toolBarViewIsVisible: Bool {
-        guard toolBarView != nil else { return false }
-        return toolBarView.frame.origin.y >= view.frame.origin.y
     }
     
     
@@ -216,10 +186,62 @@ extension APODPageViewController: APODPageViewDelegate {
         return tabBarController!.tabBar.frame.origin.y < view.frame.maxY
     }
     
+    
+    func showDateSearchView(_ show: Bool) {
+        
+        if show {
+            dateSearchView.isHidden = false
+        }
+        
+        dateSearchView.snp.remakeConstraints { (view) in
+            view.leading.trailing.equalToSuperview()
+            if show {
+                view.top.equalTo(self.toolBarView.snp.bottom)
+            } else {
+                view.bottom.equalTo(self.view.snp.top)
+            }
+        }
+        
+        UIView.animate(withDuration: 0.2, animations: { 
+            self.view.layoutIfNeeded()
+        }) { (complete) in
+            if complete && !show {
+                self.dateSearchView.isHidden = true
+            }
+        }
+    }
+    
+    
+    
+    // MARK:- Rotation
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        
+        if let apodVC = self.viewControllers?.first as? APODViewController {
+            statusBarHidden = UIDevice.current.orientation.isLandscape || apodVC.isHidingDetail ? true : false
+            statusBarBackgorundView.isHidden = UIDevice.current.orientation.isLandscape || apodVC.isHidingDetail ? true : false
+        }
+        
+        coordinator.animate(alongsideTransition: { (context) in
+            if let apodVC = self.viewControllers?.first as? APODViewController {
+                apodVC.resetForRotation()
+            }
+        }) { (context) in
+        }
+    }
+}
+
+
+extension APODPageViewController: APODPageViewDelegate {
+    
+    
     func showToolTabStatusBars(_ show: Bool) {
         setToolBarVisible(visible: show, animated: true)
-        setTabBarVisible(visible: show, animated: true)
         statusBarHidden = UIDevice.current.orientation.isLandscape || !show ? true : false
+        if pageViewType == .daily {
+            setTabBarVisible(visible: show, animated: true)
+        }
     }
 }
 
@@ -239,11 +261,10 @@ extension APODPageViewController: ToolBarViewDelegate {
         print("burger tapped for \(currentAPODViewController!.date.displayString())")
     }
     func dateSearchButtonTapped(sender: UIButton) {
-        dateSearchView.isHidden = dateSearchView.isHidden ? false : true
+        showDateSearchView(dateSearchView.isHidden)
     }
     func dismissButtonTapped(sender: UIButton) {
-//        dismiss(animated: true, completion: nil)
-        navigationController?.popViewController(animated: true)
+        dismiss(animated: true, completion: nil)
     }
 }
 

@@ -16,8 +16,6 @@ class DateSearchView: UIView {
 
     var delegate: DateSearchViewDelegate!
     
-    let margin = 20.0
-    
     var datePicker = UIDatePicker()
     var doneButton = UIButton()
     
@@ -42,7 +40,6 @@ class DateSearchView: UIView {
         setupViews()
         setupConstraints()
     }
-    
     
     func setupViews() {
         addSubview(backgroundView)
@@ -74,8 +71,5 @@ class DateSearchView: UIView {
     
     func datePickerDidChange() {
         delegate.dateSelected(date: datePicker.date)
-        isHidden = true
     }
-
-
 }

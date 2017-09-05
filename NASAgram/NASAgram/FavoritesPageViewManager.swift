@@ -36,8 +36,6 @@ class FavoritesPageViewManager: NSObject {
         apodVC.indexPath = indexPath
         return apodVC
     }
-
-
 }
 
 extension FavoritesPageViewManager: UIPageViewControllerDelegate {
@@ -70,25 +68,14 @@ extension FavoritesPageViewManager: UIPageViewControllerDataSource {
 extension FavoritesPageViewManager: APODPageViewManagerDelegate {
     
     func setupPageVC() {
-//        let todayVC = getAPODVC(for: thisDate)
-//        apodPageViewController.setViewControllers([todayVC], direction: .reverse, animated: true) { (_) in
-//            self.loadSurroundingVCs(for: self.thisDate, viewController: todayVC)
-//        }
-//        seenVCs[thisDate.yyyyMMdd()] = todayVC
+
         guard let indexPath = indexPath, let thisVC = getAPODVC(for: indexPath) else { return }
         
-        print("should be good")
         apodPageViewController.setViewControllers([thisVC], direction: .reverse, animated: true, completion: nil)
     }
     
     func dateSelected(date: Date) {
-//        guard date != thisDate else { return }
-//        let direction: UIPageViewControllerNavigationDirection = date < thisDate ? .reverse : .forward
-//        let newVC = getAPODVC(for: date)
-//        apodPageViewController.setViewControllers([newVC], direction: direction, animated: true) { (_) in
-//            self.loadSurroundingVCs(for: date, viewController: newVC)
-//        }
-//        thisDate = date
+        
     }
 
     

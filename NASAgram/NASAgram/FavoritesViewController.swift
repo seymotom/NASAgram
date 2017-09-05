@@ -34,13 +34,9 @@ class FavoritesViewController: UIViewController {
         manager.favorites.tableView = tableView
         manager.favorites.favoritesViewController = self
         manager.favorites.initializeFetchedResultsController()
-        navigationItem.title = "Favorites"
-        navigationController?.setNeedsStatusBarAppearanceUpdate()
-//        setNeedsStatusBarAppearanceUpdate()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        navigationController?.navigationBar.isHidden = false
         manager.favorites.initializeFetchedResultsController()
     }
 
@@ -56,7 +52,6 @@ class FavoritesViewController: UIViewController {
     }
     
     func setupConstraints() {
-        edgesForExtendedLayout = []
         tableView.snp.makeConstraints { (view) in
             view.leading.trailing.equalToSuperview()
             view.top.equalTo(topLayoutGuide.snp.bottom)
