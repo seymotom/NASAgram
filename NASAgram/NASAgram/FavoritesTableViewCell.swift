@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class FavoritesTableViewCell: UITableViewCell {
     
@@ -38,20 +39,19 @@ class FavoritesTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
 //        super.setSelected(selected, animated: animated)
-
     }
     
     private func setupViews() {
         backgroundColor = .black
         apodImageView.contentMode = .scaleAspectFill
         apodImageView.clipsToBounds = true
-        addSubview(apodImageView)
-        addSubview(dateLabel)
-        addSubview(titleLabel)
+        contentView.addSubview(apodImageView)
+        contentView.addSubview(dateLabel)
+        contentView.addSubview(titleLabel)
         titleLabel.font = UIFont.systemFont(ofSize: 12)
         titleLabel.numberOfLines = 2
         titleLabel.lineBreakMode = .byWordWrapping
-        addSubview(edgeInset)
+        contentView.addSubview(edgeInset)
         edgeInset.backgroundColor = .white
     }
     

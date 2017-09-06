@@ -21,6 +21,7 @@
 		DE248C5A1F2A828D001F2F45 /* DateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE248C591F2A828D001F2F45 /* DateView.swift */; };
 		DE39A7331F02F15F004212DD /* APODViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE39A7321F02F15E004212DD /* APODViewController.swift */; };
 		DE39A7351F030A86004212DD /* Extension+Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE39A7341F030A86004212DD /* Extension+Date.swift */; };
+		DE58E65D1F5F4C9900AFB339 /* VideoPlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE58E65C1F5F4C9900AFB339 /* VideoPlayView.swift */; };
 		DE5DACB21F165DC0000B8607 /* APODManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5DACB11F165DC0000B8607 /* APODManager.swift */; };
 		DE5DACB41F167383000B8607 /* AlertFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5DACB31F167383000B8607 /* AlertFactory.swift */; };
 		DEAA7C541F477FF700385D13 /* DailyPageViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAA7C531F477FF700385D13 /* DailyPageViewManager.swift */; };
@@ -80,6 +81,7 @@
 		DE248C591F2A828D001F2F45 /* DateView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateView.swift; sourceTree = "<group>"; };
 		DE39A7321F02F15E004212DD /* APODViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APODViewController.swift; sourceTree = "<group>"; };
 		DE39A7341F030A86004212DD /* Extension+Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extension+Date.swift"; sourceTree = "<group>"; };
+		DE58E65C1F5F4C9900AFB339 /* VideoPlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayView.swift; sourceTree = "<group>"; };
 		DE5DACB11F165DC0000B8607 /* APODManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APODManager.swift; sourceTree = "<group>"; };
 		DE5DACB31F167383000B8607 /* AlertFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertFactory.swift; sourceTree = "<group>"; };
 		DEAA7C531F477FF700385D13 /* DailyPageViewManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DailyPageViewManager.swift; sourceTree = "<group>"; };
@@ -157,6 +159,7 @@
 				DE1AF1251F09754C001474A0 /* DetailLabel.swift */,
 				DE248C571F2A7BF2001F2F45 /* BlurredBackgroundView.swift */,
 				DEDA0E671F13D28D004BCB0F /* FavoritesTableViewCell.swift */,
+				DE58E65C1F5F4C9900AFB339 /* VideoPlayView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -569,6 +572,7 @@
 				DEAA7C581F487A3300385D13 /* FavoritesPageViewManager.swift in Sources */,
 				DE248C5A1F2A828D001F2F45 /* DateView.swift in Sources */,
 				DEAD51E61F01B391002486B1 /* APIManager.swift in Sources */,
+				DE58E65D1F5F4C9900AFB339 /* VideoPlayView.swift in Sources */,
 				DEAD51B41F018C6F002486B1 /* NASAgram.xcdatamodeld in Sources */,
 				DE39A7331F02F15F004212DD /* APODViewController.swift in Sources */,
 				DEAD51E31F018F76002486B1 /* DataManager.swift in Sources */,

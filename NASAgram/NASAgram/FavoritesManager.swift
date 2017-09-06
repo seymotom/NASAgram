@@ -19,8 +19,11 @@ class FavoritesManager: NSObject {
         return appDelegate.persistentContainer.viewContext
     }
     
-    var tableView: UITableView!
     var favoritesViewController: FavoritesViewController!
+    var tableView: UITableView {
+        return favoritesViewController.tableView
+    }
+    
     var fetchedResultsController: NSFetchedResultsController<FavAPOD>!
     
     init(dataManager: DataManager) {
@@ -169,6 +172,7 @@ extension FavoritesManager: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let apodManager = APODManager(dataManager: dataManager, favoritesManager: self)
         let favoritesPVC = APODPageViewController(apodManager: apodManager, pageViewType: .favorite, indexPath: indexPath)
+        favoritesPVC.modalTransitionStyle = .flipHorizontal
         favoritesViewController.present(favoritesPVC, animated: true, completion: nil)
     }
     
@@ -185,6 +189,10 @@ extension FavoritesManager: UITableViewDelegate, UITableViewDataSource {
             let favApod = fetchedResultsController.object(at: indexPath)
             deleteFromCoreData(favApod: favApod)
         }
+    }
+    
+    func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+        return true
     }
 }
 

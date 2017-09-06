@@ -33,14 +33,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let favoitesManager = FavoritesManager(dataManager: dataManager)
         let apodManager = APODManager(dataManager: dataManager, favoritesManager: favoitesManager)
         
-        let favVC = FavoritesViewController(manager: apodManager)
-//        favVC.navigationController?.navigationBar.tintColor = .red
-        
-//        let navBarAppearance = UINavigationBar.appearance()
-//        navBarAppearance.barTintColor = .clear
-//        navBarAppearance.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
-        
         let pageVC = APODPageViewController(apodManager: apodManager, pageViewType: .daily)
+        let favVC = UINavigationController(rootViewController: FavoritesViewController(manager: apodManager))
+        
+        let navBarAppearance = UINavigationBar.appearance()
+        navBarAppearance.barTintColor = .clear
+        navBarAppearance.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        
+        
+        let barButtonAppearance = UIBarButtonItem.appearance()
+        barButtonAppearance.tintColor = .red
         
         pageVC.tabBarItem = UITabBarItem(title: "Daily", image: nil, selectedImage: nil)
         favVC.tabBarItem = UITabBarItem(title: "Favorites", image: nil, selectedImage: nil)

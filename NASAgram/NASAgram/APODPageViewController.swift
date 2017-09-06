@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SnapKit
 
 enum APODPageViewType {
     case daily, favorite
@@ -235,13 +236,16 @@ class APODPageViewController: UIPageViewController {
 
 extension APODPageViewController: APODPageViewDelegate {
     
-    
     func showToolTabStatusBars(_ show: Bool) {
-        setToolBarVisible(visible: show, animated: true)
-        statusBarHidden = UIDevice.current.orientation.isLandscape || !show ? true : false
-        if pageViewType == .daily {
-            setTabBarVisible(visible: show, animated: true)
+        
+        DispatchQueue.main.async {
+            self.setToolBarVisible(visible: show, animated: true)
+            self.statusBarHidden = UIDevice.current.orientation.isLandscape || !show ? true : false
+            if self.pageViewType == .daily {
+                self.setTabBarVisible(visible: show, animated: true)
+            }
         }
+        
     }
 }
 

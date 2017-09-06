@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import SnapKit
+
 
 class FavoritesViewController: UIViewController {
     
@@ -31,9 +33,12 @@ class FavoritesViewController: UIViewController {
         super.viewDidLoad()
         setupTableView()
         setupConstraints()
-        manager.favorites.tableView = tableView
         manager.favorites.favoritesViewController = self
         manager.favorites.initializeFetchedResultsController()
+        
+        navigationController?.navigationBar.barStyle = .blackTranslucent
+        navigationItem.title = "Favorites"
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editButtonPressed))
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -52,10 +57,21 @@ class FavoritesViewController: UIViewController {
     }
     
     func setupConstraints() {
+        edgesForExtendedLayout = []
         tableView.snp.makeConstraints { (view) in
             view.leading.trailing.equalToSuperview()
             view.top.equalTo(topLayoutGuide.snp.bottom)
             view.bottom.equalTo(bottomLayoutGuide.snp.top)
         }
+    }
+    
+    func editButtonPressed() {
+        tableView.setEditing(true, animated: true)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed))
+    }
+    
+    func doneButtonPressed() {
+        tableView.setEditing(false, animated: true)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editButtonPressed))
     }
 }

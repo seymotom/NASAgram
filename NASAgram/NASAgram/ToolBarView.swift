@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SnapKit
 
 @objc protocol ToolBarViewDelegate {
     func favoriteButtonTapped(sender: UIButton)

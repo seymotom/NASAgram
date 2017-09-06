@@ -10,10 +10,6 @@ import UIKit
 import SnapKit
 
 
-@objc protocol DetailViewDelegate {
-    func videoLabelTapped()
-}
-
 class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     let date: Date!
@@ -32,6 +28,8 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     var alertFactory: AlertFactory!
     var pageViewDelegate: APODPageViewDelegate!
+    
+    let videoPlayView = VideoPlayView()
     
     var isViewAppeared: Bool = false
     
@@ -57,7 +55,6 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         setupConstraints()
         setupGestures()
         getAPOD()
-        self.edgesForExtendedLayout = .top
     }
     
     
@@ -69,6 +66,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         setupDateView()
         
         DispatchQueue.main.async {
+            self.constrainDateView()
             self.apodImageView.resetForOrientation()
             if let apod = self.apod {
                 self.pageViewDelegate.toolBarView.setFavorite(apod.isFavorite)
@@ -86,10 +84,14 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         view.backgroundColor = .black
         apodImageView = APODImageView()
         view.addSubview(apodImageView)
-        apodDetailView = DetailView(delegate: self)
+        apodDetailView = DetailView()
         view.addSubview(apodDetailView)
         view.addSubview(dateView)
         apodDetailView.isHidden = isHidingDetail
+        
+        view.addSubview(videoPlayView)
+        videoPlayView.playButton.addTarget(self, action: #selector(videoButtonTapped), for: .touchUpInside)
+        videoPlayView.isHidden = true
     }
     
     func setupConstraints() {
@@ -102,6 +104,12 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
             view.bottom.equalTo(bottomLayoutGuide.snp.top).offset(-apodDetailView.margin)
             view.top.equalTo(self.view.snp.centerY)
         }
+        videoPlayView.snp.makeConstraints { (view) in
+            view.centerX.equalToSuperview()
+            view.bottom.equalTo(self.view.snp.centerY).offset(-11)
+            view.width.height.equalTo(UIScreen.main.bounds.width * 0.2)
+        }
+        
         constrainDateView()
     }
     
@@ -144,8 +152,13 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         isHidingDetail = false
         apodDetailView.isHidden = false
         dateView.isHidden = false
+        if isViewAppeared {
+            pageViewDelegate.showToolTabStatusBars(true)
+        }
+        videoPlayView.isHidden = false
     }
     
+        
     func setupDateView() {
         if isHidingDetail {
             fadeView(dateView, hide: false)
@@ -244,11 +257,9 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
             view.isHidden = hide ? true : false
         }
     }
-}
-
-extension APODViewController: DetailViewDelegate {
     
-    func videoLabelTapped() {
+    
+    func videoButtonTapped() {
         guard let apod = apod, let url = URL(string: apod.url) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }

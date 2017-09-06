@@ -7,10 +7,12 @@
 //
 
 import UIKit
+import SnapKit
+
 
 class DetailView: UIView {
     
-    var delegate: DetailViewDelegate!
+//    var delegate: DetailViewDelegate!
     
     let margin: CGFloat = 11.0
 
@@ -21,11 +23,11 @@ class DetailView: UIView {
     
     let backgroundView = BlurredBackgroundView(style: .dark)
         
-    convenience init(delegate: DetailViewDelegate) {
-        self.init(frame: CGRect.zero)
-        self.delegate = delegate
-        setup()
-    }
+//    convenience init(delegate: DetailViewDelegate) {
+//        self.init(frame: CGRect.zero)
+//        self.delegate = delegate
+//        setup()
+//    }
 
     
     required init(coder aDecoder: NSCoder) {
@@ -34,6 +36,7 @@ class DetailView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        setup()
     }
     
     private func setup() {
