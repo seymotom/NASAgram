@@ -71,7 +71,6 @@ class FavoritesTableViewCell: UITableViewCell {
             view.leading.trailing.equalTo(dateLabel)
             view.top.equalTo(dateLabel.snp.bottom).offset(margin)
         }
-        
         edgeInset.snp.makeConstraints { (view) in
             view.leading.trailing.equalTo(titleLabel)
             view.bottom.equalTo(apodImageView)
@@ -82,7 +81,11 @@ class FavoritesTableViewCell: UITableViewCell {
     func configure(with apod: APOD) {
         dateLabel.text = apod.date.displayString()
         titleLabel.text = apod.title
-        apodImageView.image = apod.mediaType == .image ? UIImage(data: apod.ldImageData! as Data) : #imageLiteral(resourceName: "Video-Icon")
+        if let imageData = apod.ldImageData {
+            apodImageView.image = UIImage(data: imageData as Data)
+        } else {
+            apodImageView.image = #imageLiteral(resourceName: "Video-Icon")
+        }
     }
 
 }

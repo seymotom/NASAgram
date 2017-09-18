@@ -32,7 +32,6 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     let videoPlayView = VideoPlayView()
     
     var isViewAppeared: Bool = false
-    
     var isHidingDetail: Bool = true
     
     init(date: Date, pageViewDelegate: APODPageViewDelegate?, manager: APODManager) {
@@ -84,14 +83,11 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         view.backgroundColor = .black
         apodImageView = APODImageView()
         view.addSubview(apodImageView)
-        apodDetailView = DetailView()
+        apodDetailView = DetailView(delegate: self)
         view.addSubview(apodDetailView)
         view.addSubview(dateView)
         apodDetailView.isHidden = isHidingDetail
         
-        view.addSubview(videoPlayView)
-        videoPlayView.playButton.addTarget(self, action: #selector(videoButtonTapped), for: .touchUpInside)
-        videoPlayView.isHidden = true
     }
     
     func setupConstraints() {
@@ -99,16 +95,8 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         apodImageView.snp.makeConstraints { (view) in
             view.leading.trailing.bottom.top.equalToSuperview()
         }
-        apodDetailView.snp.makeConstraints { (view) in
-            view.width.centerX.equalTo(dateView)
-            view.bottom.equalTo(bottomLayoutGuide.snp.top).offset(-apodDetailView.margin)
-            view.top.equalTo(self.view.snp.centerY)
-        }
-        videoPlayView.snp.makeConstraints { (view) in
-            view.centerX.equalToSuperview()
-            view.bottom.equalTo(self.view.snp.centerY).offset(-11)
-            view.width.height.equalTo(UIScreen.main.bounds.width * 0.2)
-        }
+        
+        constrainDetailView(for: .image)
         
         constrainDateView()
     }
@@ -116,11 +104,27 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     func constrainDateView() {
         // UIDevice.current.orientation.isLandscape doesn't detect isLandscape on first load so comparing the screen height and width to tell if landscape
         let offset = UIScreen.main.bounds.width > UIScreen.main.bounds.height ? ToolBarView.height : pageViewDelegate.statusBarHeightWhenNotHidden + ToolBarView.height
+        
         dateView.snp.remakeConstraints { (view) in
             view.top.equalToSuperview().offset(offset + dateView.margin)
             view.width.equalToSuperview().multipliedBy(DateView.widthMultiplier)
             view.height.equalTo(DateView.height)
             view.centerX.equalToSuperview()
+        }
+    }
+    
+    func constrainDetailView(for mediaType: MediaType) {
+        
+        apodDetailView.snp.remakeConstraints { (view) in
+            view.width.centerX.equalTo(dateView)
+            view.bottom.equalTo(bottomLayoutGuide.snp.top).offset(-apodDetailView.margin)
+            
+            switch mediaType {
+            case .image:
+                view.top.equalTo(self.view.snp.centerY)
+            case .video:
+                view.top.equalTo(self.dateView.snp.bottom).offset(apodDetailView.margin)
+            }
         }
     }
     
@@ -147,15 +151,16 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         apodImageView.addGestureRecognizer(doubleTapRecognizer)
     }
     
-    func configureViewForVideo() {
+    func configureViewForNoImage() {
         apodImageView.stopActivityIndicator()
         isHidingDetail = false
-        apodDetailView.isHidden = false
-        dateView.isHidden = false
+//        apodDetailView.isHidden = false
+        fadeView(apodDetailView, hide: false)
+//        dateView.isHidden = false
+        fadeView(dateView, hide: false)
         if isViewAppeared {
             pageViewDelegate.showToolTabStatusBars(true)
         }
-        videoPlayView.isHidden = false
     }
     
         
@@ -178,12 +183,16 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
             DispatchQueue.main.async {
                 self.pageViewDelegate.toolBarView.setFavorite(apod.isFavorite)
                 self.apodDetailView.populateInfo(from: apod)
-                switch apod.mediaType {
-                case .image:
-                    self.apodImageView.image = UIImage(data: apod.hdImageData! as Data)
-                case .video:
-                    self.configureViewForVideo()
+                self.apodImageView.image = UIImage(data: apod.hdImageData! as Data)
+                self.constrainDetailView(for: apod.mediaType)
+                if self.apodImageView.image == nil {
+                    self.configureViewForNoImage()
                 }
+//                switch apod.mediaType {
+//                case .image:
+//                    break
+//                case .video:
+//                }
             }
         } else {
             loadAPOD()
@@ -200,27 +209,28 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
             DispatchQueue.main.async {
                 self.pageViewDelegate.toolBarView.setFavorite(apod.isFavorite)
                 self.apodDetailView.populateInfo(from: apod)
+                self.constrainDetailView(for: apod.mediaType)
             }
             
-            switch apod.mediaType {
-            case .image:
-                if let hdurl = apod.hdurl {
-                    self.manager?.data.getImage(url: hdurl) { (data, errorMessage) in
-                        guard let data = data else {
-                            self.alertFactory.showErrorAlert(message: errorMessage!)
-                            self.apodImageView.stopActivityIndicator()
-                            return
-                        }
-                        self.apod?.hdImageData = data as NSData
-                        let image = UIImage(data: data)
-                        self.apod?.ldImageData = UIImageJPEGRepresentation(image!, 0.25)! as NSData
-                        DispatchQueue.main.async {
-                            self.apodImageView.image = image
-                        }
+            if let hdurl = apod.hdurl {
+                self.manager?.data.getImage(url: hdurl) { (data, errorMessage) in
+                    guard let data = data else {
+                        self.configureViewForNoImage()
+                        self.alertFactory.showErrorAlert(message: errorMessage!)
+                        self.apodImageView.stopActivityIndicator()
+                        return
+                    }
+                    self.apod?.hdImageData = data as NSData
+                    let image = UIImage(data: data)
+                    self.apod?.ldImageData = UIImageJPEGRepresentation(image!, 0.25)! as NSData
+                    DispatchQueue.main.async {
+                        self.apodImageView.image = image
                     }
                 }
-            case .video:
-                self.configureViewForVideo()
+            } else {
+                self.configureViewForNoImage()
+                self.alertFactory.showErrorAlert(message: errorMessage!)
+                self.apodImageView.stopActivityIndicator()
             }
         }
     }
@@ -229,13 +239,18 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     func handleGesture(sender: UITapGestureRecognizer) {
         switch sender.numberOfTapsRequired {
         case 1:
-            // only hide/show view if apod has loaded and is an image
-            if let apod = apod, apod.mediaType == .image {
+            // only hide/show view if apod has loaded and has an image
+            
+            if apodImageView.image != nil {
+                
                 isHidingDetail = !isHidingDetail
-                fadeView(dateView, hide: isHidingDetail)
-                fadeView(apodDetailView, hide: isHidingDetail)
+                if let _ = apod {
+                    fadeView(dateView, hide: isHidingDetail)
+                    fadeView(apodDetailView, hide: isHidingDetail)
+                }
                 pageViewDelegate.showToolTabStatusBars(!isHidingDetail)
             }
+            
         case 2:
             apodImageView.doubleTapZoom(for: sender)
         default:
@@ -259,9 +274,14 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     
+}
+
+extension APODViewController: DetailViewDelegate {
     func videoButtonTapped() {
         guard let apod = apod, let url = URL(string: apod.url) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 }
+
+
 

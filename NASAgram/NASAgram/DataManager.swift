@@ -44,7 +44,41 @@ class DataManager {
             }
             else if let data = data, let apod = APOD.makeAPOD(from: data) {
                 self.apods.append(apod)
-                completion(apod, nil)
+                
+                switch apod.mediaType {
+                case .video(let videoType):
+                    if let videoType = videoType {
+                        switch videoType {
+                        case .unknown, .youTube:
+                            completion(apod, nil)
+                        case .vimeo:
+                            self.getVimeoImageURL(for: apod, completion: { (urlString, errorMessage) in
+                                if let error = errorMessage {
+                                    completion(apod, error)
+                                } else {
+                                    apod.hdurl = urlString
+                                    completion(apod, nil)
+                                }
+                            })
+                        }                        
+                    }
+                case .image:
+                    completion(apod, nil)
+                }
+            }
+        }
+    }
+    
+    func getVimeoImageURL(for apod: APOD, completion: @ escaping (String?, String?) -> ()) {
+        
+        if let vimeoEndpoint = MediaType.VideoType.vimeoImageAPIEndpoint(urlString: apod.url) {
+            apiManager.getData(endpoint: vimeoEndpoint) { (data, errorMessage) in
+                if let error = errorMessage {
+                    completion(nil, error)
+                }
+                else if let data = data, let urlString = MediaType.VideoType.vimeoImageURL(from: data) {
+                    completion(urlString, nil)
+                }
             }
         }
     }

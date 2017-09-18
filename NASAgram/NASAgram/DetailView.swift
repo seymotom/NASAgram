@@ -9,25 +9,30 @@
 import UIKit
 import SnapKit
 
+protocol DetailViewDelegate {
+    func videoButtonTapped()
+}
+
 
 class DetailView: UIView {
     
-//    var delegate: DetailViewDelegate!
+    var delegate: DetailViewDelegate!
     
     let margin: CGFloat = 11.0
 
     var titleLabel = DetailLabel()
     var explanationScrollView = ExplanationScrollView()
-//    var videoLabel = DetailLabel()
     var copyrightLabel = DetailLabel()
+    
+    var videoPlayView = VideoPlayView()
     
     let backgroundView = BlurredBackgroundView(style: .dark)
         
-//    convenience init(delegate: DetailViewDelegate) {
-//        self.init(frame: CGRect.zero)
-//        self.delegate = delegate
-//        setup()
-//    }
+    convenience init(delegate: DetailViewDelegate) {
+        self.init(frame: CGRect.zero)
+        self.delegate = delegate
+        setup()
+    }
 
     
     required init(coder aDecoder: NSCoder) {
@@ -36,7 +41,6 @@ class DetailView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setup()
     }
     
     private func setup() {
@@ -55,16 +59,6 @@ class DetailView: UIView {
         
         addSubview(explanationScrollView)
         
-//        videoLabel.text = "This is a video, open in browser?"
-//        videoLabel.isUserInteractionEnabled = true
-//        addSubview(videoLabel)
-//        
-//        let videoTap = UITapGestureRecognizer()
-//        videoTap.delegate = delegate as? UIGestureRecognizerDelegate
-//        videoTap.numberOfTapsRequired = 1
-//        videoTap.addTarget(delegate , action: #selector (delegate.videoLabelTapped))
-//        videoLabel.addGestureRecognizer(videoTap)
-        
         self.clipsToBounds = true
         self.layer.cornerRadius = margin
     }
@@ -82,15 +76,9 @@ class DetailView: UIView {
             view.top.equalTo(titleLabel.snp.bottom).offset(margin)
             view.bottom.equalToSuperview().offset(-margin)
         }
-//        videoLabel.snp.makeConstraints { (view) in
-//            view.leading.trailing.equalTo(titleLabel)
-//            view.top.equalTo(explanationScrollView.snp.bottom).offset(margin)
-//            view.bottom.equalToSuperview().offset(-margin)
-//        }
     }
     
     func populateInfo(from apod: APOD) {
-//        videoLabel.isHidden = apod.mediaType == .image ? true : false
         titleLabel.text = apod.title
         explanationScrollView.explanationLabel.text = apod.explanation
         
@@ -98,6 +86,14 @@ class DetailView: UIView {
             copyrightLabel.text = "© \(copyright)"
             addCopyrightLabel()
         }
+        
+        switch apod.mediaType {
+        case .video:
+            setupViewForVideo()
+        case .image:
+            break
+        }
+        
         layoutIfNeeded()
     }
     
@@ -116,5 +112,27 @@ class DetailView: UIView {
             view.top.equalTo(explanationScrollView.snp.bottom).offset(margin)
             view.bottom.equalToSuperview().offset(-margin)
         }
+    }
+    
+    func setupViewForVideo() {
+        addSubview(videoPlayView)
+        videoPlayView.playButton.addTarget(self, action: #selector(videoButtonTapped), for: .touchUpInside)
+        
+        titleLabel.snp.remakeConstraints { (view) in
+            view.leading.equalToSuperview().offset(margin)
+            view.trailing.equalToSuperview().offset(-margin)
+            view.top.equalTo(videoPlayView.snp.bottom).offset(margin)
+        }
+        videoPlayView.snp.makeConstraints { (view) in
+            view.centerX.equalToSuperview()
+            view.width.height.equalTo(UIScreen.main.bounds.width * 0.2)
+            view.top.equalToSuperview().offset(margin)
+        }
+    }
+    
+    
+    
+    func videoButtonTapped() {
+        delegate.videoButtonTapped()
     }
 }
