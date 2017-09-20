@@ -20,6 +20,8 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         return manager?.data.apod(for: date.yyyyMMdd())
     }
     
+    var errorMessage: String?
+    
     var indexPath: IndexPath?
     
     var dateView: DateView!
@@ -33,6 +35,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     var isViewAppeared: Bool = false
     var isHidingDetail: Bool = true
+    var noImageToDisplay: Bool = false
     
     init(date: Date, pageViewDelegate: APODPageViewDelegate?, manager: APODManager) {
         self.date = date
@@ -53,13 +56,12 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         setupView()
         setupConstraints()
         setupGestures()
-        getAPOD()
+        checkFavoritesForAPOD()
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        isViewAppeared = true
         
         pageViewDelegate.showToolTabStatusBars(!isHidingDetail)
         setupDateView()
@@ -67,17 +69,27 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         DispatchQueue.main.async {
             self.constrainDateView()
             self.apodImageView.resetForOrientation()
-            if let apod = self.apod {
-                self.pageViewDelegate.toolBarView.setFavorite(apod.isFavorite)
-            }
         }
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        isViewAppeared = true
+        
+        if let apod = self.apod {
+            self.pageViewDelegate.toolBarView.setFavorite(apod.isFavorite)
+        }
+        
+        if let error = errorMessage {
+            alertFactory.showErrorAlert(message: error)
+            errorMessage = nil
+        }
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         isViewAppeared = false
     }
-    
     
     func setupView() {
         view.backgroundColor = .black
@@ -151,19 +163,35 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         apodImageView.addGestureRecognizer(doubleTapRecognizer)
     }
     
-    func configureViewForNoImage() {
-        apodImageView.stopActivityIndicator()
-        isHidingDetail = false
-//        apodDetailView.isHidden = false
-        fadeView(apodDetailView, hide: false)
-//        dateView.isHidden = false
-        fadeView(dateView, hide: false)
+    func configureViewForNoImage(errorMessage: String? = nil) {
+        noImageToDisplay = true
         if isViewAppeared {
             pageViewDelegate.showToolTabStatusBars(true)
+            if let error = errorMessage {
+                alertFactory.showErrorAlert(message: error)
+            }
+        } else {
+            self.errorMessage = errorMessage
+        }
+        
+        apodImageView.stopActivityIndicator()
+        
+        isHidingDetail = false
+        fadeView(dateView, hide: false)
+        if let _ = apod {
+            fadeView(apodDetailView, hide: false)
         }
     }
     
-        
+    func configureViewForAPOD(_ apod: APOD) {
+        if isViewAppeared {
+            pageViewDelegate.toolBarView.setFavorite(apod.isFavorite)
+        }
+        apodDetailView.populateInfo(from: apod)
+        constrainDetailView(for: apod.mediaType)
+    }
+    
+    
     func setupDateView() {
         if isHidingDetail {
             fadeView(dateView, hide: false)
@@ -177,47 +205,45 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    func getAPOD() {
+    func checkFavoritesForAPOD() {
         // checks favorites before hitting api
         if let apod = manager?.favorites.fetchAPOD(date: date.yyyyMMdd()) {
+            // needs to be on main thread for off screen VCs
             DispatchQueue.main.async {
-                self.pageViewDelegate.toolBarView.setFavorite(apod.isFavorite)
-                self.apodDetailView.populateInfo(from: apod)
-                self.apodImageView.image = UIImage(data: apod.hdImageData! as Data)
-                self.constrainDetailView(for: apod.mediaType)
-                if self.apodImageView.image == nil {
+                self.configureViewForAPOD(apod)
+                if let imageData = apod.hdImageData {
+                    self.apodImageView.image = UIImage(data: imageData as Data)
+                } else {
                     self.configureViewForNoImage()
                 }
-//                switch apod.mediaType {
-//                case .image:
-//                    break
-//                case .video:
-//                }
             }
+            
         } else {
-            loadAPOD()
+            loadAPODFromAPI()
         }
     }
     
-    func loadAPOD() {
+    func loadAPODFromAPI() {
         
         manager?.data.getAPOD(from: date) { (apod, errorMessage) in
             guard let apod = apod else {
-                self.alertFactory.showErrorAlert(message: errorMessage!)
+                // big apod error
+                DispatchQueue.main.async {
+                    self.configureViewForNoImage(errorMessage: errorMessage)
+                }
                 return
             }
             DispatchQueue.main.async {
-                self.pageViewDelegate.toolBarView.setFavorite(apod.isFavorite)
-                self.apodDetailView.populateInfo(from: apod)
-                self.constrainDetailView(for: apod.mediaType)
+                self.configureViewForAPOD(apod)
             }
             
             if let hdurl = apod.hdurl {
                 self.manager?.data.getImage(url: hdurl) { (data, errorMessage) in
                     guard let data = data else {
-                        self.configureViewForNoImage()
-                        self.alertFactory.showErrorAlert(message: errorMessage!)
-                        self.apodImageView.stopActivityIndicator()
+                        // no image error
+                        DispatchQueue.main.async {
+                            self.configureViewForNoImage(errorMessage: errorMessage)
+                        }
                         return
                     }
                     self.apod?.hdImageData = data as NSData
@@ -228,33 +254,31 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
                     }
                 }
             } else {
-                self.configureViewForNoImage()
-                self.alertFactory.showErrorAlert(message: errorMessage!)
-                self.apodImageView.stopActivityIndicator()
+                // no image error
+                DispatchQueue.main.async {
+                    self.configureViewForNoImage(errorMessage: errorMessage)
+                }
             }
         }
     }
     
     
     func handleGesture(sender: UITapGestureRecognizer) {
-        switch sender.numberOfTapsRequired {
-        case 1:
-            // only hide/show view if apod has loaded and has an image
-            
-            if apodImageView.image != nil {
-                
+        // only hide/show view if apod has loaded and has an image
+        if !noImageToDisplay {
+            switch sender.numberOfTapsRequired {
+            case 1:
                 isHidingDetail = !isHidingDetail
+                pageViewDelegate.showToolTabStatusBars(!isHidingDetail)
+                fadeView(dateView, hide: isHidingDetail)
                 if let _ = apod {
-                    fadeView(dateView, hide: isHidingDetail)
                     fadeView(apodDetailView, hide: isHidingDetail)
                 }
-                pageViewDelegate.showToolTabStatusBars(!isHidingDetail)
+            case 2:
+                apodImageView.doubleTapZoom(for: sender)
+            default:
+                break
             }
-            
-        case 2:
-            apodImageView.doubleTapZoom(for: sender)
-        default:
-            break
         }
     }
     

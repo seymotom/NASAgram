@@ -23,9 +23,10 @@ class APODImageView: UIScrollView {
     
     var image: UIImage? {
         didSet {
-            imageView.image = image
+            imageView.image = image 
             fadeInImageView()
             setZoom()
+            updateImageConstraints()
             activityIndicator?.stopAnimating()
         }
     }
@@ -156,9 +157,7 @@ class APODImageView: UIScrollView {
     }
     
     func stopActivityIndicator() {
-        DispatchQueue.main.async {
-            self.activityIndicator.stopAnimating()
-        }
+        self.activityIndicator.stopAnimating()
     }
     
 //    private func getRect(for point: CGPoint, thisZoomScale: CGFloat = 1) -> CGRect {

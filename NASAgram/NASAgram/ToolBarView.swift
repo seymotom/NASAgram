@@ -109,7 +109,6 @@ class ToolBarView: UIView {
             view.trailing.equalToSuperview().offset(-margin)
             view.centerY.equalToSuperview()
         }
-        
     }
     
     func setFavorite(_ isFavorite: Bool) {

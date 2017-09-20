@@ -8,6 +8,11 @@
 
 import UIKit
 
+//enum AlertError: String {
+//    case hasNoImage = ""
+//    case cantGetImage = ""
+//}
+
 struct AlertFactory {
     
     private let defaultTitle = "Error"
@@ -35,6 +40,8 @@ struct AlertFactory {
             }
         }
         alert.addAction(okayAction)
-        view.present(alert, animated: true, completion: nil)
+        DispatchQueue.main.async {
+            self.view.present(alert, animated: true, completion: nil)
+        }
     }
 }

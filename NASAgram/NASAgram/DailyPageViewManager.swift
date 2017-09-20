@@ -13,6 +13,7 @@ protocol APODPageViewManagerDelegate: UIPageViewControllerDelegate, UIPageViewCo
     func setupPageVC()
     func dateSelected(date: Date)
     var indexPath: IndexPath? { get set }
+    var seenVCs: [String: UIViewController] { get set }
 }
 
 class DailyPageViewManager: NSObject, UIPageViewControllerDelegate, UIPageViewControllerDataSource, APODPageViewManagerDelegate {
@@ -85,6 +86,9 @@ class DailyPageViewManager: NSObject, UIPageViewControllerDelegate, UIPageViewCo
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        if thisDate.yyyyMMdd() == DataManager.firstAPODDate.yyyyMMdd() {
+            return nil
+        }
         let yesterday = thisDate.advanceDay(by: -1)
         return getAPODVC(for: yesterday)
     }

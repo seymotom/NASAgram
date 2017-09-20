@@ -24,7 +24,9 @@ class APIManager {
                     completion(data, nil)
                 }
                 else {
-                    completion(nil, response.description)
+                    completion(nil, HTTPURLResponse.localizedString(forStatusCode: response.statusCode))
+//                    completion(nil, response.description)
+
                 }
             }
             }.resume()

@@ -46,6 +46,7 @@ class DateSearchView: UIView {
         addSubview(backgroundView)
         
         datePicker.maximumDate = Date()
+        datePicker.minimumDate = DataManager.firstAPODDate
         datePicker.datePickerMode = .date
         addSubview(datePicker)
         

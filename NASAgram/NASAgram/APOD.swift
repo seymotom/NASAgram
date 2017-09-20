@@ -13,95 +13,6 @@ enum ParseError: Error {
     case vimeoImageError
 }
 
-enum MediaType {
-    
-    enum VideoType: String {
-        case youTube, vimeo, unknown
-        
-        static func youTubeImageURL(urlString: String) -> String? {
-            let preIDURLString = "https://img.youtube.com/vi/"
-            let postIDURLString = "/0.jpg"
-            
-            if let idSection = urlString.components(separatedBy: "/").last,
-                let id = idSection.components(separatedBy: "?").first {
-                return preIDURLString + id + postIDURLString
-            }
-            
-            return nil
-        }
-        
-        static func vimeoImageAPIEndpoint(urlString: String) -> String? {
-            let preIDURLString = "https://vimeo.com/api/v2/video/"
-            let postIDURLString = ".jsonX"
-            
-            if let idSection = urlString.components(separatedBy: "/").last,
-                let id = idSection.components(separatedBy: "#").first {
-                return preIDURLString + id + postIDURLString
-            }
-            
-            return nil
-        }
-        
-        static func vimeoImageURL(from data: Data) -> String? {
-            do {
-                let jsonData: Any = try JSONSerialization.jsonObject(with: data, options: [])
-                guard
-                    let jsonArr = jsonData as? [[String: AnyObject]],
-                    let vidDict = jsonArr.first,
-                    let imageURLString = vidDict["thumbnail_large"] as? String
-                    else {
-                        throw ParseError.vimeoImageError
-                }
-                return imageURLString
-            }
-            catch ParseError.vimeoImageError {
-                print("Error occured while getting vimeo image")
-            }
-            catch let error as NSError {
-                print("Error while parsing \(error)")
-            }
-            return nil
-            
-        }
-
-
-    }
-    
-    case image
-    case video(VideoType?)
-    
-    var myRawValue: String {
-        switch self {
-        case .image:
-            return "image"
-        case .video:
-            return "video"
-        }
-    }
-    
-    static func videoType(from urlString: String) -> VideoType {
-        if urlString.contains(VideoType.vimeo.rawValue) {
-            return .vimeo
-        } else if urlString.contains(VideoType.youTube.rawValue.lowercased()) {
-            return .youTube
-        } else {
-            return .unknown
-        }
-    }
-    
-    static func mediaType(myRawValue: String) -> MediaType? {
-        switch myRawValue {
-        case "image":
-            return .image
-        case "video":
-            return .video(nil)
-        default:
-            return nil
-        }
-    }
-}
-
-
 enum APODField: String {
     case date, explanation, hdurl, title, url, copyright
     case mediaType = "media_type"
@@ -171,25 +82,8 @@ class APOD {
             }
         }
         
-        
-        
-//        let hdurl = mediaType == .image ? json[APODField.hdurl.rawValue] as? String : APOD.getVideoImageURL(urlString: url)
-        
-        
         self.init(date: date, explanation: explanation, hdurl: hdurl, url: url, mediaType: mediaType, serviceVersion: serviceVersion, title: title, copyright: copyright)
     }
-    
-    
-//    static private func getVideoImageURL(urlString: String) -> String {
-//        // detect if youtube or vimeo
-//        
-//        // if vimeo, make a network call. May need to add a field to the model, maybe have an associated value to MediaType.video of type VideoType. Can make cases for youTube, vimeo and unknown.   
-//        
-//        
-//        
-//        return ""
-//    }
-    
     
     static func makeAPOD(from data: Data) -> APOD? {
         do {
@@ -210,6 +104,4 @@ class APOD {
         }
         return nil
     }
-    
-    
 }

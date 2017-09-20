@@ -21,6 +21,7 @@
 		DE248C5A1F2A828D001F2F45 /* DateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE248C591F2A828D001F2F45 /* DateView.swift */; };
 		DE39A7331F02F15F004212DD /* APODViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE39A7321F02F15E004212DD /* APODViewController.swift */; };
 		DE39A7351F030A86004212DD /* Extension+Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE39A7341F030A86004212DD /* Extension+Date.swift */; };
+		DE499F741F72ECC200EDC852 /* MediaType.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE499F731F72ECC200EDC852 /* MediaType.swift */; };
 		DE58E65D1F5F4C9900AFB339 /* VideoPlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE58E65C1F5F4C9900AFB339 /* VideoPlayView.swift */; };
 		DE5DACB21F165DC0000B8607 /* APODManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5DACB11F165DC0000B8607 /* APODManager.swift */; };
 		DE5DACB41F167383000B8607 /* AlertFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5DACB31F167383000B8607 /* AlertFactory.swift */; };
@@ -81,6 +82,7 @@
 		DE248C591F2A828D001F2F45 /* DateView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateView.swift; sourceTree = "<group>"; };
 		DE39A7321F02F15E004212DD /* APODViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APODViewController.swift; sourceTree = "<group>"; };
 		DE39A7341F030A86004212DD /* Extension+Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extension+Date.swift"; sourceTree = "<group>"; };
+		DE499F731F72ECC200EDC852 /* MediaType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaType.swift; sourceTree = "<group>"; };
 		DE58E65C1F5F4C9900AFB339 /* VideoPlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayView.swift; sourceTree = "<group>"; };
 		DE5DACB11F165DC0000B8607 /* APODManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APODManager.swift; sourceTree = "<group>"; };
 		DE5DACB31F167383000B8607 /* AlertFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertFactory.swift; sourceTree = "<group>"; };
@@ -254,6 +256,7 @@
 			children = (
 				DEAD51DF1F018F16002486B1 /* APOD.swift */,
 				DE1AF12A1F0FCA6C001474A0 /* Extension+FavAPOD.swift */,
+				DE499F731F72ECC200EDC852 /* MediaType.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -588,6 +591,7 @@
 				DEAD51E01F018F16002486B1 /* APOD.swift in Sources */,
 				DE1AF1261F09754C001474A0 /* DetailLabel.swift in Sources */,
 				DE19D8BC1F1FB8F40084872E /* DateSearchView.swift in Sources */,
+				DE499F741F72ECC200EDC852 /* MediaType.swift in Sources */,
 				DEDA0E681F13D28D004BCB0F /* FavoritesTableViewCell.swift in Sources */,
 				DEF02B6B1F4F4DE0009836E1 /* ExplanationScrollView.swift in Sources */,
 				DEDA0E661F13C7DB004BCB0F /* FavoritesViewController.swift in Sources */,

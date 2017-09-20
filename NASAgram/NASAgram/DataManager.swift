@@ -16,6 +16,8 @@ class DataManager {
     
     private let apodEndpoint = "https://api.nasa.gov/planetary/apod?api_key=AOy2RZcIA1OYQZF6Bbjjz5ntTJPSPwYogYtN0IGP&hd=True&date="
     
+    static let firstAPODDate = "1995-06-20".date()!
+    
     init(apiManager: APIManager) {
         self.apiManager = apiManager
     }

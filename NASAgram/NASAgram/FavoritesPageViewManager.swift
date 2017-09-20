@@ -15,6 +15,8 @@ class FavoritesPageViewManager: NSObject {
     let apodPageViewController: APODPageViewController!
     let apodManager: APODManager!
     
+    var seenVCs: [String: UIViewController] = [:]
+    
     init(pageViewController: APODPageViewController, apodManager: APODManager, indexPath: IndexPath?) {
         apodPageViewController = pageViewController
         self.indexPath = indexPath

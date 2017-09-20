@@ -79,9 +79,9 @@ class APODPageViewController: UIPageViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupPageVC()
         setupView()
         setupConstraints()
+        setupPageVC()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -92,7 +92,7 @@ class APODPageViewController: UIPageViewController {
         super.didReceiveMemoryWarning()
         print("/n/n/n>>>>>>>>>>> !!! MEMORY WARNING !!! <<<<<<<<<<<<<\n\n\n")
         // empty the dictionary if using too much memory
-        //        seenVCs = [:]
+        pageViewManager.seenVCs = [:]
     }
     
     func setupPageVC() {
@@ -237,15 +237,11 @@ class APODPageViewController: UIPageViewController {
 extension APODPageViewController: APODPageViewDelegate {
     
     func showToolTabStatusBars(_ show: Bool) {
-        
-        DispatchQueue.main.async {
-            self.setToolBarVisible(visible: show, animated: true)
-            self.statusBarHidden = UIDevice.current.orientation.isLandscape || !show ? true : false
-            if self.pageViewType == .daily {
-                self.setTabBarVisible(visible: show, animated: true)
-            }
+        self.setToolBarVisible(visible: show, animated: true)
+        self.statusBarHidden = UIDevice.current.orientation.isLandscape || !show ? true : false
+        if self.pageViewType == .daily {
+            self.setTabBarVisible(visible: show, animated: true)
         }
-        
     }
 }
 
