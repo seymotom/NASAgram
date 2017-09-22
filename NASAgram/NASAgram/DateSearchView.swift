@@ -71,7 +71,7 @@ class DateSearchView: UIView {
         }
     }
     
-    func datePickerDidChange() {
+    @objc func datePickerDidChange() {
         delegate.dateSelected(date: datePicker.date)
     }
 }

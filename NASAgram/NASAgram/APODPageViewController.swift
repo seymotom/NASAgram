@@ -259,12 +259,42 @@ extension APODPageViewController: ToolBarViewDelegate {
     
     func optionsButtonTapped(sender: UIButton) {
         print("burger tapped for \(currentAPODViewController!.date.displayString())")
+        
+//        let alertFactory = AlertFactory(for: self)
+//        alertFactory.showActionSheet()
+        
+        let alert = UIAlertController(title: "Picture Options", message: "Not sure what this message should say, if anything at all.", preferredStyle: .actionSheet)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        let saveAction = UIAlertAction(title: "Save to Photos", style: .default) { (alertAction) in
+            print("Now save that shit")
+            
+            guard let apodVC = self.currentAPODViewController, let image = apodVC.apodImageView.image else { return }
+//            UIImageWriteToSavedPhotosAlbum(image, self, nil, nil)
+            UIImageWriteToSavedPhotosAlbum(image, self, #selector (self.didFinishSavingImage(image: didFinishSavingWithError: contextInfo:)), nil)
+        }
+        
+        alert.addAction(cancelAction)
+        alert.addAction(saveAction)
+        
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
+
+        
     }
     func dateSearchButtonTapped(sender: UIButton) {
         showDateSearchView(dateSearchView.isHidden)
     }
     func dismissButtonTapped(sender: UIButton) {
         dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func didFinishSavingImage(image: UIImage, didFinishSavingWithError: NSError?, contextInfo: UnsafeMutableRawPointer?) {
+        print("FINISHED")
+        let aleFac = AlertFactory(for: self)
+        aleFac.showCustomOKAlert(title: "Success", message: "Photo Saved to Photos")
     }
 }
 

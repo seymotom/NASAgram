@@ -125,14 +125,15 @@ class DetailView: UIView {
         }
         videoPlayView.snp.makeConstraints { (view) in
             view.centerX.equalToSuperview()
-            view.width.height.equalTo(UIScreen.main.bounds.width * 0.2)
+            let width = UIScreen.main.bounds.width < UIScreen.main.bounds.height ? UIScreen.main.bounds.width : UIScreen.main.bounds.height
+            view.width.height.equalTo(width * 0.2)
             view.top.equalToSuperview().offset(margin)
         }
     }
     
     
     
-    func videoButtonTapped() {
+    @objc func videoButtonTapped() {
         delegate.videoButtonTapped()
     }
 }

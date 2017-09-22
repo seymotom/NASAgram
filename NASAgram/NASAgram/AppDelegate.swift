@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let navBarAppearance = UINavigationBar.appearance()
         navBarAppearance.barTintColor = .clear
-        navBarAppearance.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        navBarAppearance.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         
         
         let barButtonAppearance = UIBarButtonItem.appearance()

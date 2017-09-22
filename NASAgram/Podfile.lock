@@ -1,6 +1,6 @@
 PODS:
   - DGActivityIndicatorView (2.1.1)
-  - SnapKit (3.2.0)
+  - SnapKit (4.0.0)
 
 DEPENDENCIES:
   - DGActivityIndicatorView
@@ -8,7 +8,7 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   DGActivityIndicatorView: ff2c76073d79692f724863c8dd38685866a03cb6
-  SnapKit: 1ca44df72cfa543218d177cb8aab029d10d86ea7
+  SnapKit: a42d492c16e80209130a3379f73596c3454b7694
 
 PODFILE CHECKSUM: ea731e08b36d1164501d57d365166aa9092b0be4
 

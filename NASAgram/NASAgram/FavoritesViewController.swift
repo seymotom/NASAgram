@@ -65,12 +65,12 @@ class FavoritesViewController: UIViewController {
         }
     }
     
-    func editButtonPressed() {
+    @objc func editButtonPressed() {
         tableView.setEditing(true, animated: true)
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed))
     }
     
-    func doneButtonPressed() {
+    @objc func doneButtonPressed() {
         tableView.setEditing(false, animated: true)
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editButtonPressed))
     }

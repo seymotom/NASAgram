@@ -199,7 +199,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(dateTimerIsUp), userInfo: nil, repeats: false)
     }
     
-    func dateTimerIsUp() {
+    @objc func dateTimerIsUp() {
         if isHidingDetail {
             fadeView(dateView, hide: true)
         }
@@ -263,7 +263,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     
-    func handleGesture(sender: UITapGestureRecognizer) {
+    @objc func handleGesture(sender: UITapGestureRecognizer) {
         // only hide/show view if apod has loaded and has an image
         if !noImageToDisplay {
             switch sender.numberOfTapsRequired {

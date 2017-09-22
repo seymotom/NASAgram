@@ -44,4 +44,36 @@ struct AlertFactory {
             self.view.present(alert, animated: true, completion: nil)
         }
     }
+    
+    
+    
+    func showActionSheet() {
+        let alert = UIAlertController(title: "Picture Options", message: "Not sure what this message should say, if anything at all.", preferredStyle: .actionSheet)
+        
+        let okayAction = UIAlertAction(title: okay, style: .cancel) { (_) in
+            // if let completionAction = completion {
+               // completionAction()
+            // }
+        }
+        alert.addAction(okayAction)
+        
+        DispatchQueue.main.async {
+            self.view.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

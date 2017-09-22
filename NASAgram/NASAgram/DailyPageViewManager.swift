@@ -55,7 +55,10 @@ class DailyPageViewManager: NSObject, UIPageViewControllerDelegate, UIPageViewCo
     func loadSurroundingVCs(for date: Date, viewController: UIViewController) {
         let before = pageViewController(apodPageViewController, viewControllerBefore: viewController)
         let after = pageViewController(apodPageViewController, viewControllerAfter: viewController)
+        
         // accessing the viewController's view loads it so it can prepopulate
+        
+        // this is causing the viewControllers to appear is if they're falling from the sky
         let _ = before?.view
         let _ = after?.view
         
