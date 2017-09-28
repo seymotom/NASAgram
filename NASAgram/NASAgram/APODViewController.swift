@@ -129,7 +129,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         
         apodDetailView.snp.remakeConstraints { (view) in
             view.width.centerX.equalTo(dateView)
-            view.bottom.equalTo(bottomLayoutGuide.snp.top).offset(-apodDetailView.margin)
+            view.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-apodDetailView.margin)
             
             switch mediaType {
             case .image:
@@ -246,9 +246,9 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
                         }
                         return
                     }
-                    self.apod?.hdImageData = data as NSData
+                    self.apod?.hdImageData = data
                     let image = UIImage(data: data)
-                    self.apod?.ldImageData = UIImageJPEGRepresentation(image!, 0.25)! as NSData
+                    self.apod?.ldImageData = UIImageJPEGRepresentation(image!, 0.25)! 
                     DispatchQueue.main.async {
                         self.apodImageView.image = image
                     }

@@ -60,8 +60,8 @@ class FavoritesViewController: UIViewController {
         edgesForExtendedLayout = []
         tableView.snp.makeConstraints { (view) in
             view.leading.trailing.equalToSuperview()
-            view.top.equalTo(topLayoutGuide.snp.bottom)
-            view.bottom.equalTo(bottomLayoutGuide.snp.top)
+            view.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
+            view.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
         }
     }
     

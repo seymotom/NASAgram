@@ -139,7 +139,7 @@ class APODPageViewController: UIPageViewController {
             view.leading.trailing.equalToSuperview()
             view.height.equalTo(ToolBarView.height)
             if visible {
-                view.top.equalTo(self.topLayoutGuide.snp.bottom)
+                view.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
             } else {
                 view.bottom.equalTo(self.view.snp.top)
             }

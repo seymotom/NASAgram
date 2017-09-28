@@ -44,8 +44,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let barButtonAppearance = UIBarButtonItem.appearance()
         barButtonAppearance.tintColor = .red
         
-        pageVC.tabBarItem = UITabBarItem(title: "Daily", image: nil, selectedImage: nil)
-        favVC.tabBarItem = UITabBarItem(title: "Favorites", image: nil, selectedImage: nil)
+        pageVC.tabBarItem = UITabBarItem(title: "Daily", image: StyleManager.Icon.daily, selectedImage: nil)
+        favVC.tabBarItem = UITabBarItem(title: "Favorites", image: StyleManager.Icon.favorites, selectedImage: nil)
         
         let tabController = UITabBarController()
         tabController.viewControllers = [pageVC, favVC]

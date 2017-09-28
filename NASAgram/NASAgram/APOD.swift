@@ -29,14 +29,14 @@ class APOD {
     let title: String
     let copyright: String?
     
-    var hdImageData: NSData?
-    var ldImageData: NSData?
+    var hdImageData: Data?
+    var ldImageData: Data?
     
     var isFavorite: Bool = false
     
     init(date: Date, explanation: String, hdurl: String?, url: String,
          mediaType: MediaType, serviceVersion: String, title: String, copyright: String?,
-         hdImageData: NSData? = nil, ldImageData: NSData? = nil) {
+         hdImageData: Data? = nil, ldImageData: Data? = nil) {
         self.date = date
         self.explanation = explanation
         self.hdurl = hdurl

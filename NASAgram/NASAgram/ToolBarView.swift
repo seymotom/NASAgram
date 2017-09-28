@@ -59,16 +59,20 @@ class ToolBarView: UIView {
         titleLabel.contentMode = .center
         addSubview(titleLabel)
         favoriteButton.addTarget(delegate, action: #selector (delegate.favoriteButtonTapped(sender:)), for: .touchUpInside)
-        favoriteButton.setTitle("☆", for: .normal)
+        favoriteButton.setImage(StyleManager.Icon.favoriteEmpty, for: .normal)
+//        favoriteButton.setTitle("☆", for: .normal)
         addSubview(favoriteButton)
         optionsButton.addTarget(delegate, action: #selector (delegate.optionsButtonTapped(sender:)), for: .touchUpInside)
-        optionsButton.setTitle("🍔", for: .normal)
+//        optionsButton.setTitle("🍔", for: .normal)
+        optionsButton.setImage(StyleManager.Icon.menu, for: .normal)
         addSubview(optionsButton)
         dateSearchButton.addTarget(delegate, action: #selector (delegate.dateSearchButtonTapped(sender:)), for: .touchUpInside)
-        dateSearchButton.setTitle("🔍", for: .normal)
+        dateSearchButton.setImage(StyleManager.Icon.search, for: .normal)
+//        dateSearchButton.setTitle("🔍", for: .normal)
         addSubview(dateSearchButton)
         dismissButton.addTarget(delegate, action: #selector (delegate.dismissButtonTapped(sender:)), for: .touchUpInside)
-        dismissButton.setTitle("✕", for: .normal)
+//        dismissButton.setTitle("✕", for: .normal)
+        dismissButton.setImage(StyleManager.Icon.dismiss, for: .normal)
         addSubview(dismissButton)
         
         switch pageViewType! {
@@ -112,6 +116,7 @@ class ToolBarView: UIView {
     }
     
     func setFavorite(_ isFavorite: Bool) {
-        favoriteButton.setTitle(isFavorite ? "⭐️" : "☆", for: .normal)
+        let iconImage = isFavorite ? StyleManager.Icon.favoriteFilled : StyleManager.Icon.favoriteEmpty
+        favoriteButton.setImage(iconImage, for: .normal)
     }
 }
