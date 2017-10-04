@@ -56,7 +56,7 @@ class ToolBarView: UIView {
     func setupViews() {
         addSubview(backgroundView)
         titleLabel.font = StyleManager.Font.nasalization()
-        titleLabel.text = StyleManager.appTitle
+        titleLabel.text = StyleManager.Text.appTitle
         titleLabel.contentMode = .center
         addSubview(titleLabel)
         favoriteButton.addTarget(delegate, action: #selector (delegate.favoriteButtonTapped(sender:)), for: .touchUpInside)

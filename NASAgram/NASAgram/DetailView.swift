@@ -18,8 +18,6 @@ class DetailView: UIView {
     
     var delegate: DetailViewDelegate!
     
-    let margin: CGFloat = 11.0
-
     var titleLabel = DetailLabel()
     var explanationScrollView = ExplanationScrollView()
     var copyrightLabel = DetailLabel()
@@ -34,7 +32,6 @@ class DetailView: UIView {
         setup()
     }
 
-    
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
     }
@@ -60,7 +57,7 @@ class DetailView: UIView {
         addSubview(explanationScrollView)
         
         self.clipsToBounds = true
-        self.layer.cornerRadius = margin
+        self.layer.cornerRadius = StyleManager.Dimension.standardMargin
     }
     
     func setupConstraints() {
@@ -68,13 +65,13 @@ class DetailView: UIView {
             view.leading.trailing.top.bottom.equalToSuperview()
         }
         titleLabel.snp.makeConstraints { (view) in
-            view.top.leading.equalToSuperview().offset(margin)
-            view.trailing.equalToSuperview().offset(-margin)
+            view.top.leading.equalToSuperview().offset(StyleManager.Dimension.standardMargin)
+            view.trailing.equalToSuperview().offset(-StyleManager.Dimension.standardMargin)
         }
         explanationScrollView.snp.makeConstraints { (view) in
             view.leading.trailing.equalTo(titleLabel)
-            view.top.equalTo(titleLabel.snp.bottom).offset(margin)
-            view.bottom.equalToSuperview().offset(-margin)
+            view.top.equalTo(titleLabel.snp.bottom).offset(StyleManager.Dimension.standardMargin)
+            view.bottom.equalToSuperview().offset(-StyleManager.Dimension.standardMargin)
         }
     }
     
@@ -99,18 +96,18 @@ class DetailView: UIView {
     
     func addCopyrightLabel() {
         addSubview(copyrightLabel)
-        copyrightLabel.font = UIFont.systemFont(ofSize: 8)
+        copyrightLabel.font = StyleManager.Font.system(size: .small)
         copyrightLabel.textAlignment = .right
         
         explanationScrollView.snp.remakeConstraints { (view) in
             view.leading.trailing.equalTo(titleLabel)
-            view.top.equalTo(titleLabel.snp.bottom).offset(margin)
+            view.top.equalTo(titleLabel.snp.bottom).offset(StyleManager.Dimension.standardMargin)
         }
         
         copyrightLabel.snp.makeConstraints { (view) in
             view.leading.trailing.equalTo(titleLabel)
-            view.top.equalTo(explanationScrollView.snp.bottom).offset(margin)
-            view.bottom.equalToSuperview().offset(-margin)
+            view.top.equalTo(explanationScrollView.snp.bottom).offset(StyleManager.Dimension.standardMargin)
+            view.bottom.equalToSuperview().offset(-StyleManager.Dimension.standardMargin)
         }
     }
     
@@ -119,15 +116,16 @@ class DetailView: UIView {
         videoPlayView.playButton.addTarget(self, action: #selector(videoButtonTapped), for: .touchUpInside)
         
         titleLabel.snp.remakeConstraints { (view) in
-            view.leading.equalToSuperview().offset(margin)
-            view.trailing.equalToSuperview().offset(-margin)
-            view.top.equalTo(videoPlayView.snp.bottom).offset(margin)
+            view.leading.equalToSuperview().offset(StyleManager.Dimension.standardMargin)
+            view.trailing.equalToSuperview().offset(-StyleManager.Dimension.standardMargin)
+            view.top.equalTo(videoPlayView.snp.bottom).offset(StyleManager.Dimension.standardMargin)
         }
         videoPlayView.snp.makeConstraints { (view) in
             view.centerX.equalToSuperview()
-            let width = UIScreen.main.bounds.width < UIScreen.main.bounds.height ? UIScreen.main.bounds.width : UIScreen.main.bounds.height
-            view.width.height.equalTo(width * 0.2)
-            view.top.equalToSuperview().offset(margin)
+//            let width = UIScreen.main.bounds.width < UIScreen.main.bounds.height ? UIScreen.main.bounds.width : UIScreen.main.bounds.height
+//            view.width.height.equalTo(width * 0.2)
+//            view.centerX.equalToSuperview()
+            view.top.equalToSuperview().offset(StyleManager.Dimension.standardMargin)
         }
     }
     

@@ -30,7 +30,7 @@ class ExplanationScrollView: UIScrollView {
     
     private func setupViews() {
        addSubview(explanationLabel)
-        explanationLabel.font = UIFont.systemFont(ofSize: 12)
+        explanationLabel.font = StyleManager.Font.system(size: .medium)
         explanationLabel.numberOfLines = 0
         explanationLabel.lineBreakMode = .byWordWrapping
     }

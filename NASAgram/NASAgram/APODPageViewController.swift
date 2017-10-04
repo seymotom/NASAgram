@@ -230,7 +230,10 @@ class APODPageViewController: UIPageViewController {
         
         coordinator.animate(alongsideTransition: { (context) in
             if let apodVC = self.viewControllers?.first as? APODViewController {
-                apodVC.resetForRotation()
+                DispatchQueue.main.async {
+                    apodVC.resetForRotation()
+                    print(self.tabBarController?.tabBar.frame.height)
+                }
             }
         }) { (context) in
         }

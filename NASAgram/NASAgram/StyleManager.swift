@@ -10,34 +10,54 @@ import UIKit
 
 class StyleManager {
     
-    static let appTitle = "NASAgram"
     
-    class Icon {
+    class Text {
+        static let appTitle = "NASAgram"
         
-        static let daily: UIImage? = UIImage(named: "daily")
-        static let favorites: UIImage? = UIImage(named: "favorites")
-        
-        static let dismiss: UIImage? = UIImage(named: "dismiss")
-        static let menu: UIImage? = UIImage(named: "menu")
-        static let search: UIImage? = UIImage(named: "search")
-        static let favoriteEmpty: UIImage? = UIImage(named: "starEmpty")
-        static let favoriteFilled: UIImage? = UIImage(named: "starFilled")
+        static let videoPlayExplanation = "open video in browser?"
 
     }
     
-    class Font {
-        static let titileSize: CGFloat = 20.0
+    class Icon {
         
-        static func nasalization(size: CGFloat = Font.titileSize) -> UIFont {
-            return UIFont(name: "NasalizationRg-Regular", size: size)!
+        static let daily = UIImage(named: "daily")
+        static let favorites = UIImage(named: "favorites")
+        
+        static let dismiss = UIImage(named: "dismiss")
+        static let menu = UIImage(named: "menu")
+        static let search = UIImage(named: "search")
+        static let favoriteEmpty = UIImage(named: "starEmpty")
+        static let favoriteFilled = UIImage(named: "starFilled")
+        
+        static let playVideo = UIImage(named: "play")
+    }
+    
+    class Font {
+        
+        enum Size: CGFloat {
+            case title = 20
+            case small = 8
+            case medium = 12
+        }
+        
+        static func system(size: Size) -> UIFont {
+            return UIFont.systemFont(ofSize: size.rawValue)
+        }
+        
+        static func nasalization(size: Size = .title) -> UIFont {
+            return UIFont(name: "NasalizationRg-Regular", size: size.rawValue)!
         }
     }
     
     
     class Dimension {
-        
+        static let standardMargin: CGFloat = 8
+
     }
     
-    
+    class Color {
+        static let primary = UIColor.white
+        static let accent = UIColor.red
+    }
     
 }

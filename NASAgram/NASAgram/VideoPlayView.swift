@@ -11,7 +11,7 @@ import SnapKit
 
 class VideoPlayView: UIView {
 
-    let explanationLabel = DetailLabel()
+    private let explanationLabel = DetailLabel()
     let playButton = UIButton()
     
     required init(coder aDecoder: NSCoder) {
@@ -31,21 +31,22 @@ class VideoPlayView: UIView {
     
     private func setupViews() {
         addSubview(explanationLabel)
-        explanationLabel.text = "open video in browser?"
-        explanationLabel.font = UIFont.systemFont(ofSize: 8)
+        explanationLabel.text = StyleManager.Text.videoPlayExplanation
+        explanationLabel.font = StyleManager.Font.system(size: .small)
         explanationLabel.textAlignment = .center
         
         addSubview(playButton)
-        playButton.setImage(#imageLiteral(resourceName: "video-play-3-xxl"), for: .normal)
+        playButton.setImage(StyleManager.Icon.playVideo, for: .normal)
     }
     
     private func setupConstraints() {
         playButton.snp.makeConstraints { (view) in
-            view.leading.trailing.top.bottom.equalToSuperview()
+            view.leading.trailing.top.equalToSuperview()
+            view.bottom.equalTo(explanationLabel.snp.top)
         }
         explanationLabel.snp.makeConstraints { (view) in
             view.bottom.equalToSuperview()
-            view.leading.equalTo(playButton.snp.trailing)
+            view.leading.equalTo(playButton.snp.centerX).offset(StyleManager.Dimension.standardMargin)
         }
     }
 }

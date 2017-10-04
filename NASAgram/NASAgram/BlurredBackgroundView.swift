@@ -12,7 +12,6 @@ import SnapKit
 class BlurredBackgroundView: UIView {
     
     private var backgroundView: UIVisualEffectView!
-    
     private var style: UIBlurEffectStyle!
     
     convenience init(style: UIBlurEffectStyle = .dark) {

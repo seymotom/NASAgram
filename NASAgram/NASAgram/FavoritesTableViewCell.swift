@@ -13,15 +13,19 @@ class FavoritesTableViewCell: UITableViewCell {
     
     static let identifier = "favoritesTableViewCell"
     
-    let margin = 8.0
-    var imageHeight: CGFloat {
+    private var imageHeight: CGFloat {
         return CGFloat(Int(bounds.width / 3))
     }
+    private var imageWidth: CGFloat {
+        return imageHeight * 1.5
+    }
+    private let edgeInsetHeight: CGFloat = 1
+    private let titleLines = 3
     
-    var apodImageView = UIImageView()
-    var dateLabel = DetailLabel()
-    var titleLabel = DetailLabel()
-    var edgeInset = UIView()
+    private var apodImageView = UIImageView()
+    private var dateLabel = DetailLabel()
+    private var titleLabel = DetailLabel()
+    private var edgeInset = UIView()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -48,33 +52,33 @@ class FavoritesTableViewCell: UITableViewCell {
         contentView.addSubview(apodImageView)
         contentView.addSubview(dateLabel)
         contentView.addSubview(titleLabel)
-        titleLabel.font = UIFont.systemFont(ofSize: 12)
-        titleLabel.numberOfLines = 2
+        titleLabel.font = StyleManager.Font.system(size: .medium)
+        titleLabel.numberOfLines = titleLines
         titleLabel.lineBreakMode = .byWordWrapping
         contentView.addSubview(edgeInset)
-        edgeInset.backgroundColor = .white
+        edgeInset.backgroundColor = StyleManager.Color.primary
     }
     
     private func setupConstraints() {
         apodImageView.snp.makeConstraints { (view) in
-            view.leading.top.equalToSuperview().offset(margin)
-            view.bottom.equalToSuperview().offset(-margin)
+            view.leading.top.equalToSuperview().offset(StyleManager.Dimension.standardMargin)
+            view.bottom.equalToSuperview().offset(-StyleManager.Dimension.standardMargin)
             view.height.equalTo(imageHeight)
-            view.width.equalTo(imageHeight * 1.5)
+            view.width.equalTo(imageWidth)
         }
         dateLabel.snp.makeConstraints { (view) in
-            view.leading.equalTo(apodImageView.snp.trailing).offset(margin)
+            view.leading.equalTo(apodImageView.snp.trailing).offset(StyleManager.Dimension.standardMargin)
             view.top.equalTo(apodImageView)
-            view.trailing.equalToSuperview().offset(-margin)
+            view.trailing.equalToSuperview().offset(-StyleManager.Dimension.standardMargin)
         }
         titleLabel.snp.makeConstraints { (view) in
             view.leading.trailing.equalTo(dateLabel)
-            view.top.equalTo(dateLabel.snp.bottom).offset(margin)
+            view.top.equalTo(dateLabel.snp.bottom).offset(StyleManager.Dimension.standardMargin)
         }
         edgeInset.snp.makeConstraints { (view) in
             view.leading.trailing.equalTo(titleLabel)
             view.bottom.equalTo(apodImageView)
-            view.height.equalTo(1)
+            view.height.equalTo(edgeInsetHeight)
         }
     }
     
@@ -84,7 +88,7 @@ class FavoritesTableViewCell: UITableViewCell {
         if let imageData = apod.ldImageData {
             apodImageView.image = UIImage(data: imageData as Data)
         } else {
-            apodImageView.image = #imageLiteral(resourceName: "Video-Icon")
+            apodImageView.image = nil
         }
     }
 

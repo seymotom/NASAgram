@@ -33,6 +33,9 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     let videoPlayView = VideoPlayView()
     
+    private var isHorizontal: Bool {
+        return UIScreen.main.bounds.width > UIScreen.main.bounds.height
+    }
     var isViewAppeared: Bool = false
     var isHidingDetail: Bool = true
     var noImageToDisplay: Bool = false
@@ -67,8 +70,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         
         DispatchQueue.main.async {
             self.pageViewDelegate.showToolTabStatusBars(!self.isHidingDetail)
-            self.constrainDateView()
-            self.apodImageView.resetForOrientation()
+            self.resetForRotation()
         }
     }
 
@@ -116,7 +118,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func constrainDateView() {
         // UIDevice.current.orientation.isLandscape doesn't detect isLandscape on first load so comparing the screen height and width to tell if landscape
-        let offset = UIScreen.main.bounds.width > UIScreen.main.bounds.height ? ToolBarView.height : pageViewDelegate.statusBarHeightWhenNotHidden + ToolBarView.height
+        let offset = isHorizontal ? ToolBarView.height : pageViewDelegate.statusBarHeightWhenNotHidden + ToolBarView.height
         
         dateView.snp.remakeConstraints { (view) in
             view.top.equalToSuperview().offset(offset + dateView.margin)
@@ -130,13 +132,19 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         
         apodDetailView.snp.remakeConstraints { (view) in
             view.width.centerX.equalTo(dateView)
-            view.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-apodDetailView.margin)
+            
+            var offset = (isHorizontal ? 32 : 49) + StyleManager.Dimension.standardMargin
+            
+            view.bottom.equalToSuperview().offset(-offset)
+//            view.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)//.offset(-StyleManager.Dimension.standardMargin)
+            
+            
             
             switch mediaType {
             case .image:
                 view.top.equalTo(self.view.snp.centerY)
             case .video:
-                view.top.equalTo(self.dateView.snp.bottom).offset(apodDetailView.margin)
+                view.top.equalTo(self.dateView.snp.bottom).offset(StyleManager.Dimension.standardMargin)
             }
         }
     }
@@ -144,6 +152,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     func resetForRotation() {
         apodImageView.resetForOrientation()
         constrainDateView()
+        constrainDetailView(for: apod?.mediaType ?? .image)
     }
     
     func setupGestures() {
