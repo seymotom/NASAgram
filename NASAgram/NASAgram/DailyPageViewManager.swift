@@ -67,10 +67,8 @@ class DailyPageViewManager: NSObject, UIPageViewControllerDelegate, UIPageViewCo
     }
     
     func dateSelected(date: Date) {
-        guard date != thisDate else { return }
-        
         apodPageViewController.showDateSearchView(false)
-        
+        guard date != thisDate else { return }
         let direction: UIPageViewControllerNavigationDirection = date < thisDate ? .reverse : .forward
         let newVC = getAPODVC(for: date)
         apodPageViewController.setViewControllers([newVC], direction: direction, animated: true) { (_) in

@@ -45,5 +45,7 @@
 	</array>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Access to the Photos App is required to save photos.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Access to the Photos App is required to save photos.</string>
 </dict>
 </plist>

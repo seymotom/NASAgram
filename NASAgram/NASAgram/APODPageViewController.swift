@@ -16,7 +16,9 @@ enum APODPageViewType {
 protocol APODPageViewDelegate {
     var statusBarHeightWhenNotHidden: CGFloat { get }
     var toolBarView: ToolBarView! { get }
+    var dateSearchView: DateSearchView! { get }
     func showToolTabStatusBars(_ show: Bool)
+    func dismissDateSearchView()
 }
 
 class APODPageViewController: UIPageViewController {
@@ -32,6 +34,8 @@ class APODPageViewController: UIPageViewController {
     var toolBarView: ToolBarView!
     
     var dateSearchView: DateSearchView!
+    
+    var isFirstLoad = true
     
     var statusBarHidden = true {
         didSet {
@@ -166,6 +170,7 @@ class APODPageViewController: UIPageViewController {
     func setTabBarVisible(visible: Bool, animated: Bool) {
         // bail if the current state matches the desired state
         if tabBarIsVisible == visible {
+            
             return
         }
         
@@ -180,7 +185,6 @@ class APODPageViewController: UIPageViewController {
             let frame = self.tabBarController!.tabBar.frame
             self.tabBarController!.tabBar.frame = frame.offsetBy(dx: 0, dy: offsetY);
         }, completion: nil)
-        
     }
     
     var tabBarIsVisible: Bool {
@@ -243,6 +247,12 @@ extension APODPageViewController: APODPageViewDelegate {
             self.setTabBarVisible(visible: show, animated: true)
         }
     }
+    
+    func dismissDateSearchView() {
+        if !dateSearchView.isHidden {
+            showDateSearchView(false)
+        }
+    }
 }
 
 extension APODPageViewController: ToolBarViewDelegate {
@@ -257,9 +267,7 @@ extension APODPageViewController: ToolBarViewDelegate {
         toolBarView.setFavorite(apod.isFavorite)
     }
     
-    func optionsButtonTapped(sender: UIButton) {
-        print("burger tapped for \(currentAPODViewController!.date.displayString())")
-        
+    func optionsButtonTapped(sender: UIButton) {        
 //        let alertFactory = AlertFactory(for: self)
 //        alertFactory.showActionSheet()
         
@@ -271,7 +279,6 @@ extension APODPageViewController: ToolBarViewDelegate {
             print("Now save that shit")
             
             guard let apodVC = self.currentAPODViewController, let image = apodVC.apodImageView.image else { return }
-//            UIImageWriteToSavedPhotosAlbum(image, self, nil, nil)
             UIImageWriteToSavedPhotosAlbum(image, self, #selector (self.didFinishSavingImage(image: didFinishSavingWithError: contextInfo:)), nil)
         }
         
@@ -281,9 +288,8 @@ extension APODPageViewController: ToolBarViewDelegate {
         DispatchQueue.main.async {
             self.present(alert, animated: true, completion: nil)
         }
-
-        
     }
+    
     func dateSearchButtonTapped(sender: UIButton) {
         showDateSearchView(dateSearchView.isHidden)
     }

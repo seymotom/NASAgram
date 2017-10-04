@@ -63,10 +63,10 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        pageViewDelegate.showToolTabStatusBars(!isHidingDetail)
         setupDateView()
         
         DispatchQueue.main.async {
+            self.pageViewDelegate.showToolTabStatusBars(!self.isHidingDetail)
             self.constrainDateView()
             self.apodImageView.resetForOrientation()
         }
@@ -105,6 +105,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     func setupConstraints() {
         
         apodImageView.snp.makeConstraints { (view) in
+            //constraining the height to the height of the screen still shifts the view when the statusBar comes in
             view.leading.trailing.bottom.top.equalToSuperview()
         }
         
@@ -268,17 +269,27 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         if !noImageToDisplay {
             switch sender.numberOfTapsRequired {
             case 1:
-                isHidingDetail = !isHidingDetail
-                pageViewDelegate.showToolTabStatusBars(!isHidingDetail)
-                fadeView(dateView, hide: isHidingDetail)
-                if let _ = apod {
-                    fadeView(apodDetailView, hide: isHidingDetail)
+                if pageViewDelegate.dateSearchView.isHidden {
+                    // regular detail show/hide
+                    toggleDetailViews()
+                } else {
+                    // only dismiss the dateSearchView if its showing
+                    pageViewDelegate.dismissDateSearchView()
                 }
             case 2:
                 apodImageView.doubleTapZoom(for: sender)
             default:
                 break
             }
+        }
+    }
+    
+    func toggleDetailViews() {
+        isHidingDetail = !isHidingDetail
+        pageViewDelegate.showToolTabStatusBars(!isHidingDetail)
+        fadeView(dateView, hide: isHidingDetail)
+        if let _ = apod {
+            fadeView(apodDetailView, hide: isHidingDetail)
         }
     }
     

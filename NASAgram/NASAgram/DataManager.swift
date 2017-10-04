@@ -43,8 +43,11 @@ class DataManager {
         apiManager.getData(endpoint: apodEndpoint + date.yyyyMMdd()) { (data, errorMessage) in
             if let error = errorMessage {
                 completion(nil, error)
+                print("\nERROR GETTING APOD FOR \(date.yyyyMMdd())\n")
+
             }
             else if let data = data, let apod = APOD.makeAPOD(from: data) {
+                print("\nGOT APOD FOR \(apod.date.yyyyMMdd())\n")
                 self.apods.append(apod)
                 
                 switch apod.mediaType {
