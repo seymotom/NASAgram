@@ -55,23 +55,20 @@ class ToolBarView: UIView {
     
     func setupViews() {
         addSubview(backgroundView)
-        titleLabel.text = "NASAgram"
+        titleLabel.font = StyleManager.Font.nasalization()
+        titleLabel.text = StyleManager.appTitle
         titleLabel.contentMode = .center
         addSubview(titleLabel)
         favoriteButton.addTarget(delegate, action: #selector (delegate.favoriteButtonTapped(sender:)), for: .touchUpInside)
         favoriteButton.setImage(StyleManager.Icon.favoriteEmpty, for: .normal)
-//        favoriteButton.setTitle("☆", for: .normal)
         addSubview(favoriteButton)
         optionsButton.addTarget(delegate, action: #selector (delegate.optionsButtonTapped(sender:)), for: .touchUpInside)
-//        optionsButton.setTitle("🍔", for: .normal)
         optionsButton.setImage(StyleManager.Icon.menu, for: .normal)
         addSubview(optionsButton)
         dateSearchButton.addTarget(delegate, action: #selector (delegate.dateSearchButtonTapped(sender:)), for: .touchUpInside)
         dateSearchButton.setImage(StyleManager.Icon.search, for: .normal)
-//        dateSearchButton.setTitle("🔍", for: .normal)
         addSubview(dateSearchButton)
         dismissButton.addTarget(delegate, action: #selector (delegate.dismissButtonTapped(sender:)), for: .touchUpInside)
-//        dismissButton.setTitle("✕", for: .normal)
         dismissButton.setImage(StyleManager.Icon.dismiss, for: .normal)
         addSubview(dismissButton)
         

@@ -10,6 +10,8 @@ import UIKit
 
 class StyleManager {
     
+    static let appTitle = "NASAgram"
+    
     class Icon {
         
         static let daily: UIImage? = UIImage(named: "daily")
@@ -21,8 +23,21 @@ class StyleManager {
         static let favoriteEmpty: UIImage? = UIImage(named: "starEmpty")
         static let favoriteFilled: UIImage? = UIImage(named: "starFilled")
 
-
+    }
+    
+    class Font {
+        static let titileSize: CGFloat = 20.0
+        
+        static func nasalization(size: CGFloat = Font.titileSize) -> UIFont {
+            return UIFont(name: "NasalizationRg-Regular", size: size)!
+        }
+    }
+    
+    
+    class Dimension {
         
     }
+    
+    
     
 }

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1812ED3D614F3F103C6F5C38 /* Pods_NASAgramUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 544C1C32652D480D73C40647 /* Pods_NASAgramUITests.framework */; };
 		A8D1C7F4D50F10D317305DEC /* Pods_NASAgramTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5687EAE1666678C578181A11 /* Pods_NASAgramTests.framework */; };
+		DE12ACA51F854757009AFA18 /* nasalization-rg.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE12ACA21F854703009AFA18 /* nasalization-rg.ttf */; };
 		DE19D8BA1F1FB55A0084872E /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE19D8B91F1FB55A0084872E /* DetailView.swift */; };
 		DE19D8BC1F1FB8F40084872E /* DateSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE19D8BB1F1FB8F40084872E /* DateSearchView.swift */; };
 		DE19D8BE1F1FB91A0084872E /* ToolBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE19D8BD1F1FB91A0084872E /* ToolBarView.swift */; };
@@ -71,6 +72,9 @@
 		C97C0F81A47C9FC3164FA679 /* Pods-NASAgram.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NASAgram.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NASAgram/Pods-NASAgram.debug.xcconfig"; sourceTree = "<group>"; };
 		D66B842FB0B556870985D402 /* Pods-NASAgramUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NASAgramUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NASAgramUITests/Pods-NASAgramUITests.release.xcconfig"; sourceTree = "<group>"; };
 		D98DBAA20347FDEE5A9CE598 /* Pods-NASAgramTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NASAgramTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NASAgramTests/Pods-NASAgramTests.debug.xcconfig"; sourceTree = "<group>"; };
+		DE12ACA21F854703009AFA18 /* nasalization-rg.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "nasalization-rg.ttf"; sourceTree = "<group>"; };
+		DE12ACA31F854703009AFA18 /* read-this.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "read-this.html"; sourceTree = "<group>"; };
+		DE12ACA41F854703009AFA18 /* typodermic-eula-02-2014.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "typodermic-eula-02-2014.pdf"; sourceTree = "<group>"; };
 		DE19D8B91F1FB55A0084872E /* DetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		DE19D8BB1F1FB8F40084872E /* DateSearchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateSearchView.swift; sourceTree = "<group>"; };
 		DE19D8BD1F1FB91A0084872E /* ToolBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolBarView.swift; sourceTree = "<group>"; };
@@ -151,6 +155,16 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		DE12ACA11F854703009AFA18 /* nasalization */ = {
+			isa = PBXGroup;
+			children = (
+				DE12ACA21F854703009AFA18 /* nasalization-rg.ttf */,
+				DE12ACA31F854703009AFA18 /* read-this.html */,
+				DE12ACA41F854703009AFA18 /* typodermic-eula-02-2014.pdf */,
+			);
+			path = nasalization;
+			sourceTree = SOURCE_ROOT;
+		};
 		DE1AF1201F092F84001474A0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -171,6 +185,7 @@
 		DE1AF1291F0ED96B001474A0 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				DE12ACA11F854703009AFA18 /* nasalization */,
 				DEAD51AB1F018C6F002486B1 /* AppDelegate.swift */,
 				DEAD51B51F018C6F002486B1 /* Assets.xcassets */,
 				DEAD51B71F018C6F002486B1 /* LaunchScreen.storyboard */,
@@ -415,6 +430,7 @@
 			files = (
 				DEAD51B91F018C6F002486B1 /* LaunchScreen.storyboard in Resources */,
 				DEAD51B61F018C6F002486B1 /* Assets.xcassets in Resources */,
+				DE12ACA51F854757009AFA18 /* nasalization-rg.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
