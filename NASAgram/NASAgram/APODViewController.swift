@@ -98,6 +98,9 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         DispatchQueue.main.async {
             self.pageViewDelegate.showToolTabStatusBars(!self.isHidingDetail)
             self.resetForRotation()
+            if !self.pageViewDelegate.dateSearchView.isHidden {
+                self.pageViewDelegate.dismissDateSearchView()
+            }
         }
     }
 
@@ -128,7 +131,6 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         view.addSubview(apodDetailView)
         view.addSubview(dateView)
         apodDetailView.isHidden = isHidingDetail
-        
     }
     
     func setupConstraints() {

@@ -42,7 +42,7 @@ class FavoritesTableViewCell: UITableViewCell {
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
-//        super.setSelected(selected, animated: animated)
+        super.setSelected(selected, animated: animated)
     }
     
     private func setupViews() {
@@ -56,7 +56,7 @@ class FavoritesTableViewCell: UITableViewCell {
         titleLabel.numberOfLines = titleLines
         titleLabel.lineBreakMode = .byWordWrapping
         contentView.addSubview(edgeInset)
-        edgeInset.backgroundColor = StyleManager.Color.primary
+        edgeInset.backgroundColor = StyleManager.Color.accentLight
     }
     
     private func setupConstraints() {

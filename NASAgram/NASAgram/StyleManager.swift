@@ -16,6 +16,7 @@ struct StyleManager {
         static let copyrightPrefix = "© "
         static let dailyTitle = "Daily"
         static let favoritesTitle = "Favorites"
+        static let done = "Done"
     }
     
     struct Icon {
@@ -54,22 +55,21 @@ struct StyleManager {
     
     struct Dimension {
         static let standardMargin: CGFloat = 8
-        
-        static let detailWidthMultiplier: CGFloat = 0.8
+        static let detailWidthMultiplier: CGFloat = 0.9
         static let dateViewHeight: CGFloat = 40
         static let toolBarViewHeight: CGFloat = 50.0
         static let activityIndicatorSize: CGFloat = 100
-
-
     }
     
     struct Animation {
         static let fadeDuration = 0.2
+        static let slideDuration = 0.2
     }
     
     struct Color {
         static let primary = UIColor.white
         static let accent = UIColor(hexString: "#7d26cf")
+        static let accentLight = UIColor(hexString: "#d2b1f1")
     }
     
 }

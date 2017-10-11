@@ -90,6 +90,10 @@ class APODPageViewController: UIPageViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if isFirstLoad {
+            showTabBar(false, animated: false)
+            isFirstLoad = false
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -110,8 +114,8 @@ class APODPageViewController: UIPageViewController {
         view.addSubview(dateSearchView)
         dateSearchView.isHidden = true
         toolBarView = ToolBarView(delegate: self, pageViewType: pageViewType)
-        view.addSubview(toolBarView)
         view.addSubview(statusBarBackgorundView)
+        view.addSubview(toolBarView)
         statusBarBackgorundView.isHidden = UIScreen.main.bounds.width > UIScreen.main.bounds.height ? true : false
     }
     
@@ -132,17 +136,28 @@ class APODPageViewController: UIPageViewController {
         }
     }
     
-    func setToolBarVisible(visible: Bool, animated: Bool) {
-        
+    // Animation Code
+    
+    func showToolBarVisible(_ show: Bool, animated: Bool) {
+    
         // bail if the toolBarView hasn't been set yet
         if toolBarView == nil {
             return
         }
         
+        if show {
+            toolBarView.isHidden = false
+            
+            statusBarBackgorundView.isHidden = false
+//            if UIDevice.current.orientation.isLandscape {
+//
+//            }
+        }
+        
         self.toolBarView.snp.remakeConstraints({ (view) in
             view.leading.trailing.equalToSuperview()
             view.height.equalTo(StyleManager.Dimension.toolBarViewHeight)
-            if visible {
+            if show {
                 view.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
             } else {
                 view.bottom.equalTo(self.view.snp.top)
@@ -152,31 +167,40 @@ class APODPageViewController: UIPageViewController {
         self.statusBarBackgorundView.snp.remakeConstraints({ (view) in
             view.leading.trailing.equalToSuperview()
             view.height.equalTo(statusBarHeightWhenNotHidden)
-            if visible {
+            if show {
+                print("\nThe status background top is set equal to superview\n")
                 view.top.equalToSuperview()
             } else {
                 view.bottom.equalTo(self.view.snp.top)
             }
         })
         // zero duration means no animation
-        let duration = (animated ? 0.2 : 0.0)
+        let duration = (animated ? StyleManager.Animation.slideDuration : 0)
         
         UIView.animate(withDuration: duration, animations: {
             self.view.layoutIfNeeded()
-        }, completion: nil)
+        }, completion: { (complete) in
+            if complete && !show {
+                self.toolBarView.isHidden = true
+                self.statusBarBackgorundView.isHidden = true
+            }
+        })
     }
     
-    
-    func setTabBarVisible(visible: Bool, animated: Bool) {
+    func showTabBar(_ show: Bool, animated: Bool) {
+                
+        if show {
+            tabBarController?.tabBar.isHidden = false
+        }
+        
         // bail if the current state matches the desired state
-        if tabBarIsVisible == visible {
-            
+        if tabBarIsVisible == show {
             return
         }
         
         // get a frame calculation ready
         let height = tabBarController!.tabBar.frame.size.height
-        let offsetY = (visible ? -height : height)
+        let offsetY = (show ? -height : height)
         
         // zero duration means no animation
         let duration = (animated ? 0.2 : 0.0)
@@ -184,7 +208,11 @@ class APODPageViewController: UIPageViewController {
         UIView.animate(withDuration: duration, animations: {
             let frame = self.tabBarController!.tabBar.frame
             self.tabBarController!.tabBar.frame = frame.offsetBy(dx: 0, dy: offsetY);
-        }, completion: nil)
+        }, completion: { (complete) in
+            if complete && !show {
+                self.tabBarController?.tabBar.isHidden = true
+            }
+        })
     }
     
     var tabBarIsVisible: Bool {
@@ -232,6 +260,12 @@ class APODPageViewController: UIPageViewController {
             if let apodVC = self.viewControllers?.first as? APODViewController {
                 DispatchQueue.main.async {
                     apodVC.resetForRotation()
+                    
+                    // ios 11, have to rehide the tabbar on rotation
+                    if apodVC.isHidingDetail {
+                        self.showTabBar(false, animated: false)
+                    }
+                    print("tabbar frame: ", self.tabBarController?.tabBar.frame)
                     print(self.tabBarController?.tabBar.frame.height)
                 }
             }
@@ -244,10 +278,10 @@ class APODPageViewController: UIPageViewController {
 extension APODPageViewController: APODPageViewDelegate {
     
     func showToolTabStatusBars(_ show: Bool) {
-        self.setToolBarVisible(visible: show, animated: true)
+        self.showToolBarVisible(show, animated: true)
         self.statusBarHidden = UIDevice.current.orientation.isLandscape || !show ? true : false
         if self.pageViewType == .daily {
-            self.setTabBarVisible(visible: show, animated: true)
+            self.showTabBar(show, animated: true)
         }
     }
     

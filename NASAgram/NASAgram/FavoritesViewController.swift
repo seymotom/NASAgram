@@ -37,7 +37,7 @@ class FavoritesViewController: UIViewController {
         manager.favorites.initializeFetchedResultsController()
         
         navigationController?.navigationBar.barStyle = .blackTranslucent
-        navigationItem.title = StyleManager.Text.favoritesTitle
+        navigationItem.title = StyleManager.Text.favoritesTitle.uppercased()
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editButtonPressed))
     }
     
@@ -51,13 +51,12 @@ class FavoritesViewController: UIViewController {
         tableView.delegate = manager.favorites
         tableView.dataSource = manager.favorites
         tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 150
+        tableView.estimatedRowHeight = 1
         tableView.separatorStyle = .none
         tableView.backgroundColor = .black
     }
     
     func setupConstraints() {
-        edgesForExtendedLayout = []
         tableView.snp.makeConstraints { (view) in
             view.leading.trailing.equalToSuperview()
             view.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
@@ -73,5 +72,15 @@ class FavoritesViewController: UIViewController {
     @objc func doneButtonPressed() {
         tableView.setEditing(false, animated: true)
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editButtonPressed))
+    }
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        
+        
+        coordinator.animate(alongsideTransition: { (context) in
+            
+            print("Navbar height: ", self.navigationController?.navigationBar.frame.height)
+        }) { (context) in
+        }
     }
 }
