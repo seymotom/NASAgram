@@ -12,11 +12,6 @@ import SnapKit
 
 class DateView: UIView {
     
-    static let height: CGFloat = 40
-    static let widthMultiplier: CGFloat = 0.8
-    
-    let margin: CGFloat = 11.0
-    
     var dateLabel = DetailLabel()
     
     let backgroundView = BlurredBackgroundView(style: .dark)
@@ -24,7 +19,7 @@ class DateView: UIView {
     
     convenience init(date: Date) {
         self.init(frame: CGRect.zero)
-        dateLabel.text = date.displayString()
+        dateLabel.text = date.displayString().uppercased()
         setup()
     }
     
@@ -47,9 +42,9 @@ class DateView: UIView {
         addSubview(backgroundView)
         addSubview(dateLabel)
         dateLabel.textAlignment = .center
-        
+        dateLabel.font = StyleManager.Font.nasalization(size: .large)
         self.clipsToBounds = true
-        self.layer.cornerRadius = margin
+        self.layer.cornerRadius = StyleManager.Dimension.standardMargin
     }
     
     func setupConstraints() {
@@ -57,8 +52,8 @@ class DateView: UIView {
             view.leading.trailing.top.bottom.equalToSuperview()
         }
         dateLabel.snp.makeConstraints { (view) in
-            view.top.leading.equalToSuperview().offset(margin)
-            view.trailing.bottom.equalToSuperview().offset(-margin)
+            view.top.leading.equalToSuperview().offset(StyleManager.Dimension.standardMargin)
+            view.trailing.bottom.equalToSuperview().offset(-StyleManager.Dimension.standardMargin)
         }
     }
 }

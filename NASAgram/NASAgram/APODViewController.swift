@@ -60,6 +60,33 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         setupConstraints()
         setupGestures()
         checkFavoritesForAPOD()
+        
+        
+//        let label1 = UILabel()
+//        label1.text = "NASA"
+//        label1.numberOfLines = 1
+//        label1.contentMode = .center
+//        label1.font = StyleManager.Font.nasalization(size: .extraLarge)
+//        label1.textColor = .white
+//        
+//        let label2 = UILabel()
+//        label2.text = "gram"
+//        label2.contentMode = .center
+//        label2.font = StyleManager.Font.nasalization(size: .extraLarge)
+//        label2.textColor = .white
+//        
+//        
+//        view.addSubview(label1)
+//        view.addSubview(label2)
+//        label1.snp.makeConstraints { (view) in
+//            view.centerX.equalToSuperview()
+//            view.centerY.equalToSuperview().offset(-30)
+//        }
+//        label2.snp.makeConstraints { (view) in
+//            view.top.equalTo(label1.snp.bottom).offset(-42)
+//            view.leading.equalTo(label1.snp.leading).offset(13)
+//        }
+        
     }
     
     
@@ -118,12 +145,12 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func constrainDateView() {
         // UIDevice.current.orientation.isLandscape doesn't detect isLandscape on first load so comparing the screen height and width to tell if landscape
-        let offset = isHorizontal ? ToolBarView.height : pageViewDelegate.statusBarHeightWhenNotHidden + ToolBarView.height
+        let offset = isHorizontal ? StyleManager.Dimension.toolBarViewHeight : pageViewDelegate.statusBarHeightWhenNotHidden + StyleManager.Dimension.toolBarViewHeight
         
         dateView.snp.remakeConstraints { (view) in
-            view.top.equalToSuperview().offset(offset + dateView.margin)
-            view.width.equalToSuperview().multipliedBy(DateView.widthMultiplier)
-            view.height.equalTo(DateView.height)
+            view.top.equalToSuperview().offset(offset + StyleManager.Dimension.standardMargin)
+            view.width.equalToSuperview().multipliedBy(StyleManager.Dimension.detailWidthMultiplier)
+            view.height.equalTo(StyleManager.Dimension.dateViewHeight)
             view.centerX.equalToSuperview()
         }
     }
@@ -137,9 +164,7 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
             
             view.bottom.equalToSuperview().offset(-offset)
 //            view.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)//.offset(-StyleManager.Dimension.standardMargin)
-            
-            
-            
+        
             switch mediaType {
             case .image:
                 view.top.equalTo(self.view.snp.centerY)

@@ -37,7 +37,7 @@ class FavoritesViewController: UIViewController {
         manager.favorites.initializeFetchedResultsController()
         
         navigationController?.navigationBar.barStyle = .blackTranslucent
-        navigationItem.title = "Favorites"
+        navigationItem.title = StyleManager.Text.favoritesTitle
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editButtonPressed))
     }
     

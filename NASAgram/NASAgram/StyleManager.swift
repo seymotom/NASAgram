@@ -8,17 +8,17 @@
 
 import UIKit
 
-class StyleManager {
+struct StyleManager {
     
-    
-    class Text {
+    struct Text {
         static let appTitle = "NASAgram"
-        
         static let videoPlayExplanation = "open video in browser?"
-
+        static let copyrightPrefix = "© "
+        static let dailyTitle = "Daily"
+        static let favoritesTitle = "Favorites"
     }
     
-    class Icon {
+    struct Icon {
         
         static let daily = UIImage(named: "daily")
         static let favorites = UIImage(named: "favorites")
@@ -32,12 +32,14 @@ class StyleManager {
         static let playVideo = UIImage(named: "play")
     }
     
-    class Font {
+    struct Font {
         
         enum Size: CGFloat {
-            case title = 20
             case small = 8
             case medium = 12
+            case large = 16
+            case title = 20
+            case extraLarge = 80
         }
         
         static func system(size: Size) -> UIFont {
@@ -50,14 +52,24 @@ class StyleManager {
     }
     
     
-    class Dimension {
+    struct Dimension {
         static let standardMargin: CGFloat = 8
+        
+        static let detailWidthMultiplier: CGFloat = 0.8
+        static let dateViewHeight: CGFloat = 40
+        static let toolBarViewHeight: CGFloat = 50.0
+        static let activityIndicatorSize: CGFloat = 100
+
 
     }
     
-    class Color {
+    struct Animation {
+        static let fadeDuration = 0.2
+    }
+    
+    struct Color {
         static let primary = UIColor.white
-        static let accent = UIColor.red
+        static let accent = UIColor(hexString: "#7d26cf")
     }
     
 }

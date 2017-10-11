@@ -12,9 +12,6 @@ import DGActivityIndicatorView
 
 class APODImageView: UIScrollView {
     
-    private let fadeInAnimationDuration = 0.2
-    private let activityIndicatorSize: CGFloat = 100
-    
     fileprivate var imageView = UIImageView()
     
     private var activityIndicator: DGActivityIndicatorView!
@@ -50,10 +47,10 @@ class APODImageView: UIScrollView {
         delegate = self
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
-        imageView.alpha = 0.0
+        imageView.alpha = 0
         addSubview(imageView)
         
-        activityIndicator = DGActivityIndicatorView(type: .ballClipRotateMultiple, tintColor: .lightGray, size: activityIndicatorSize)
+        activityIndicator = DGActivityIndicatorView(type: .ballClipRotateMultiple, tintColor: .lightGray, size: StyleManager.Dimension.activityIndicatorSize)
         addSubview(activityIndicator!)
         activityIndicator?.startAnimating()
     }
@@ -69,14 +66,14 @@ class APODImageView: UIScrollView {
     }
     
     private func fadeInImageView() {
-        UIView.animate(withDuration: fadeInAnimationDuration, animations: {
-            self.imageView.alpha = 1.0
+        UIView.animate(withDuration: StyleManager.Animation.fadeDuration, animations: {
+            self.imageView.alpha = 1
         })
     }
     
     private func setZoom() {
         // capture zoomPoint before setting zoomScale because didScroll gets called and fucks with it
-        let zoomPointBeforeRotation = self.currentZoomPoint
+        let zoomPointBeforeRotation = currentZoomPoint
         let zoomScaleBeforeRotation = zoomScale
         
         guard let imageSize = image?.size else { return }

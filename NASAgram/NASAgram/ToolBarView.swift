@@ -23,14 +23,11 @@ class ToolBarView: UIView {
     var optionsButton = UIButton()
     var dismissButton = UIButton()
     var dateSearchButton = UIButton()
+    let backgroundView = BlurredBackgroundView(style: .dark)
 
     var delegate: ToolBarViewDelegate!
     var pageViewType: APODPageViewType!
     
-    static let height: CGFloat = 50.0
-    let margin = 8.0
-    
-    let backgroundView = BlurredBackgroundView(style: .dark)
     
     convenience init(delegate: ToolBarViewDelegate, pageViewType: APODPageViewType) {
         self.init(frame: CGRect.zero)
@@ -87,27 +84,27 @@ class ToolBarView: UIView {
         
         titleLabel.snp.makeConstraints { (view) in
             view.center.equalToSuperview()
-            view.top.equalToSuperview().offset(margin)
-            view.bottom.equalToSuperview().offset(-margin)
+            view.top.equalToSuperview().offset(StyleManager.Dimension.standardMargin)
+            view.bottom.equalToSuperview().offset(-StyleManager.Dimension.standardMargin)
         }
         
         optionsButton.snp.makeConstraints { (view) in
-            view.leading.equalToSuperview().offset(margin)
+            view.leading.equalToSuperview().offset(StyleManager.Dimension.standardMargin)
             view.centerY.equalToSuperview()
         }
         
         favoriteButton.snp.makeConstraints { (view) in
-            view.leading.equalTo(optionsButton.snp.trailing).offset(margin)
+            view.leading.equalTo(optionsButton.snp.trailing).offset(StyleManager.Dimension.standardMargin)
             view.centerY.equalToSuperview()
         }
         
         dateSearchButton.snp.makeConstraints { (view) in
-            view.trailing.equalToSuperview().offset(-margin)
+            view.trailing.equalToSuperview().offset(-StyleManager.Dimension.standardMargin)
             view.centerY.equalToSuperview()
         }
         
         dismissButton.snp.makeConstraints { (view) in
-            view.trailing.equalToSuperview().offset(-margin)
+            view.trailing.equalToSuperview().offset(-StyleManager.Dimension.standardMargin)
             view.centerY.equalToSuperview()
         }
     }

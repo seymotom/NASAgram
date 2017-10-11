@@ -39,7 +39,7 @@ class APODPageViewController: UIPageViewController {
     
     var statusBarHidden = true {
         didSet {
-            UIView.animate(withDuration: 0.2) { () -> Void in
+            UIView.animate(withDuration: StyleManager.Animation.fadeDuration) { () -> Void in
                 self.setNeedsStatusBarAppearanceUpdate()
             }
         }
@@ -118,7 +118,7 @@ class APODPageViewController: UIPageViewController {
     func setupConstraints() {
         toolBarView.snp.makeConstraints { (view) in
             view.leading.trailing.equalToSuperview()
-            view.height.equalTo(ToolBarView.height)
+            view.height.equalTo(StyleManager.Dimension.toolBarViewHeight)
             view.bottom.equalTo(self.view.snp.top)
         }
         statusBarBackgorundView.snp.makeConstraints { (view) in
@@ -141,7 +141,7 @@ class APODPageViewController: UIPageViewController {
         
         self.toolBarView.snp.remakeConstraints({ (view) in
             view.leading.trailing.equalToSuperview()
-            view.height.equalTo(ToolBarView.height)
+            view.height.equalTo(StyleManager.Dimension.toolBarViewHeight)
             if visible {
                 view.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
             } else {

@@ -38,22 +38,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let navBarAppearance = UINavigationBar.appearance()
         navBarAppearance.barTintColor = .clear
-        navBarAppearance.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+        
+        navBarAppearance.titleTextAttributes = [
+            NSAttributedStringKey.foregroundColor: StyleManager.Color.primary,
+            NSAttributedStringKey.font: StyleManager.Font.nasalization()
+        ]
+        
         
         
         let barButtonAppearance = UIBarButtonItem.appearance()
-        barButtonAppearance.tintColor = .red
+        barButtonAppearance.tintColor = StyleManager.Color.accent
         
-        pageVC.tabBarItem = UITabBarItem(title: "Daily", image: StyleManager.Icon.daily, selectedImage: nil)
-        favVC.tabBarItem = UITabBarItem(title: "Favorites", image: StyleManager.Icon.favorites, selectedImage: nil)
+        pageVC.tabBarItem = UITabBarItem(title: StyleManager.Text.dailyTitle, image: StyleManager.Icon.daily, selectedImage: nil)
+        favVC.tabBarItem = UITabBarItem(title: StyleManager.Text.favoritesTitle, image: StyleManager.Icon.favorites, selectedImage: nil)
         
         let tabController = UITabBarController()
         tabController.viewControllers = [pageVC, favVC]
+        tabController.tabBar.tintColor = StyleManager.Color.accent
+        tabController.tabBar.unselectedItemTintColor = StyleManager.Color.primary
         
         let tabBarAppearance = UITabBar.appearance()
         tabBarAppearance.barTintColor = .clear
         
-        tabController.tabBar.tintColor = .red
+        let tabBarItemAppearance  = UITabBarItem.appearance()
+        let normalAttributes = [NSAttributedStringKey.foregroundColor: StyleManager.Color.primary,
+                                NSAttributedStringKey.font: StyleManager.Font.nasalization(size: .medium)]
+        let selectedAttributes = [NSAttributedStringKey.foregroundColor: StyleManager.Color.accent,
+                                  NSAttributedStringKey.font: StyleManager.Font.nasalization(size: .medium)]
+        tabBarItemAppearance.setTitleTextAttributes(normalAttributes, for: .normal)
+        tabBarItemAppearance.setTitleTextAttributes(selectedAttributes, for: .selected)
         return tabController
     }
 

@@ -80,7 +80,7 @@ class DetailView: UIView {
         explanationScrollView.explanationLabel.text = apod.explanation
         
         if let copyright = apod.copyright {
-            copyrightLabel.text = "© \(copyright)"
+            copyrightLabel.text = StyleManager.Text.copyrightPrefix + copyright
             addCopyrightLabel()
         }
         
@@ -122,14 +122,9 @@ class DetailView: UIView {
         }
         videoPlayView.snp.makeConstraints { (view) in
             view.centerX.equalToSuperview()
-//            let width = UIScreen.main.bounds.width < UIScreen.main.bounds.height ? UIScreen.main.bounds.width : UIScreen.main.bounds.height
-//            view.width.height.equalTo(width * 0.2)
-//            view.centerX.equalToSuperview()
             view.top.equalToSuperview().offset(StyleManager.Dimension.standardMargin)
         }
     }
-    
-    
     
     @objc func videoButtonTapped() {
         delegate.videoButtonTapped()
