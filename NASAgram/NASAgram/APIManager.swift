@@ -25,8 +25,6 @@ class APIManager {
                 }
                 else {
                     completion(nil, HTTPURLResponse.localizedString(forStatusCode: response.statusCode))
-//                    completion(nil, response.description)
-
                 }
             }
             }.resume()

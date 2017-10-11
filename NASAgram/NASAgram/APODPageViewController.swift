@@ -270,27 +270,22 @@ extension APODPageViewController: ToolBarViewDelegate {
         toolBarView.setFavorite(apod.isFavorite)
     }
     
-    func optionsButtonTapped(sender: UIButton) {        
-//        let alertFactory = AlertFactory(for: self)
-//        alertFactory.showActionSheet()
-        
-        let alert = UIAlertController(title: "Picture Options", message: "Not sure what this message should say, if anything at all.", preferredStyle: .actionSheet)
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        
-        let saveAction = UIAlertAction(title: "Save to Photos", style: .default) { (alertAction) in
-            print("Now save that shit")
-            
-            guard let apodVC = self.currentAPODViewController, let image = apodVC.apodImageView.image else { return }
-            UIImageWriteToSavedPhotosAlbum(image, self, #selector (self.didFinishSavingImage(image: didFinishSavingWithError: contextInfo:)), nil)
-        }
-        
-        alert.addAction(cancelAction)
-        alert.addAction(saveAction)
-        
-        DispatchQueue.main.async {
-            self.present(alert, animated: true, completion: nil)
-        }
+    func optionsButtonTapped(sender: UIButton) {
+        guard let apodVC = self.currentAPODViewController, let apodImage = apodVC.apodImageView.image, let apodTitle = apodVC.apod?.title else { return }
+        print("\nimagesize ", apodImage.size, "\n")
+        let activityController = UIActivityViewController(activityItems: [apodTitle, apodImage], applicationActivities: nil)
+        activityController.excludedActivityTypes = [.assignToContact, .print]
+        self.present(activityController, animated: true)
+//        let alert = UIAlertController(title: "Picture Options", message: nil, preferredStyle: .actionSheet)
+//        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+//        let saveAction = UIAlertAction(title: "Save to Photos", style: .default) { (alertAction) in
+//            UIImageWriteToSavedPhotosAlbum(apodImage, self, #selector (self.didFinishSavingImage(image: didFinishSavingWithError: contextInfo:)), nil)
+//        }
+//        alert.addAction(cancelAction)
+//        alert.addAction(saveAction)
+//        DispatchQueue.main.async {
+//            self.present(alert, animated: true, completion: nil)
+//        }
     }
     
     func dateSearchButtonTapped(sender: UIButton) {

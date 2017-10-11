@@ -36,12 +36,13 @@ enum MediaType {
         }
         
         static func vimeoImageURL(from data: Data) -> String? {
+            let vimeoThumbnailField = "thumbnail_large"
             do {
                 let jsonData: Any = try JSONSerialization.jsonObject(with: data, options: [])
                 guard
                     let jsonArr = jsonData as? [[String: AnyObject]],
                     let vidDict = jsonArr.first,
-                    let imageURLString = vidDict["thumbnail_large"] as? String
+                    let imageURLString = vidDict[vimeoThumbnailField] as? String
                     else {
                         throw ParseError.vimeoImageError
                 }
@@ -60,12 +61,15 @@ enum MediaType {
     case image
     case video(VideoType?)
     
+    static let imageRawValue = "image"
+    static let videoRawValue = "video"
+    
     var myRawValue: String {
         switch self {
         case .image:
-            return "image"
+            return MediaType.imageRawValue
         case .video:
-            return "video"
+            return MediaType.videoRawValue
         }
     }
     
@@ -81,9 +85,9 @@ enum MediaType {
     
     static func mediaType(myRawValue: String) -> MediaType? {
         switch myRawValue {
-        case "image":
+        case MediaType.imageRawValue:
             return .image
-        case "video":
+        case MediaType.videoRawValue:
             return .video(nil)
         default:
             return nil

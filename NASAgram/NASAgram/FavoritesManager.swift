@@ -77,20 +77,20 @@ class FavoritesManager: NSObject {
     }
     
     
-    // debug function
-    func printAllSavedFavDates() {
-        let request: NSFetchRequest<FavAPOD> = FavAPOD.fetchRequest()
-        do {
-            let favApods = try mainContext.fetch(request) 
-            print("\nHere are the \(favApods.count) favorites")
-            for fav in favApods {
-                print(fav.date!)
-            }
-            print("\n")
-        } catch {
-            fatalError("Failed to search for all apods in core data:\n\n \(error)")
-        }
-    }
+//    // debug function
+//    func printAllSavedFavDates() {
+//        let request: NSFetchRequest<FavAPOD> = FavAPOD.fetchRequest()
+//        do {
+//            let favApods = try mainContext.fetch(request) 
+//            print("\nHere are the \(favApods.count) favorites")
+//            for fav in favApods {
+//                print(fav.date!)
+//            }
+//            print("\n")
+//        } catch {
+//            fatalError("Failed to search for all apods in core data:\n\n \(error)")
+//        }
+//    }
 }
 
 extension FavoritesManager: NSFetchedResultsControllerDelegate {
