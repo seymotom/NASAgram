@@ -160,13 +160,9 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
     func constrainDetailView(for mediaType: MediaType) {
         
         apodDetailView.snp.remakeConstraints { (view) in
-            view.width.centerX.equalTo(dateView)
-            
-            var offset = (isHorizontal ? 32 : 49) + StyleManager.Dimension.standardMargin
-            
+            let offset = pageViewDelegate.tabBarHeight + StyleManager.Dimension.standardMargin
             view.bottom.equalToSuperview().offset(-offset)
-//            view.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)//.offset(-StyleManager.Dimension.standardMargin)
-        
+            view.width.centerX.equalTo(dateView)
             switch mediaType {
             case .image:
                 view.top.equalTo(self.view.snp.centerY)

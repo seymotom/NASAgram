@@ -19,6 +19,7 @@ protocol APODPageViewDelegate {
     var dateSearchView: DateSearchView! { get }
     func showToolTabStatusBars(_ show: Bool)
     func dismissDateSearchView()
+    var tabBarHeight:CGFloat! { get }
 }
 
 class APODPageViewController: UIPageViewController {
@@ -46,6 +47,10 @@ class APODPageViewController: UIPageViewController {
     }
     
     let statusBarHeightWhenNotHidden: CGFloat
+    
+    var tabBarHeight: CGFloat! {
+        return tabBarController?.tabBar.bounds.height
+    }
     
     var currentAPODViewController: APODViewController? {
         return viewControllers?.first as? APODViewController
@@ -168,7 +173,6 @@ class APODPageViewController: UIPageViewController {
             view.leading.trailing.equalToSuperview()
             view.height.equalTo(statusBarHeightWhenNotHidden)
             if show {
-                print("\nThe status background top is set equal to superview\n")
                 view.top.equalToSuperview()
             } else {
                 view.bottom.equalTo(self.view.snp.top)
@@ -193,8 +197,9 @@ class APODPageViewController: UIPageViewController {
             tabBarController?.tabBar.isHidden = false
         }
         
+        let tabBarIsShowing = tabBarController!.tabBar.frame.origin.y < view.frame.maxY
         // bail if the current state matches the desired state
-        if tabBarIsVisible == show {
+        if tabBarIsShowing == show {
             return
         }
         
@@ -203,7 +208,7 @@ class APODPageViewController: UIPageViewController {
         let offsetY = (show ? -height : height)
         
         // zero duration means no animation
-        let duration = (animated ? 0.2 : 0.0)
+        let duration = (animated ? StyleManager.Animation.slideDuration : 0)
         
         UIView.animate(withDuration: duration, animations: {
             let frame = self.tabBarController!.tabBar.frame
@@ -214,11 +219,6 @@ class APODPageViewController: UIPageViewController {
             }
         })
     }
-    
-    var tabBarIsVisible: Bool {
-        return tabBarController!.tabBar.frame.origin.y < view.frame.maxY
-    }
-    
     
     func showDateSearchView(_ show: Bool) {
         
@@ -235,7 +235,7 @@ class APODPageViewController: UIPageViewController {
             }
         }
         
-        UIView.animate(withDuration: 0.2, animations: { 
+        UIView.animate(withDuration: StyleManager.Animation.slideDuration, animations: {
             self.view.layoutIfNeeded()
         }) { (complete) in
             if complete && !show {
@@ -265,8 +265,8 @@ class APODPageViewController: UIPageViewController {
                     if apodVC.isHidingDetail {
                         self.showTabBar(false, animated: false)
                     }
-                    print("tabbar frame: ", self.tabBarController?.tabBar.frame)
-                    print(self.tabBarController?.tabBar.frame.height)
+//                    print("tabbar frame: ", self.tabBarController?.tabBar.frame)
+//                    print(self.tabBarController?.tabBar.frame.height)
                 }
             }
         }) { (context) in
@@ -329,10 +329,10 @@ extension APODPageViewController: ToolBarViewDelegate {
         dismiss(animated: true, completion: nil)
     }
     
-    @objc func didFinishSavingImage(image: UIImage, didFinishSavingWithError: NSError?, contextInfo: UnsafeMutableRawPointer?) {
-        print("FINISHED")
-        let aleFac = AlertFactory(for: self)
-        aleFac.showCustomOKAlert(title: "Success", message: "Photo Saved to Photos")
-    }
+//    @objc func didFinishSavingImage(image: UIImage, didFinishSavingWithError: NSError?, contextInfo: UnsafeMutableRawPointer?) {
+//        print("FINISHED")
+//        let aleFac = AlertFactory(for: self)
+//        aleFac.showCustomOKAlert(title: "Success", message: "Photo Saved to Photos")
+//    }
 }
 

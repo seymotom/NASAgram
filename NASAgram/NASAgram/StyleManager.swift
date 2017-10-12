@@ -37,8 +37,8 @@ struct StyleManager {
         
         enum Size: CGFloat {
             case small = 8
-            case medium = 12
-            case large = 16
+            case medium = 14
+            case large = 18
             case title = 20
             case extraLarge = 80
         }
