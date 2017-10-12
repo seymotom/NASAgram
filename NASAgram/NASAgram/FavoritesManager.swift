@@ -14,6 +14,8 @@ class FavoritesManager: NSObject {
     
     let dataManager: DataManager!
     
+    var indexPath: IndexPath?
+    
     var mainContext: NSManagedObjectContext {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.persistentContainer.viewContext
@@ -75,7 +77,6 @@ class FavoritesManager: NSObject {
             fatalError("Failed to delete apod: \(error)")
         }
     }
-    
     
 //    // debug function
 //    func printAllSavedFavDates() {
@@ -171,7 +172,7 @@ extension FavoritesManager: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let apodManager = APODManager(dataManager: dataManager, favoritesManager: self)
-        let favoritesPVC = APODPageViewController(apodManager: apodManager, pageViewType: .favorite, indexPath: indexPath)
+        let favoritesPVC = APODPageViewController(apodManager: apodManager, pageViewType: .favorite, navBarDelegate: favoritesViewController, indexPath: indexPath)
         favoritesPVC.modalTransitionStyle = .flipHorizontal
         favoritesViewController.present(favoritesPVC, animated: true, completion: nil)
     }

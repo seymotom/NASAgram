@@ -19,7 +19,7 @@ protocol APODPageViewDelegate {
     var dateSearchView: DateSearchView! { get }
     func showToolTabStatusBars(_ show: Bool)
     func dismissDateSearchView()
-    var tabBarHeight:CGFloat! { get }
+    var tabBarHeight:CGFloat { get }
 }
 
 class APODPageViewController: UIPageViewController {
@@ -48,13 +48,16 @@ class APODPageViewController: UIPageViewController {
     
     let statusBarHeightWhenNotHidden: CGFloat
     
-    var tabBarHeight: CGFloat! {
-        return tabBarController?.tabBar.bounds.height
+    var tabBarHeight: CGFloat {
+        return tabBarController?.tabBar.bounds.height ?? 0
     }
+    
+    var navBarDelegate: NavBarDelegate
     
     var currentAPODViewController: APODViewController? {
         return viewControllers?.first as? APODViewController
     }
+    
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -68,9 +71,10 @@ class APODPageViewController: UIPageViewController {
         return .slide
     }
     
-    init(apodManager: APODManager, pageViewType: APODPageViewType, indexPath: IndexPath? = nil) {
+    init(apodManager: APODManager, pageViewType: APODPageViewType, navBarDelegate: NavBarDelegate, indexPath: IndexPath? = nil) {
         self.apodManager = apodManager
         self.pageViewType = pageViewType
+        self.navBarDelegate = navBarDelegate
         // statusBar height is 0 when hidden so have to capture the value here so the APODVC can use it to constrain the date
         statusBarHeightWhenNotHidden = UIApplication.shared.statusBarFrame.height
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
@@ -89,16 +93,17 @@ class APODPageViewController: UIPageViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-        setupConstraints()
+        constrainViews(showing: false)
         setupPageVC()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if isFirstLoad {
-            showTabBar(false, animated: false)
-            isFirstLoad = false
+        fadeInView()
+        if isFirstLoad, pageViewType == .daily {
+            animateTabBarView(showing: false, animated: false)
         }
+        isFirstLoad = false
     }
     
     override func didReceiveMemoryWarning() {
@@ -106,6 +111,13 @@ class APODPageViewController: UIPageViewController {
         print("/n/n/n>>>>>>>>>>> !!! MEMORY WARNING !!! <<<<<<<<<<<<<\n\n\n")
         // empty the dictionary if using too much memory
         pageViewManager.seenVCs = [:]
+    }
+    
+    func fadeInView() {
+        view.alpha = 0
+        UIView.animate(withDuration: StyleManager.Animation.fadeDuration) {
+            self.view.alpha = 1
+        }
     }
     
     func setupPageVC() {
@@ -124,88 +136,91 @@ class APODPageViewController: UIPageViewController {
         statusBarBackgorundView.isHidden = UIScreen.main.bounds.width > UIScreen.main.bounds.height ? true : false
     }
     
-    func setupConstraints() {
-        toolBarView.snp.makeConstraints { (view) in
-            view.leading.trailing.equalToSuperview()
-            view.height.equalTo(StyleManager.Dimension.toolBarViewHeight)
-            view.bottom.equalTo(self.view.snp.top)
-        }
-        statusBarBackgorundView.snp.makeConstraints { (view) in
-            view.leading.trailing.equalToSuperview()
-            view.height.equalTo(statusBarHeightWhenNotHidden)
-            view.bottom.equalTo(self.view.snp.top)
-        }
-        dateSearchView.snp.makeConstraints { (view) in
-            view.leading.trailing.equalToSuperview()
-            view.bottom.equalTo(self.view.snp.top)
-        }
+    func constrainViews(showing: Bool) {
+        constrainToolBarView(showing: showing)
+        constrainStatusBarBackgroundView(showing: showing)
+        constrainDateSearchView()
     }
     
-    // Animation Code
-    
-    func showToolBarVisible(_ show: Bool, animated: Bool) {
-    
-        // bail if the toolBarView hasn't been set yet
-        if toolBarView == nil {
-            return
-        }
-        
-        if show {
-            toolBarView.isHidden = false
-            
-            statusBarBackgorundView.isHidden = false
-//            if UIDevice.current.orientation.isLandscape {
-//
-//            }
-        }
-        
+    func constrainToolBarView(showing: Bool) {
         self.toolBarView.snp.remakeConstraints({ (view) in
             view.leading.trailing.equalToSuperview()
-            view.height.equalTo(StyleManager.Dimension.toolBarViewHeight)
-            if show {
+            view.height.equalTo(navBarDelegate.navBarHeight)
+            if showing {
                 view.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
             } else {
                 view.bottom.equalTo(self.view.snp.top)
             }
         })
-        
-        self.statusBarBackgorundView.snp.remakeConstraints({ (view) in
+    }
+    
+    func constrainStatusBarBackgroundView(showing: Bool) {
+        statusBarBackgorundView.snp.remakeConstraints({ (view) in
             view.leading.trailing.equalToSuperview()
             view.height.equalTo(statusBarHeightWhenNotHidden)
-            if show {
+            if showing {
                 view.top.equalToSuperview()
             } else {
                 view.bottom.equalTo(self.view.snp.top)
             }
         })
+    }
+    
+    func constrainDateSearchView(showing: Bool = false) {
+        dateSearchView.snp.remakeConstraints { (view) in
+            view.leading.trailing.equalToSuperview()
+            if showing {
+                view.top.equalTo(self.toolBarView.snp.bottom)
+            } else {
+                view.bottom.equalTo(self.view.snp.top)
+            }
+        }
+    }
+    
+    
+    // Animation Code
+    
+    func animateToolBarStatusBackgroundView(showing: Bool, animated: Bool) {
+    
+        // bail if the toolBarView hasn't been set yet
+        if toolBarView == nil {
+            return
+        }
+        if showing {
+            toolBarView.isHidden = false
+            statusBarBackgorundView.isHidden = false
+        }
+        constrainToolBarView(showing: showing)
+        constrainStatusBarBackgroundView(showing: showing)
+
         // zero duration means no animation
         let duration = (animated ? StyleManager.Animation.slideDuration : 0)
         
         UIView.animate(withDuration: duration, animations: {
             self.view.layoutIfNeeded()
         }, completion: { (complete) in
-            if complete && !show {
+            if complete && !showing {
                 self.toolBarView.isHidden = true
                 self.statusBarBackgorundView.isHidden = true
             }
         })
     }
     
-    func showTabBar(_ show: Bool, animated: Bool) {
+    func animateTabBarView(showing: Bool, animated: Bool) {
                 
-        if show {
+        if showing {
             tabBarController?.tabBar.isHidden = false
         }
         
         let tabBarIsShowing = tabBarController!.tabBar.frame.origin.y < view.frame.maxY
         // bail if the current state matches the desired state
-        if tabBarIsShowing == show {
+        if tabBarIsShowing == showing {
             return
         }
         
         // get a frame calculation ready
         let height = tabBarController!.tabBar.frame.size.height
-        let offsetY = (show ? -height : height)
+        let offsetY = (showing ? -height : height)
         
         // zero duration means no animation
         let duration = (animated ? StyleManager.Animation.slideDuration : 0)
@@ -214,31 +229,21 @@ class APODPageViewController: UIPageViewController {
             let frame = self.tabBarController!.tabBar.frame
             self.tabBarController!.tabBar.frame = frame.offsetBy(dx: 0, dy: offsetY);
         }, completion: { (complete) in
-            if complete && !show {
+            if complete && !showing {
                 self.tabBarController?.tabBar.isHidden = true
             }
         })
     }
     
-    func showDateSearchView(_ show: Bool) {
-        
-        if show {
+    func animateDateSearchView(showing: Bool) {
+        if showing {
             dateSearchView.isHidden = false
         }
-        
-        dateSearchView.snp.remakeConstraints { (view) in
-            view.leading.trailing.equalToSuperview()
-            if show {
-                view.top.equalTo(self.toolBarView.snp.bottom)
-            } else {
-                view.bottom.equalTo(self.view.snp.top)
-            }
-        }
-        
+        constrainDateSearchView(showing: showing)
         UIView.animate(withDuration: StyleManager.Animation.slideDuration, animations: {
             self.view.layoutIfNeeded()
         }) { (complete) in
-            if complete && !show {
+            if complete && !showing {
                 self.dateSearchView.isHidden = true
             }
         }
@@ -260,13 +265,11 @@ class APODPageViewController: UIPageViewController {
             if let apodVC = self.viewControllers?.first as? APODViewController {
                 DispatchQueue.main.async {
                     apodVC.resetForRotation()
-                    
+                    self.constrainToolBarView(showing: !apodVC.isHidingDetail)
                     // ios 11, have to rehide the tabbar on rotation
                     if apodVC.isHidingDetail {
-                        self.showTabBar(false, animated: false)
+                        self.animateTabBarView(showing: false, animated: false)
                     }
-//                    print("tabbar frame: ", self.tabBarController?.tabBar.frame)
-//                    print(self.tabBarController?.tabBar.frame.height)
                 }
             }
         }) { (context) in
@@ -278,16 +281,16 @@ class APODPageViewController: UIPageViewController {
 extension APODPageViewController: APODPageViewDelegate {
     
     func showToolTabStatusBars(_ show: Bool) {
-        self.showToolBarVisible(show, animated: true)
+        self.animateToolBarStatusBackgroundView(showing: show, animated: true)
         self.statusBarHidden = UIDevice.current.orientation.isLandscape || !show ? true : false
         if self.pageViewType == .daily {
-            self.showTabBar(show, animated: true)
+            self.animateTabBarView(showing: show, animated: true)
         }
     }
     
     func dismissDateSearchView() {
         if !dateSearchView.isHidden {
-            showDateSearchView(false)
+            animateDateSearchView(showing: false)
         }
     }
 }
@@ -323,9 +326,10 @@ extension APODPageViewController: ToolBarViewDelegate {
     }
     
     func dateSearchButtonTapped(sender: UIButton) {
-        showDateSearchView(dateSearchView.isHidden)
+        animateDateSearchView(showing: dateSearchView.isHidden)
     }
     func dismissButtonTapped(sender: UIButton) {
+        apodManager.favorites.indexPath = pageViewManager.indexPath
         dismiss(animated: true, completion: nil)
     }
     

@@ -33,8 +33,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let favoitesManager = FavoritesManager(dataManager: dataManager)
         let apodManager = APODManager(dataManager: dataManager, favoritesManager: favoitesManager)
         
-        let pageVC = APODPageViewController(apodManager: apodManager, pageViewType: .daily)
-        let favVC = UINavigationController(rootViewController: FavoritesViewController(manager: apodManager))
+        let favVC = FavoritesViewController(manager: apodManager)
+        let pageVC = APODPageViewController(apodManager: apodManager, pageViewType: .daily, navBarDelegate: favVC)
+        let navFavVC = UINavigationController(rootViewController: favVC)
         
         let navBarAppearance = UINavigationBar.appearance()
         navBarAppearance.barTintColor = .clear
@@ -53,7 +54,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         favVC.tabBarItem = UITabBarItem(title: StyleManager.Text.favoritesTitle, image: StyleManager.Icon.favorites, selectedImage: nil)
         
         let tabController = UITabBarController()
-        tabController.viewControllers = [pageVC, favVC]
+        tabController.viewControllers = [pageVC, navFavVC]
         tabController.tabBar.tintColor = StyleManager.Color.accent
         tabController.tabBar.unselectedItemTintColor = StyleManager.Color.primary
         

@@ -55,6 +55,7 @@ class ToolBarView: UIView {
         titleLabel.font = StyleManager.Font.nasalization()
         titleLabel.text = StyleManager.Text.appTitle
         titleLabel.contentMode = .center
+        titleLabel.clipsToBounds = false
         addSubview(titleLabel)
         favoriteButton.addTarget(delegate, action: #selector (delegate.favoriteButtonTapped(sender:)), for: .touchUpInside)
         favoriteButton.setImage(StyleManager.Icon.favoriteEmpty, for: .normal)
@@ -84,8 +85,6 @@ class ToolBarView: UIView {
         
         titleLabel.snp.makeConstraints { (view) in
             view.center.equalToSuperview()
-            view.top.equalToSuperview().offset(StyleManager.Dimension.standardMargin)
-            view.bottom.equalToSuperview().offset(-StyleManager.Dimension.standardMargin)
         }
         
         optionsButton.snp.makeConstraints { (view) in

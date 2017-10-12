@@ -60,33 +60,6 @@ class APODViewController: UIViewController, UIGestureRecognizerDelegate {
         setupConstraints()
         setupGestures()
         checkFavoritesForAPOD()
-        
-        
-//        let label1 = UILabel()
-//        label1.text = "NASA"
-//        label1.numberOfLines = 1
-//        label1.contentMode = .center
-//        label1.font = StyleManager.Font.nasalization(size: .extraLarge)
-//        label1.textColor = .white
-//        
-//        let label2 = UILabel()
-//        label2.text = "gram"
-//        label2.contentMode = .center
-//        label2.font = StyleManager.Font.nasalization(size: .extraLarge)
-//        label2.textColor = .white
-//        
-//        
-//        view.addSubview(label1)
-//        view.addSubview(label2)
-//        label1.snp.makeConstraints { (view) in
-//            view.centerX.equalToSuperview()
-//            view.centerY.equalToSuperview().offset(-30)
-//        }
-//        label2.snp.makeConstraints { (view) in
-//            view.top.equalTo(label1.snp.bottom).offset(-42)
-//            view.leading.equalTo(label1.snp.leading).offset(13)
-//        }
-        
     }
     
     

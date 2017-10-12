@@ -9,12 +9,19 @@
 import UIKit
 import SnapKit
 
+protocol NavBarDelegate {
+    var navBarHeight: CGFloat { get }
+}
 
-class FavoritesViewController: UIViewController {
+class FavoritesViewController: UIViewController, NavBarDelegate {
     
     var tableView = UITableView()
     
     let manager: APODManager!
+    
+    var navBarHeight: CGFloat {
+        return navigationController!.navigationBar.bounds.height
+    }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -42,7 +49,18 @@ class FavoritesViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        fadeInView()
         manager.favorites.initializeFetchedResultsController()
+        if let ip = manager.favorites.indexPath {
+            tableView.scrollToRow(at: ip, at: .top, animated: false)
+        }
+    }
+    
+    func fadeInView() {
+        view.alpha = 0
+        UIView.animate(withDuration: StyleManager.Animation.fadeDuration) {
+            self.view.alpha = 1
+        }
     }
 
     func setupTableView() {
@@ -73,14 +91,11 @@ class FavoritesViewController: UIViewController {
         tableView.setEditing(false, animated: true)
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editButtonPressed))
     }
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        
-        
-        coordinator.animate(alongsideTransition: { (context) in
-            
-            print("Navbar height: ", self.navigationController?.navigationBar.frame.height)
-        }) { (context) in
-        }
-    }
+//    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+//        super.viewWillTransition(to: size, with: coordinator)
+//        coordinator.animate(alongsideTransition: { (context) in
+//            print("Navbar height: ", self.navigationController?.navigationBar.frame.height)
+//        }) { (context) in
+//        }
+//    }
 }
