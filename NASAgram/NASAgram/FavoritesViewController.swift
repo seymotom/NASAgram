@@ -52,9 +52,7 @@ class FavoritesViewController: UIViewController, NavBarDelegate {
     override func viewWillAppear(_ animated: Bool) {
         fadeInView()
         manager.favorites.initializeFetchedResultsController()
-        if let ip = manager.favorites.indexPath {
-            tableView.scrollToRow(at: ip, at: .top, animated: false)
-        }
+        checkForInexPath()
     }
     
     func fadeInView() {
@@ -80,6 +78,15 @@ class FavoritesViewController: UIViewController, NavBarDelegate {
             view.leading.trailing.equalToSuperview()
             view.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
             view.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
+        }
+    }
+    
+    func checkForInexPath() {
+        // checking for a saved indexPath and that it is valid for the tableView
+        if let ip = manager.favorites.indexPath,
+            tableView.numberOfSections > ip.section,
+            tableView.numberOfRows(inSection: ip.section) > ip.row {
+            tableView.scrollToRow(at: ip, at: .top, animated: false)
         }
     }
     
