@@ -16,6 +16,7 @@ protocol NavBarDelegate {
 class FavoritesViewController: UIViewController, NavBarDelegate {
     
     var tableView = UITableView()
+    let emptyStateView = EmptyStateView()
     
     let manager: APODManager!
     

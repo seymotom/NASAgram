@@ -159,8 +159,9 @@ extension FavoritesManager: UITableViewDelegate, UITableViewDataSource {
         guard let sections = fetchedResultsController.sections else {
             fatalError("No sections in fetchedResultsController")
         }
-        let sectionInfo = sections[section]
-        return sectionInfo.numberOfObjects
+        let rows = sections[section].numberOfObjects
+        tableView.backgroundView = rows == 0 ? favoritesViewController.emptyStateView : nil
+        return rows
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

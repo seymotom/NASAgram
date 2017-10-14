@@ -11,12 +11,13 @@ import UIKit
 struct StyleManager {
     
     struct Text {
-        static let appTitle = "NASAgram"
+        static let appTitle = "ASTROdaily"
         static let videoPlayExplanation = "open video in browser?"
         static let copyrightPrefix = "© "
         static let dailyTitle = "Daily"
         static let favoritesTitle = "Favorites"
         static let done = "Done"
+        static let emptyStateText = "No Photos Saved to Favorites"
     }
     
     struct Icon {
@@ -33,8 +34,11 @@ struct StyleManager {
         static let playVideo = UIImage(named: "play")
     }
     
+    struct Image {
+        static let background = UIImage(named: "APODBackgroundImage")
+    }
+    
     struct Font {
-        
         enum Size: CGFloat {
             case small = 8
             case medium = 14
