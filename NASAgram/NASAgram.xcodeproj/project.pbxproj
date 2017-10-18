@@ -40,6 +40,7 @@
 		DEAD51E01F018F16002486B1 /* APOD.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51DF1F018F16002486B1 /* APOD.swift */; };
 		DEAD51E31F018F76002486B1 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51E21F018F76002486B1 /* DataManager.swift */; };
 		DEAD51E61F01B391002486B1 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51E51F01B391002486B1 /* APIManager.swift */; };
+		DEB303201F97AC8F00BC6339 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DEB3031F1F97AC8F00BC6339 /* Images.xcassets */; };
 		DEDA0E661F13C7DB004BCB0F /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDA0E651F13C7DB004BCB0F /* FavoritesViewController.swift */; };
 		DEDA0E681F13D28D004BCB0F /* FavoritesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDA0E671F13D28D004BCB0F /* FavoritesTableViewCell.swift */; };
 		DEF02B6B1F4F4DE0009836E1 /* ExplanationScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF02B6A1F4F4DE0009836E1 /* ExplanationScrollView.swift */; };
@@ -112,7 +113,7 @@
 		DEAD51DF1F018F16002486B1 /* APOD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APOD.swift; sourceTree = "<group>"; };
 		DEAD51E21F018F76002486B1 /* DataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		DEAD51E51F01B391002486B1 /* APIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
-		DEC9950F1F9799370076167C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = /Users/tomseymour/Projects/NASAgram/NASAgram/NASAgram/Images.xcassets; sourceTree = "<absolute>"; };
+		DEB3031F1F97AC8F00BC6339 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		DEDA0E651F13C7DB004BCB0F /* FavoritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
 		DEDA0E671F13D28D004BCB0F /* FavoritesTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesTableViewCell.swift; sourceTree = "<group>"; };
 		DEF02B6A1F4F4DE0009836E1 /* ExplanationScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExplanationScrollView.swift; sourceTree = "<group>"; };
@@ -191,10 +192,10 @@
 			children = (
 				DE12ACA11F854703009AFA18 /* nasalization */,
 				DEAD51AB1F018C6F002486B1 /* AppDelegate.swift */,
-				DEC9950F1F9799370076167C /* Images.xcassets */,
 				DEAD51B71F018C6F002486B1 /* LaunchScreen.storyboard */,
 				DEAD51BA1F018C6F002486B1 /* Info.plist */,
 				DEAD51B21F018C6F002486B1 /* NASAgram.xcdatamodeld */,
+				DEB3031F1F97AC8F00BC6339 /* Images.xcassets */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -433,6 +434,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DEB303201F97AC8F00BC6339 /* Images.xcassets in Resources */,
 				DEAD51B91F018C6F002486B1 /* LaunchScreen.storyboard in Resources */,
 				DE12ACA51F854757009AFA18 /* nasalization-rg.ttf in Resources */,
 			);
@@ -791,7 +793,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = seymotom.NASAgram;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
@@ -806,7 +808,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = seymotom.NASAgram;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
@@ -822,7 +824,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = seymotom.NASAgramTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NASAgram.app/NASAgram";
 			};
@@ -839,7 +841,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = seymotom.NASAgramTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NASAgram.app/NASAgram";
 			};
@@ -855,7 +857,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = seymotom.NASAgramUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 				TEST_TARGET_NAME = NASAgram;
 			};
@@ -871,7 +873,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = seymotom.NASAgramUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 				TEST_TARGET_NAME = NASAgram;
 			};
