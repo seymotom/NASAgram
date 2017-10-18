@@ -34,7 +34,6 @@
 		DEAA7C581F487A3300385D13 /* FavoritesPageViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAA7C571F487A3300385D13 /* FavoritesPageViewManager.swift */; };
 		DEAD51AC1F018C6F002486B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51AB1F018C6F002486B1 /* AppDelegate.swift */; };
 		DEAD51B41F018C6F002486B1 /* NASAgram.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51B21F018C6F002486B1 /* NASAgram.xcdatamodeld */; };
-		DEAD51B61F018C6F002486B1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DEAD51B51F018C6F002486B1 /* Assets.xcassets */; };
 		DEAD51B91F018C6F002486B1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DEAD51B71F018C6F002486B1 /* LaunchScreen.storyboard */; };
 		DEAD51C41F018C70002486B1 /* NASAgramTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51C31F018C70002486B1 /* NASAgramTests.swift */; };
 		DEAD51CF1F018C70002486B1 /* NASAgramUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAD51CE1F018C70002486B1 /* NASAgramUITests.swift */; };
@@ -102,7 +101,6 @@
 		DEAD51A81F018C6F002486B1 /* NASAgram.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NASAgram.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEAD51AB1F018C6F002486B1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DEAD51B31F018C6F002486B1 /* NASAgram.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NASAgram.xcdatamodel; sourceTree = "<group>"; };
-		DEAD51B51F018C6F002486B1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DEAD51B81F018C6F002486B1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DEAD51BA1F018C6F002486B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DEAD51BF1F018C70002486B1 /* NASAgramTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NASAgramTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -114,6 +112,7 @@
 		DEAD51DF1F018F16002486B1 /* APOD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APOD.swift; sourceTree = "<group>"; };
 		DEAD51E21F018F76002486B1 /* DataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		DEAD51E51F01B391002486B1 /* APIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
+		DEC9950F1F9799370076167C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = /Users/tomseymour/Projects/NASAgram/NASAgram/NASAgram/Images.xcassets; sourceTree = "<absolute>"; };
 		DEDA0E651F13C7DB004BCB0F /* FavoritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
 		DEDA0E671F13D28D004BCB0F /* FavoritesTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesTableViewCell.swift; sourceTree = "<group>"; };
 		DEF02B6A1F4F4DE0009836E1 /* ExplanationScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExplanationScrollView.swift; sourceTree = "<group>"; };
@@ -192,7 +191,7 @@
 			children = (
 				DE12ACA11F854703009AFA18 /* nasalization */,
 				DEAD51AB1F018C6F002486B1 /* AppDelegate.swift */,
-				DEAD51B51F018C6F002486B1 /* Assets.xcassets */,
+				DEC9950F1F9799370076167C /* Images.xcassets */,
 				DEAD51B71F018C6F002486B1 /* LaunchScreen.storyboard */,
 				DEAD51BA1F018C6F002486B1 /* Info.plist */,
 				DEAD51B21F018C6F002486B1 /* NASAgram.xcdatamodeld */,
@@ -435,7 +434,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DEAD51B91F018C6F002486B1 /* LaunchScreen.storyboard in Resources */,
-				DEAD51B61F018C6F002486B1 /* Assets.xcassets in Resources */,
 				DE12ACA51F854757009AFA18 /* nasalization-rg.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

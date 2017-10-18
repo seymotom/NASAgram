@@ -95,6 +95,7 @@ class APODPageViewController: UIPageViewController {
         setupView()
         constrainViews(showing: false)
         setupPageVC()
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -298,7 +299,7 @@ extension APODPageViewController: APODPageViewDelegate {
 extension APODPageViewController: ToolBarViewDelegate {
     
     func favoriteButtonTapped(sender: UIButton) {
-        guard let vc = currentAPODViewController, let apod = vc.apod else { return }
+        guard let vc = currentAPODViewController, let apod = vc.apod, let _ = apod.hdImageData else { return }
         if apod.isFavorite {
             apodManager?.favorites.delete(apod)
         } else {
@@ -309,7 +310,6 @@ extension APODPageViewController: ToolBarViewDelegate {
     
     func optionsButtonTapped(sender: UIButton) {
         guard let apodVC = self.currentAPODViewController, let apodImage = apodVC.apodImageView.image, let apodTitle = apodVC.apod?.title else { return }
-        print("\nimagesize ", apodImage.size, "\n")
         let activityController = UIActivityViewController(activityItems: [apodTitle, apodImage], applicationActivities: nil)
         activityController.excludedActivityTypes = [.assignToContact, .print]
         self.present(activityController, animated: true)

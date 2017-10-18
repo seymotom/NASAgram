@@ -61,10 +61,12 @@ class ToolBarView: UIView {
         favoriteButton.setImage(StyleManager.Icon.favoriteEmpty, for: .normal)
         addSubview(favoriteButton)
         optionsButton.addTarget(delegate, action: #selector (delegate.optionsButtonTapped(sender:)), for: .touchUpInside)
-        optionsButton.setImage(StyleManager.Icon.menu, for: .normal)
+        optionsButton.setImage(StyleManager.Icon.share, for: .normal)
+        optionsButton.imageEdgeInsets = StyleManager.Icon.shareEdgeInset
         addSubview(optionsButton)
         dateSearchButton.addTarget(delegate, action: #selector (delegate.dateSearchButtonTapped(sender:)), for: .touchUpInside)
         dateSearchButton.setImage(StyleManager.Icon.search, for: .normal)
+//        dateSearchButton.imageEdgeInsets = StyleManager.Icon.searchEdgeInset
         addSubview(dateSearchButton)
         dismissButton.addTarget(delegate, action: #selector (delegate.dismissButtonTapped(sender:)), for: .touchUpInside)
         dismissButton.setImage(StyleManager.Icon.dismiss, for: .normal)
@@ -110,6 +112,8 @@ class ToolBarView: UIView {
     
     func setFavorite(_ isFavorite: Bool) {
         let iconImage = isFavorite ? StyleManager.Icon.favoriteFilled : StyleManager.Icon.favoriteEmpty
-        favoriteButton.setImage(iconImage, for: .normal)
+        let tintedIconImage = iconImage?.withRenderingMode(.alwaysTemplate)
+        favoriteButton.setImage(tintedIconImage, for: .normal)
+        favoriteButton.tintColor = isFavorite ? StyleManager.Color.favoriteGold : StyleManager.Color.primary
     }
 }

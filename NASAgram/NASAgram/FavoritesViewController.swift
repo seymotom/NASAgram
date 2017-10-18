@@ -83,10 +83,14 @@ class FavoritesViewController: UIViewController, NavBarDelegate {
     
     func checkForInexPath() {
         // checking for a saved indexPath and that it is valid for the tableView
-        if let ip = manager.favorites.indexPath,
-            tableView.numberOfSections > ip.section,
-            tableView.numberOfRows(inSection: ip.section) > ip.row {
-            tableView.scrollToRow(at: ip, at: .top, animated: false)
+        if let ip = manager.favorites.indexPath {
+            if tableView.numberOfSections > ip.section,
+                tableView.numberOfRows(inSection: ip.section) > ip.row {
+                tableView.scrollToRow(at: ip, at: .top, animated: false)
+            } else {
+                let ip = IndexPath(row: tableView.numberOfRows(inSection: tableView.numberOfSections - 1) - 1, section: tableView.numberOfSections - 1)
+                tableView.scrollToRow(at: ip, at: .bottom, animated: false)
+            }
         }
     }
     

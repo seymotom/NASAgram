@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:/Users/tomseymour/Projects/NASAgram/NASAgram/NASAgram/Images.xcassets">
+   </FileRef>
+   <FileRef
       location = "group:NASAgram.xcodeproj">
    </FileRef>
    <FileRef

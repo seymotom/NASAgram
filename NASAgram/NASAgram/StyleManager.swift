@@ -30,8 +30,10 @@ struct StyleManager {
         static let search = UIImage(named: "search")
         static let favoriteEmpty = UIImage(named: "starEmpty")
         static let favoriteFilled = UIImage(named: "starFilled")
-        
+        static let share = UIImage(named: "share")
         static let playVideo = UIImage(named: "play")
+        
+        static let shareEdgeInset = UIEdgeInsetsMake(3, 3, 3, 3)
     }
     
     struct Image {
@@ -72,8 +74,13 @@ struct StyleManager {
     
     struct Color {
         static let primary = UIColor.white
-        static let accent = UIColor(hexString: "#7d26cf")
-        static let accentLight = UIColor(hexString: "#d2b1f1")
+        //        static let accent = UIColor(hexString: "#7d26cf")
+        //        static let accentLight = UIColor(hexString: "#d2b1f1")
+//        static let accent = UIColor(hexString: "#8360c7")
+//        static let accentLight = UIColor(hexString: "#bba8e1")
+        static let accent = UIColor(hexString: "#917AD0")
+        static let accentLight = UIColor(hexString: "#C0B1EB")
+        static let favoriteGold = UIColor(hexString: "#FEE438")
     }
     
 }

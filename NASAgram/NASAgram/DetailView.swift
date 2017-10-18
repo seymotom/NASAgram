@@ -51,9 +51,8 @@ class DetailView: UIView {
         titleLabel.textAlignment = .center
         titleLabel.numberOfLines = 2
         titleLabel.lineBreakMode = .byWordWrapping
-        
+        titleLabel.font = StyleManager.Font.system(size: .large)
         addSubview(titleLabel)
-        
         addSubview(explanationScrollView)
         
         self.clipsToBounds = true

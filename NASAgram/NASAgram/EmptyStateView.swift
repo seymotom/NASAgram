@@ -30,6 +30,7 @@ class EmptyStateView: UIView {
     
     private func setupViews() {
         backgroundImageView.image = StyleManager.Image.background
+        backgroundImageView.contentMode = .scaleAspectFill
         backgroundImageView.alpha = 0.3
         backgroundImageView.contentMode = .scaleAspectFit
         textLabel.numberOfLines = 0

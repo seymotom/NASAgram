@@ -49,9 +49,11 @@ class FavoritesTableViewCell: UITableViewCell {
         backgroundColor = .black
         apodImageView.contentMode = .scaleAspectFill
         apodImageView.clipsToBounds = true
+        apodImageView.layer.cornerRadius = StyleManager.Dimension.standardMargin
         contentView.addSubview(apodImageView)
         contentView.addSubview(dateLabel)
         contentView.addSubview(titleLabel)
+        dateLabel.font = StyleManager.Font.nasalization(size: .large)
         titleLabel.font = StyleManager.Font.system(size: .medium)
         titleLabel.numberOfLines = titleLines
         titleLabel.lineBreakMode = .byWordWrapping
