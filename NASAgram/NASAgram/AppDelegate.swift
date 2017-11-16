@@ -16,8 +16,59 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        UIApplication.shared.statusBarStyle = .lightContent
+        
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        self.window?.rootViewController = setupTabBar()
+        self.window?.makeKeyAndVisible()
+
         return true
+    }
+    
+    func setupTabBar() -> UIViewController {
+        
+        let apiManager = APIManager()
+        let dataManager = DataManager(apiManager: apiManager)
+        let favoitesManager = FavoritesManager(dataManager: dataManager)
+        let apodManager = APODManager(dataManager: dataManager, favoritesManager: favoitesManager)
+        
+        let favVC = FavoritesViewController(manager: apodManager)
+        let pageVC = APODPageViewController(apodManager: apodManager, pageViewType: .daily, navBarDelegate: favVC)
+        let navFavVC = UINavigationController(rootViewController: favVC)
+        
+        let navBarAppearance = UINavigationBar.appearance()
+        navBarAppearance.barTintColor = .clear
+        
+        navBarAppearance.titleTextAttributes = [
+            NSAttributedStringKey.foregroundColor: StyleManager.Color.primary,
+            NSAttributedStringKey.font: StyleManager.Font.nasalization()
+        ]
+        
+        
+        
+        let barButtonAppearance = UIBarButtonItem.appearance()
+        barButtonAppearance.tintColor = StyleManager.Color.accent
+        
+        pageVC.tabBarItem = UITabBarItem(title: StyleManager.Text.dailyTitle, image: StyleManager.Icon.daily, selectedImage: nil)
+        favVC.tabBarItem = UITabBarItem(title: StyleManager.Text.favoritesTitle, image: StyleManager.Icon.favorites, selectedImage: nil)
+        
+        let tabController = UITabBarController()
+        tabController.viewControllers = [pageVC, navFavVC]
+        tabController.tabBar.tintColor = StyleManager.Color.accent
+        tabController.tabBar.unselectedItemTintColor = StyleManager.Color.primary
+        
+        let tabBarAppearance = UITabBar.appearance()
+        tabBarAppearance.barTintColor = .clear
+        
+        let tabBarItemAppearance  = UITabBarItem.appearance()
+        let normalAttributes = [NSAttributedStringKey.foregroundColor: StyleManager.Color.primary,
+                                NSAttributedStringKey.font: StyleManager.Font.nasalization(size: .medium)]
+        let selectedAttributes = [NSAttributedStringKey.foregroundColor: StyleManager.Color.accent,
+                                  NSAttributedStringKey.font: StyleManager.Font.nasalization(size: .medium)]
+        tabBarItemAppearance.setTitleTextAttributes(normalAttributes, for: .normal)
+        tabBarItemAppearance.setTitleTextAttributes(selectedAttributes, for: .selected)
+        return tabController
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -88,6 +139,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
-
+    
 }
 
