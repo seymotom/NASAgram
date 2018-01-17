@@ -46,7 +46,8 @@ struct StyleManager {
             case medium = 14
             case large = 18
             case title = 20
-            case extraLarge = 80
+            case largeTitle = 28
+//            case extraLarge = 80
         }
         
         static func system(size: Size) -> UIFont {

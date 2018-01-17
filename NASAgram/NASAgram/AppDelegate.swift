@@ -44,8 +44,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             NSAttributedStringKey.foregroundColor: StyleManager.Color.primary,
             NSAttributedStringKey.font: StyleManager.Font.nasalization()
         ]
-        
-        
+        navBarAppearance.largeTitleTextAttributes =
+            [NSAttributedStringKey.font: StyleManager.Font.nasalization(size: .largeTitle)]
+
         
         let barButtonAppearance = UIBarButtonItem.appearance()
         barButtonAppearance.tintColor = StyleManager.Color.accent
