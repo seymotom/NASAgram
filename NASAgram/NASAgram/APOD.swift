@@ -10,10 +10,7 @@ import Foundation
 
 enum ParseError: Error {
     case makeAPODError
-}
-
-enum MediaType: String {
-    case image, video
+    case vimeoImageError
 }
 
 enum APODField: String {
@@ -25,21 +22,21 @@ enum APODField: String {
 class APOD {
     let date: Date
     let explanation: String
-    let hdurl: String?
+    var hdurl: String?
     let url: String
     let mediaType: MediaType
     let serviceVersion: String
     let title: String
     let copyright: String?
     
-    var hdImageData: NSData?
-    var ldImageData: NSData?
+    var hdImageData: Data?
+    var ldImageData: Data?
     
     var isFavorite: Bool = false
     
     init(date: Date, explanation: String, hdurl: String?, url: String,
          mediaType: MediaType, serviceVersion: String, title: String, copyright: String?,
-         hdImageData: NSData? = nil, ldImageData: NSData? = nil) {
+         hdImageData: Data? = nil, ldImageData: Data? = nil) {
         self.date = date
         self.explanation = explanation
         self.hdurl = hdurl
@@ -59,14 +56,31 @@ class APOD {
             let explanation = json[APODField.explanation.rawValue] as? String,
             let url = json[APODField.url.rawValue] as? String,
             let mediaTypeString = json[APODField.mediaType.rawValue] as? String,
-            let mediaType = MediaType(rawValue: mediaTypeString),
+            var mediaType = MediaType.mediaType(myRawValue: mediaTypeString),
             let serviceVersion = json[APODField.serviceVersion.rawValue] as? String,
             let title = json[APODField.title.rawValue] as? String
             else {
                 return nil
         }
-        let hdurl = json[APODField.hdurl.rawValue] as? String
         let copyright = json[APODField.copyright.rawValue] as? String
+        
+        let hdurlString = json[APODField.hdurl.rawValue] as? String
+        var hdurl: String?
+        
+        switch mediaType {
+        case .image:
+            hdurl = hdurlString
+        case .video:
+            switch MediaType.videoType(from: url) {
+            case .youTube:
+                hdurl = MediaType.VideoType.youTubeImageURL(urlString: url)
+                mediaType = .video(.youTube)
+            case .vimeo:
+                 mediaType = .video(.vimeo)
+            case .unknown:
+                mediaType = .video(.unknown)
+            }
+        }
         
         self.init(date: date, explanation: explanation, hdurl: hdurl, url: url, mediaType: mediaType, serviceVersion: serviceVersion, title: title, copyright: copyright)
     }
@@ -90,5 +104,4 @@ class APOD {
         }
         return nil
     }
-    
 }

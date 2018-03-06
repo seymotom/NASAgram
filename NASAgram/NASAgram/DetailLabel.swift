@@ -21,8 +21,7 @@ class DetailLabel: UILabel {
     }
     
     private func setup() {
-        textColor = .white
-        textAlignment = .center
+        textColor = StyleManager.Color.primary
     }
 }
 

@@ -14,61 +14,54 @@ class FavoritesManager: NSObject {
     
     let dataManager: DataManager!
     
+    var indexPath: IndexPath?
+    
     var mainContext: NSManagedObjectContext {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.persistentContainer.viewContext
     }
     
-    var tableView: UITableView!
+    var favoritesViewController: FavoritesViewController!
+    var tableView: UITableView {
+        return favoritesViewController.tableView
+    }
+    
     var fetchedResultsController: NSFetchedResultsController<FavAPOD>!
     
     init(dataManager: DataManager) {
         self.dataManager = dataManager
     }
     
-    func fetchAPOD(date: String, completion: @escaping (APOD?) -> Void) {
-        fetchFavAPOD(date: date) { (favApod) in
-            self.dataManager.appendAPOD(favApod?.apod())
-            completion(favApod?.apod())
-        }
+    func fetchAPOD(date: String) -> APOD? {
+        let apod = fetchFavAPOD(date: date)?.apod()
+        dataManager.appendAPOD(apod)
+        return apod        
     }
 
-    func save(_ apod: APOD, completion: @escaping (Bool, Error?) -> Void) {
-        
+    func save(_ apod: APOD) {
         let favApod = FavAPOD(context: mainContext)
         favApod.populate(from: apod)
-        
         do {
             try mainContext.save()
-            dataManager.updateFavorite(for: favApod.date!, isFavorite: true)
         } catch let error {
-            print("\n\n\n\(error)\n\n\n\n")
-            completion(false, error)
-            return
+            fatalError("Failed to save apod in core data: \(error)")
         }
-        completion(true, nil)
+        dataManager.updateFavorite(for: favApod.date!, isFavorite: true)
     }
     
-    func delete(_ apod: APOD, completion: @escaping (Bool) -> Void) {
-        fetchFavAPOD(date: apod.date.yyyyMMdd()) { (favApod) in
-            if let validFavApod = favApod {
-                self.deleteFromCoreData(favApod: validFavApod)
-                print("delete was \(true)")
-            }
+    func delete(_ apod: APOD) {
+        if let favApod = fetchFavAPOD(date: apod.date.yyyyMMdd()) {
+            deleteFromCoreData(favApod: favApod)
         }
     }
     
-    private func fetchFavAPOD(date: String, completion: @escaping (FavAPOD?) -> Void) {
+    private func fetchFavAPOD(date: String) -> FavAPOD? {
         let request: NSFetchRequest<FavAPOD> = FavAPOD.fetchRequest()
         let predicate: NSPredicate = NSPredicate(format: "date = %@", date)
         request.predicate = predicate
         do {
             let favApods = try mainContext.fetch(request) 
-            if favApods.isEmpty {
-                completion(nil)
-            } else {
-                completion(favApods.last!)
-            }
+            return favApods.last
         } catch {
             fatalError("Failed to search for apod in core data: \(error)")
         }
@@ -85,21 +78,20 @@ class FavoritesManager: NSObject {
         }
     }
     
-    
-    // debug function
-    func printAllSavedFavDates() {
-        let request: NSFetchRequest<FavAPOD> = FavAPOD.fetchRequest()
-        do {
-            let favApods = try mainContext.fetch(request) 
-            print("\nHere are the \(favApods.count) favorites")
-            for fav in favApods {
-                print(fav.date!)
-            }
-            print("\n")
-        } catch {
-            fatalError("Failed to search for all apods in core data:\n\n \(error)")
-        }
-    }
+//    // debug function
+//    func printAllSavedFavDates() {
+//        let request: NSFetchRequest<FavAPOD> = FavAPOD.fetchRequest()
+//        do {
+//            let favApods = try mainContext.fetch(request) 
+//            print("\nHere are the \(favApods.count) favorites")
+//            for fav in favApods {
+//                print(fav.date!)
+//            }
+//            print("\n")
+//        } catch {
+//            fatalError("Failed to search for all apods in core data:\n\n \(error)")
+//        }
+//    }
 }
 
 extension FavoritesManager: NSFetchedResultsControllerDelegate {
@@ -145,7 +137,7 @@ extension FavoritesManager: NSFetchedResultsControllerDelegate {
         case .insert:
             tableView.insertRows(at: [newIndexPath!], with: .automatic)
         case .delete:
-            tableView.deleteRows(at: [indexPath!], with: .automatic)
+            tableView.deleteRows(at: [indexPath!], with: .left)
         case .update:
             tableView.reloadRows(at: [indexPath!], with: .automatic)
         case .move:
@@ -157,7 +149,9 @@ extension FavoritesManager: NSFetchedResultsControllerDelegate {
 extension FavoritesManager: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        guard let sections = fetchedResultsController.sections else { fatalError("No sections in fetched results controller")}
+        guard let sections = fetchedResultsController.sections else {
+            fatalError("No sections in fetched results controller")
+        }
         return sections.count
     }
     
@@ -165,17 +159,23 @@ extension FavoritesManager: UITableViewDelegate, UITableViewDataSource {
         guard let sections = fetchedResultsController.sections else {
             fatalError("No sections in fetchedResultsController")
         }
-        let sectionInfo = sections[section]
-        return sectionInfo.numberOfObjects
+        let rows = sections[section].numberOfObjects
+        tableView.backgroundView = rows == 0 ? favoritesViewController.emptyStateView : nil
+        return rows
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: FavoritesTableViewCell.identifier, for: indexPath) as! FavoritesTableViewCell
-        let favAPOD = fetchedResultsController.object(at: indexPath)
-        
-        
-        cell.textLabel?.text = favAPOD.apod().date.displayString()
+        let apod = fetchedResultsController.object(at: indexPath).apod()
+        cell.configure(with: apod)
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let apodManager = APODManager(dataManager: dataManager, favoritesManager: self)
+        let favoritesPVC = APODPageViewController(apodManager: apodManager, pageViewType: .favorite, navBarDelegate: favoritesViewController, indexPath: indexPath)
+        favoritesPVC.modalTransitionStyle = .flipHorizontal
+        favoritesViewController.present(favoritesPVC, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -191,9 +191,11 @@ extension FavoritesManager: UITableViewDelegate, UITableViewDataSource {
             let favApod = fetchedResultsController.object(at: indexPath)
             deleteFromCoreData(favApod: favApod)
         }
-        initializeFetchedResultsController()
     }
     
+    func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
 }
 
 

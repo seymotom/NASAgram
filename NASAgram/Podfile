@@ -7,7 +7,7 @@ target 'NASAgram' do
 
   # Pods for NASAgram
     pod 'SnapKit'
-
+    pod 'DGActivityIndicatorView'
 
   target 'NASAgramTests' do
     inherit! :search_paths

@@ -8,20 +8,23 @@
 
 import UIKit
 import SnapKit
+import DGActivityIndicatorView
 
 class APODImageView: UIScrollView {
     
     fileprivate var imageView = UIImageView()
     
-    private var activityIndicator = UIActivityIndicatorView()
+    private var activityIndicator: DGActivityIndicatorView!
     
-    private var currentZoomPoint: CGPoint?
+    fileprivate var currentZoomPoint: CGPoint?
     
     var image: UIImage? {
         didSet {
-            imageView.image = image
+            imageView.image = image 
+            fadeInImageView()
             setZoom()
-            activityIndicator.stopAnimating()
+            updateImageConstraints()
+            activityIndicator?.stopAnimating()
         }
     }
     
@@ -44,12 +47,12 @@ class APODImageView: UIScrollView {
         delegate = self
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
+        imageView.alpha = 0
         addSubview(imageView)
         
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.color = .white
-        addSubview(activityIndicator)
-        activityIndicator.startAnimating()
+        activityIndicator = DGActivityIndicatorView(type: .ballClipRotateMultiple, tintColor: .lightGray, size: StyleManager.Dimension.activityIndicatorSize)
+        addSubview(activityIndicator!)
+        activityIndicator?.startAnimating()
     }
     
     private func setupConstraints() {
@@ -57,34 +60,54 @@ class APODImageView: UIScrollView {
             view.leading.trailing.top.bottom.equalToSuperview()
         }
         
-        activityIndicator.snp.makeConstraints { (view) in
+        activityIndicator?.snp.makeConstraints { (view) in
             view.center.equalToSuperview()
         }
     }
     
+    private func fadeInImageView() {
+        UIView.animate(withDuration: StyleManager.Animation.fadeDuration, animations: {
+            self.imageView.alpha = 1
+        })
+    }
+    
     private func setZoom() {
+        // capture zoomPoint before setting zoomScale because didScroll gets called and fucks with it
+        let zoomPointBeforeRotation = currentZoomPoint
+        let zoomScaleBeforeRotation = zoomScale
+        
         guard let imageSize = image?.size else { return }
         let xRatio = superview!.frame.width / imageSize.width
         let yRatio = superview!.frame.size.height / imageSize.height
         let scale = min(xRatio, yRatio)
         minimumZoomScale = scale
         zoomScale = scale
-        
         // check for a zoomPoint in case zoomed in when rotating
-        if let zoomPoint = currentZoomPoint {
-            let zoomRect = getRect(for: zoomPoint)
+        if let zoomPoint = zoomPointBeforeRotation {
+            let zoomRect = getRect(centerPoint: zoomPoint, zoomScale: zoomScaleBeforeRotation)
             zoom(to: zoomRect, animated: false)
         }
-        
         layoutIfNeeded()
     }
     
+    // returns the rect to zoom to
+    private func getRect(centerPoint: CGPoint, zoomScale: CGFloat = 1) -> CGRect {
+        //subtract half the size of the scrollView to center the offset and then divide by zoomScale
+        let x = (centerPoint.x - (bounds.size.width / 2)) / zoomScale
+        let y = (centerPoint.y - (bounds.size.height / 2)) / zoomScale
+        
+        // width and height of the zoomed frame
+        let width = imageView.frame.width / zoomScale
+        let height = imageView.frame.height / zoomScale
+        
+        return CGRect(x: x, y: y, width: width, height: height)
+    }
     
     // adds offset to the imageView to center image
     fileprivate func updateImageConstraints() {
         guard let screenSize = superview?.bounds.size,
             let imageSize = image?.size else { return }
-            
+        
         let imageViewHeight = imageSize.height * zoomScale
         let imageViewWidth = imageSize.width * zoomScale
         let yOffset = max(0, (screenSize.height - imageViewHeight) / 2)
@@ -99,17 +122,29 @@ class APODImageView: UIScrollView {
         layoutIfNeeded()
     }
     
-    func rotate() {
+    // saves the center point in imageView so that it can rotate to same position
+    fileprivate func updateCurrentZoomPoint(forOffset offset: CGPoint) {
+        let x = offset.x + (bounds.size.width / 2)
+        let y = offset.y + (bounds.size.height / 2)
+        currentZoomPoint = zoomScale <= minimumZoomScale ? nil : CGPoint(x: x, y: y)
+    }
+    
+    // MARK: - Internal Methods
+    
+    func resetForOrientation() {
         setZoom()
         updateImageConstraints()
     }
     
     func doubleTapZoom(for doubleTap: UITapGestureRecognizer) {
+        // don't zoom in on no image
+        guard image != nil else { return }
+        
         if zoomScale == minimumZoomScale {
             // zoom in
             // Save the point to zoom in on in case of rotation
             currentZoomPoint = doubleTap.location(in: imageView)
-            let zoomRect = getRect(for: currentZoomPoint!)
+            let zoomRect = getRect(centerPoint: currentZoomPoint!)
             zoom(to: zoomRect, animated: true)
         } else {
             // zoom out
@@ -118,24 +153,51 @@ class APODImageView: UIScrollView {
         }
     }
     
-    private func getRect(for point: CGPoint) -> CGRect {
-        //subtract half the size of the scrollView to center the offset
-        let x = point.x - (bounds.size.width / 2)
-        let y = point.y - (bounds.size.height / 2)
-        
-        // width and height of the zoomed frame
-        let width = imageView.frame.width
-        let height = imageView.frame.height
-        return CGRect(x: x, y: y, width: width, height: height)
+    func stopActivityIndicator() {
+        self.activityIndicator.stopAnimating()
     }
+    
+//    private func getRect(for point: CGPoint, thisZoomScale: CGFloat = 1) -> CGRect {
+//        //subtract half the size of the scrollView to center the offset
+//        print("image size: \(image!.size)")
+//        print("imageView bounds: \(imageView.bounds)")
+//
+//        print("self.zoomScale: \(zoomScale)")
+//
+//        print("point: \(point)")
+//        print("this zoom scale: \(thisZoomScale)")
+//
+//
+//        let x = (point.x - (bounds.size.width / 2) ) / thisZoomScale
+//        let y = (point.y - (bounds.size.height / 2) ) / thisZoomScale
+//        print("x: \(x), y: \(y)")
+//        print("bounds: \(bounds.size)")
+//
+//        
+//        // width and height of the zoomed frame
+//        let width = imageView.frame.width / thisZoomScale
+//        let height = imageView.frame.height / thisZoomScale
+//
+//        print("imageView.frame: \(imageView.frame)")
+//        print("scrollView.frame: \(frame)")
+//
+//        let rect = CGRect(x: x, y: y, width: width, height: height)
+//
+//        print("rect to zoom to: \(rect)")
+//        print("___________________________")
+//        return rect
+//    }
+    
 }
 
 extension APODImageView: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return imageView
     }
-    
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
         updateImageConstraints()
+    }
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        updateCurrentZoomPoint(forOffset: scrollView.contentOffset)
     }
 }

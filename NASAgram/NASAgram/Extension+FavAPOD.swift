@@ -10,12 +10,14 @@ import Foundation
 
 extension FavAPOD {
     
+    // FavAPOD doesn't need to know where the video came from as at this point there will be an image.
+    
     func apod() -> APOD {
         let apod = APOD(date: date!.date()!,
                         explanation: explanation!,
                         hdurl: hdurl,
                         url: url!,
-                        mediaType: MediaType(rawValue: mediaType!)!,
+                        mediaType: MediaType.mediaType(myRawValue: mediaType!)!,
                         serviceVersion: serviceVersion!,
                         title: title!,
                         copyright: copyright,
@@ -30,7 +32,7 @@ extension FavAPOD {
         title = apod.title
         explanation = apod.explanation
         serviceVersion = apod.serviceVersion
-        mediaType = apod.mediaType.rawValue
+        mediaType = apod.mediaType.myRawValue
         copyright = apod.copyright
         url = apod.url
         hdurl = apod.hdurl

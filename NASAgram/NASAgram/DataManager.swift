@@ -16,6 +16,8 @@ class DataManager {
     
     private let apodEndpoint = "https://api.nasa.gov/planetary/apod?api_key=AOy2RZcIA1OYQZF6Bbjjz5ntTJPSPwYogYtN0IGP&hd=True&date="
     
+    static let firstAPODDate = "1995-06-20".date()!
+    
     init(apiManager: APIManager) {
         self.apiManager = apiManager
     }
@@ -37,19 +39,63 @@ class DataManager {
         }
     }
     
-    // probably wanna add an error to these completion handlers
-    func getAPOD(from date: Date, completion: @escaping (APOD) -> ()) {
-        apiManager.getData(endpoint: apodEndpoint + date.yyyyMMdd()) { (data) in
-            if let apod = APOD.makeAPOD(from: data) {
+    func getAPOD(from date: Date, completion: @escaping (APOD?, String?) -> ()) {
+        apiManager.getData(endpoint: apodEndpoint + date.yyyyMMdd()) { (data, errorMessage) in
+            if let error = errorMessage {
+                completion(nil, error)
+                print("\nERROR GETTING APOD FOR \(date.yyyyMMdd())\n")
+
+            }
+            else if let data = data, let apod = APOD.makeAPOD(from: data) {
+                print("\nGOT APOD FOR \(apod.date.yyyyMMdd())\n")
                 self.apods.append(apod)
-                completion(apod)
+                
+                switch apod.mediaType {
+                case .video(let videoType):
+                    if let videoType = videoType {
+                        switch videoType {
+                        case .unknown, .youTube:
+                            completion(apod, nil)
+                        case .vimeo:
+                            self.getVimeoImageURL(for: apod, completion: { (urlString, errorMessage) in
+                                if let error = errorMessage {
+                                    completion(apod, error)
+                                } else {
+                                    apod.hdurl = urlString
+                                    completion(apod, nil)
+                                }
+                            })
+                        }                        
+                    }
+                case .image:
+                    completion(apod, nil)
+                }
             }
         }
     }
     
-    func getImage(url: String, completion: @ escaping (Data) -> ()) {
-        apiManager.getData(endpoint: url) { (data) in
-            completion(data)
+    func getVimeoImageURL(for apod: APOD, completion: @ escaping (String?, String?) -> ()) {
+        
+        if let vimeoEndpoint = MediaType.VideoType.vimeoImageAPIEndpoint(urlString: apod.url) {
+            apiManager.getData(endpoint: vimeoEndpoint) { (data, errorMessage) in
+                if let error = errorMessage {
+                    completion(nil, error)
+                }
+                else if let data = data, let urlString = MediaType.VideoType.vimeoImageURL(from: data) {
+                    completion(urlString, nil)
+                }
+            }
+        }
+    }
+    
+    func getImage(url: String, completion: @ escaping (Data?, String?) -> ()) {
+        apiManager.getData(endpoint: url) { (data, errorMessage) in
+            if let error = errorMessage {
+                completion(nil, error)
+            }
+            else {
+                completion(data, nil)
+            }
         }
     }
 }
